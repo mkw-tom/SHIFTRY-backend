@@ -2,9 +2,12 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "biome": "npx @biomejs/biome check --write ./src",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +18,7 @@
     "express": "^4.21.2"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.5",
     "nodemon": "^3.1.9",
