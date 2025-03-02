@@ -4,10 +4,14 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node dist/server.js",
-    "test": "jest",
+    "start": "dotenv -e .env.production -- node dist/server.js",
+    "build": "tsc",
+    "test": "jest --coverage",
+    "test:integration": "cross-env NODE_ENV=test jest --runInBand --detectOpenHandles",
     "biome": "npx @biomejs/biome check --write ./src",
-    "build": "tsc"
+    "type-check": "npx tsc --noEmit",
+    "migrate:prod": "dotenv -e .env.production -- npx prisma migrate deploy",
+    "migrate:test": "dotenv -e .env.test -- npx prisma migrate dev"
   },
   "keywords": [],
   "author": "",
