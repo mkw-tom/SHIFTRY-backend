@@ -9,14 +9,14 @@ export const fetchUsers = async () => {
 	return prisma.user.findMany();
 };
 
-export const editUser = async (userId: string, data: UpdateUserInput) => {
+export const updateUser = async (userId: string, data: UpdateUserInput) => {
 	return prisma.user.update({
 		where: { id: userId },
 		data,
 	});
 };
 
-export const removeUser = async (userId: string) => {
+export const deleteUser = async (userId: string) => {
 	return prisma.user.delete({
 		where: { id: userId },
 	});

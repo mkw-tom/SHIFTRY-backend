@@ -7,8 +7,14 @@
     "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
     "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
     "strict": true,                                      /* Enable all strict type-checking options. */
-    "types": ["node"],
+    "types": ["node", "jest"],
     "typeRoots": ["node_modules/@types"],
-    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
+    "skipLibCheck": true,
+    // "baseUrl": "src",
+    // "paths": {
+    //   "@controllers/*": ["controllers/*"]
+    // }
   },
+  "include": ["src"],
+  "exclude": ["node_modules", "jest.config.ts", "*.tests.ts", "types"]
 }
