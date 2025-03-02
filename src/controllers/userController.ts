@@ -1,13 +1,13 @@
 import type { Request, Response } from "express";
 import {
 	createUser,
-	editUser,
+	deleteUser,
 	fetchUsers,
-	removeUser,
+	updateUser,
 } from "../services/userService";
 import type { CreateUserInput, UpdateUserInput } from "../types/userTypes";
 
-export const registerUser = async (
+export const createUserController = async (
 	req: Request,
 	res: Response,
 ): Promise<void> => {
@@ -29,11 +29,14 @@ export const registerUser = async (
 		res.status(201).json(user);
 	} catch (error) {
 		console.error("Error in registerUser:", error);
-		res.status(500).json({ error: "Failed to register user" });
+		res.status(500).json({ error: "Failed to create user" });
 	}
 };
 
-export const getUsers = async (req: Request, res: Response): Promise<void> => {
+export const getUsersController = async (
+	req: Request,
+	res: Response,
+): Promise<void> => {
 	try {
 		const users = await fetchUsers();
 		res.status(200).json(users);
@@ -43,7 +46,7 @@ export const getUsers = async (req: Request, res: Response): Promise<void> => {
 	}
 };
 
-export const updateUser = async (
+export const updateUserController = async (
 	req: Request,
 	res: Response,
 ): Promise<void> => {
@@ -62,7 +65,7 @@ export const updateUser = async (
 		if (name) data.name = name;
 		if (role) data.role = role;
 
-		const updatedUser = await editUser(userId, data);
+		const updatedUser = await updateUser(userId, data);
 		res.status(200).json(updatedUser);
 	} catch (error) {
 		console.error("Error in updateUser:", error);
@@ -70,18 +73,18 @@ export const updateUser = async (
 	}
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUserController = async (req: Request, res: Response) => {
 	try {
 		const { userId } = req.params;
 		if (!userId) {
 			res.status(400).json({
-				error: "User are required",
+				error: "userId are required",
 			});
 			return;
 		}
 
-		const deleteUser = await removeUser(userId);
-		res.status(200).json(deleteUser);
+		const deleted = await deleteUser(userId);
+		res.status(200).json(deleted);
 	} catch (error) {
 		console.error("Error in deleteUser:", error);
 		res.status(500).json({ error: "Failed to delete user" });
