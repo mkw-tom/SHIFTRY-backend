@@ -2,6 +2,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import userRoutes from "./routes/userRoute";
+import storeRoutes from "./routes/storeRoute";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: true })); // URL エンコードのサポ
 
 // 🔹 ルーティング設定
 app.use("/api/users", userRoutes);
+app.use("/api/store", storeRoutes)
 
 // 🔹 エラーハンドリング（最後に記述）
 app.use(
