@@ -1,10 +1,10 @@
 import express from "express";
 import {
-  craeteStoreController,
-  deleteStoreController,
-  getStoreByNameController,
-  getStoresController,
-  updateStoreNameController,
+	craeteStoreController,
+	deleteStoreController,
+	getStoreByNameController,
+	getStoresController,
+	updateStoreNameController,
 } from "../controllers/storeController";
 
 const router = express.Router();
