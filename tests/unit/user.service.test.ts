@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { createUser, deleteUser, updateUser,  } from "../../src/services/userService";
+import { createUser, deleteUser, updateUser,  } from "../../src/services/user.service";
 import { UpdateUserInput } from "../../src/types/userTypes";
 
 // Prisma のモック

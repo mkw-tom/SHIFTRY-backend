@@ -5,7 +5,7 @@ import {
 	getStoreByName,
 	getStores,
 	updateStoreName,
-} from "../services/storeService";
+} from "../services/store.service";
 import type { createStoreType } from "../types/storeType";
 
 export const getStoresController = async (

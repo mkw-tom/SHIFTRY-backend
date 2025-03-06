@@ -4,7 +4,7 @@ import {
 	deleteUser,
 	fetchUsers,
 	updateUser,
-} from "../services/userService";
+} from "../services/user.service";
 import type { CreateUserInput, UpdateUserInput } from "../types/userTypes";
 
 export const createUserController = async (

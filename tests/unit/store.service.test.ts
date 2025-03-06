@@ -4,7 +4,7 @@ import {
   deleteStore,
   getStoreByName,
   updateStoreName,
-} from "../../src/services/storeService";
+} from "../../src/services/store.service";
 
 jest.mock("@prisma/client", () => {
   const mockPrisma = {
