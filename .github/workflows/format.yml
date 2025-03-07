@@ -15,6 +15,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}  # GitHub Actions用トークン
+          ref: ${{ github.head_ref }}  # PR のブランチをチェックアウト
 
       - name: Install Node.js
         uses: actions/setup-node@v3
