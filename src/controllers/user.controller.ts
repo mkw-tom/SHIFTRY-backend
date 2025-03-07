@@ -12,7 +12,7 @@ export const createUserController = async (
 	res: Response,
 ): Promise<void> => {
 	try {
-		const { lineId, name, pictureUrl,  role } = req.body;
+		const { lineId, name, pictureUrl, role } = req.body;
 
 		if (!lineId || !name || !role) {
 			res.status(400).json({ error: "Missing required fields" });
