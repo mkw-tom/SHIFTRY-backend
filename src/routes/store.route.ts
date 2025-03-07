@@ -5,7 +5,7 @@ import {
 	getStoreByNameController,
 	getStoresController,
 	updateStoreNameController,
-} from "../controllers/storeController";
+} from "../controllers/store.controller";
 
 const router = express.Router();
 

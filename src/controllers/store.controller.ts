@@ -5,7 +5,7 @@ import {
 	getStoreByName,
 	getStores,
 	updateStoreName,
-} from "../services/storeService";
+} from "../services/store.service";
 import type { createStoreType } from "../types/storeType";
 
 export const getStoresController = async (
@@ -51,13 +51,17 @@ export const craeteStoreController = async (
 	res: Response,
 ): Promise<void> => {
 	try {
-		const { name, groupId } = req.body;
+		const { name, groupId, storeId } = req.body;
 
 		if (!name || !groupId) {
 			res.status(400).json({ error: "Missing required fields" });
 			return;
 		}
-		const data: createStoreType = { name: name, groupId: groupId };
+		const data: createStoreType = {
+			name: name,
+			groupId: groupId,
+			storeId: storeId,
+		};
 		const store = await createStore(data);
 		res.status(200).json(store);
 	} catch (error) {
