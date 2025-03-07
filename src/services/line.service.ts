@@ -15,23 +15,6 @@ export const groupJoin = async (replyToken: string, message: string) => {
 	}
 };
 
-// LINEグループメンバー一覧` を取得（userId のみ）
-const getGroupMembers = async (groupId: string): Promise<string[]> => {
-	try {
-		const res = await axios.get(
-			`https://api.line.me/v2/bot/group/${groupId}/members/ids`,
-			{
-				headers: { Authorization: `Bearer ${process.env.LINE_ACCESS_TOKEN}` },
-			},
-		);
-
-		return res.data.memberIds; // ["Uxxxxxxxxxx", "Uyyyyyyyyyy", ...]
-	} catch (error) {
-		console.error("❌ グループメンバー取得エラー:", error);
-		return [];
-	}
-};
-
 // groupIdからグループユーザーの名前と画像を返す
 export const getUserProfile = async (
 	groupId: string,

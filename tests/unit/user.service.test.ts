@@ -10,7 +10,7 @@ import type { UpdateUserInput } from "../../src/types/userTypes";
 jest.mock("@prisma/client", () => {
   const mockPrisma = {
     user: {
-      create: jest.fn().mockResolvedValue({
+      upsert: jest.fn().mockResolvedValue({
         id: "test-id",
         lineId: "test123",
         name: "Test User",
@@ -43,7 +43,7 @@ jest.mock("@prisma/client", () => {
 });
 
 // Prisma インスタンスを取得
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 describe("User Service", () => {
   it("ユーザーを作成できる", async () => {
