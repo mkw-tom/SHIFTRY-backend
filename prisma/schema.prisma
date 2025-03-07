@@ -11,6 +11,7 @@ model User {
   id        String   @id @default(uuid())
   lineId    String   @unique
   name      String
+  pictureUrl  String?
   role      UserRole
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -29,7 +30,8 @@ enum UserRole {
 
 model Store {
   id        String   @id @default(uuid())
-  groupId   String   @unique 
+  groupId   String   @unique
+  storeId   String?   @unique @default(uuid())
   name      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
