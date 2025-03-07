@@ -2,7 +2,11 @@ import prisma from "../config/database";
 import type { CreateUserInput, UpdateUserInput } from "../types/userTypes";
 
 export const createUser = async (data: CreateUserInput) => {
-	return prisma.user.create({ data });
+	return prisma.user.upsert({
+		where: { lineId: data.lineId },
+		create: data,
+		update: data,
+	});
 };
 
 export const fetchUsers = async () => {
