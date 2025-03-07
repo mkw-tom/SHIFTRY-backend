@@ -7,6 +7,7 @@
 export interface StoreType {
 	id: string;
 	groupId: string;
+	storeId: string;
 	name: string;
 	createdAt: Date;
 	updatedAt: Date;
@@ -14,5 +15,6 @@ export interface StoreType {
 
 export interface createStoreType {
 	groupId: string;
+	storeId: string;
 	name: string;
 }

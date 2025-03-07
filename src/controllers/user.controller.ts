@@ -12,7 +12,7 @@ export const createUserController = async (
 	res: Response,
 ): Promise<void> => {
 	try {
-		const { lineId, name, role } = req.body;
+		const { lineId, name, pictureUrl,  role } = req.body;
 
 		if (!lineId || !name || !role) {
 			res.status(400).json({ error: "Missing required fields" });
@@ -22,6 +22,7 @@ export const createUserController = async (
 		const data: CreateUserInput = {
 			lineId,
 			name,
+			pictureUrl,
 			role: role as CreateUserInput["role"],
 		};
 
@@ -52,7 +53,7 @@ export const updateUserController = async (
 ): Promise<void> => {
 	try {
 		const { userId } = req.params;
-		const { name, role } = req.body;
+		const { name, pictureUrl, role } = req.body;
 
 		if (!userId || (!name && !role)) {
 			res.status(400).json({
@@ -64,6 +65,7 @@ export const updateUserController = async (
 		const data: UpdateUserInput = {};
 		if (name) data.name = name;
 		if (role) data.role = role;
+		if (pictureUrl) data.pictureUrl = pictureUrl;
 
 		const updatedUser = await updateUser(userId, data);
 		res.status(200).json(updatedUser);
