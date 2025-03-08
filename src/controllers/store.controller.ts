@@ -2,12 +2,14 @@ import type { Request, Response } from "express";
 import {
 	createStore,
 	deleteStore,
-	getStoreByName,
+	getStoreStaffs,
 	getStores,
+	getStoresByOwner,
 	updateStoreName,
 } from "../services/store.service";
 import type { createStoreType } from "../types/storeType";
 
+//✅ 全ての店舗一覧を取得
 export const getStoresController = async (
 	req: Request,
 	res: Response,
@@ -20,38 +22,50 @@ export const getStoresController = async (
 	}
 };
 
-export const getStoreByNameController = async (
+//✅ 店舗IDからスタッフ達の情報を取得
+export const getStoreStaffsController = async (req: Request, res: Response) => {
+	try {
+		const { storeId } = req.params;
+
+		if (!storeId) {
+			return res.status(400).json({ error: "storeId が必要です" });
+		}
+
+		const staffs = await getStoreStaffs(storeId);
+		return res.json(staffs);
+	} catch (error) {
+		console.error("❌ スタッフ取得エラー:", error);
+		return res.status(500).json({ error: "faild get staffs" });
+	}
+};
+
+//✅ オーナーIDから店舗情報を取得
+export const getStoresByOwnerController = async (
 	req: Request,
 	res: Response,
-): Promise<void> => {
+) => {
 	try {
-		const { name } = req.params;
+		const { ownerId } = req.params;
 
-		if (!name) {
-			res.status(404).json({ error: "Store name is undefined" });
+		if (!ownerId) {
+			res.status(400).json({ error: "ownerId is undefined" });
 			return;
 		}
-		// if (/^\d+$/.test(name) || /^[^a-zA-Z0-9]+$/.test(name)) {
-		//   return res.status(400).json({ error: "Store name cannot be only numbers" });
-		// }
 
-		const stores = await getStoreByName(name);
-		if (!stores) {
-			res.status(404).json({ error: "store is not found" });
-			return;
-		}
+		const stores = await getStoresByOwner(ownerId);
 		res.status(200).json(stores);
 	} catch (error) {
 		res.status(500).json({ error: "faild get stores" });
 	}
 };
 
+//✅ 店舗を新規作成
 export const craeteStoreController = async (
 	req: Request,
 	res: Response,
 ): Promise<void> => {
 	try {
-		const { name, groupId, storeId } = req.body;
+		const { name, groupId } = req.body;
 
 		if (!name || !groupId) {
 			res.status(400).json({ error: "Missing required fields" });
@@ -68,6 +82,7 @@ export const craeteStoreController = async (
 	}
 };
 
+//✅ 店舗名を更新
 export const updateStoreNameController = async (
 	req: Request,
 	res: Response,
@@ -88,6 +103,7 @@ export const updateStoreNameController = async (
 	}
 };
 
+//✅ 店舗を削除
 export const deleteStoreController = async (
 	req: Request,
 	res: Response,

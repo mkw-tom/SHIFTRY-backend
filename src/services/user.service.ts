@@ -1,4 +1,5 @@
 import prisma from "../config/database";
+import { MemberInfo } from "../types/authType";
 import type { CreateUserInput, UpdateUserInput } from "../types/userTypes";
 
 export const createUser = async (data: CreateUserInput) => {
@@ -25,3 +26,24 @@ export const deleteUser = async (userId: string) => {
 		where: { id: userId },
 	});
 };
+
+// ❌ ユーザー(スタッフ・オーナー)を登録
+// export const registerUsers = async (
+// 	membersInfo: MemberInfo[],
+// 	ownerLineId: string,
+// ) => {
+// 	if (!membersInfo || membersInfo.length === 0) {
+// 		console.log("⚠️ ユーザー情報が空または無効のため、登録をスキップします。");
+// 		return;
+// 	}
+
+// 	return await prisma.user.createMany({
+// 		data: membersInfo.map((member) => ({
+// 			lineId: member.lineId,
+// 			name: member.name,
+// 			pictureUrl: member.pictureUrl,
+// 			role: member.lineId === ownerLineId ? "OWNER" : "STAFF",
+// 		})),
+// 		skipDuplicates: true,
+// 	});
+// };
