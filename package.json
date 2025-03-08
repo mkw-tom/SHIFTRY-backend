@@ -11,6 +11,7 @@
 		"test:unit": "cross-env NODE_ENV=test jest --testPathPattern=tests/unit --coverage",
 		"test:integration": "cross-env NODE_ENV=test jest --testPathPattern=tests/integration",
 		"biome": "npx @biomejs/biome check --write ./src",
+		"biome:fix": "npx @biomejs/biome check  --fix --unsafe ./src",
 		"type-check": "npx tsc --noEmit",
 		"generate": "npx prisma generate",
 		"generate:test": "cross-env DATABASE_URL=$(cat .env.test | grep DATABASE_URL | cut -d '=' -f2) npx prisma generate",

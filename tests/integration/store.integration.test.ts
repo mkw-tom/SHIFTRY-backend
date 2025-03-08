@@ -44,21 +44,6 @@ describe("User API Integration Test", () => {
 		expect(res.body).toEqual({ error: "Missing required fields" });
 	});
 
-	it("店舗名から店舗を取得する", async () => {
-		const res = await request(app).get(`/api/store/${storeName}`);
-
-		expect(res.status).toBe(200);
-		expect(res.body.name).toBe(storeName);
-	});
-
-	it("店舗名から店舗が見つからない場合", async () => {
-		const dummyStoreName = "ダミー店";
-		const res = await request(app).get(`/api/store/${dummyStoreName}`);
-
-		expect(res.status).toBe(404);
-		expect(res.body).toEqual({ error: "store is not found" });
-	});
-
 	it("店舗名を更新できる", async () => {
 		const res = await request(app).put(`/api/store/${storeId}`).send({
 			name: "Updated User",

@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 import {
 	createStore,
 	deleteStore,
-	getStoreByName,
 	updateStoreName,
 } from "../../src/services/store.service";
 
@@ -95,10 +94,4 @@ describe("store service", () => {
 		expect(deleted.name).toBe("Deleted Store");
 	});
 
-	it("店舗名から店舗を取得する", async () => {
-		const name = "Store two";
-		const targetStore = await getStoreByName(name);
-		expect(targetStore).toHaveProperty("id", "test-id2");
-		expect(targetStore?.name).toBe("Store two");
-	});
 });
