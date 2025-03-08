@@ -1,5 +1,6 @@
 import axios from "axios";
 import apiClient from "../config/axios";
+import prisma from "../config/database";
 
 //✅ グループ招待時にメッセージを送信 （line内で何かのアクショントリガーがあった時）
 export const sendGroupMessageByTrigger = async (
@@ -29,4 +30,12 @@ export const sendGroupMessage = async (groupId: string, message: string) => {
 	} catch (error) {
 		console.error("❌ メッセージ送信エラー:", error);
 	}
+};
+
+export const checkIsOwnerData = async (storeId: string) => {
+	return prisma.ownerStore.findFirst({
+		where: { storeId: storeId },
+	});
+	/// データがある場合：{ ownerId: "xxxxxxx", storeId: "yyyyyy" }
+	/// データがない場合： null
 };

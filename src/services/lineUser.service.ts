@@ -7,7 +7,7 @@ export const getUserProfile = async (
 	userId: string,
 ): Promise<LineUser | null> => {
 	try {
-		const response: LineUser = await axios.get(
+		const response = await axios.get(
 			`https://api.line.me/v2/bot/group/${groupId}/member/${userId}`,
 			{
 				headers: {
@@ -16,7 +16,7 @@ export const getUserProfile = async (
 			},
 		);
 
-		return response; // ユーザー名を返す
+		return response.data; // ユーザー名を返す
 	} catch (error) {
 		console.error("❌ ユーザープロフィール取得エラー");
 		console.log(error);
