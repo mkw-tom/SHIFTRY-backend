@@ -16,9 +16,10 @@ app.use(express.json()); // JSON リクエストのパース
 app.use(express.urlencoded({ extended: true })); // URL エンコードのサポート
 
 // 🔹 ルーティング設定
-app.use("/api/users", userRoutes);
-app.use("/api/store", storeRoutes);
+app.use("/users", userRoutes);
+app.use("/store", storeRoutes);
 app.use("/webhook", lineRoutes);
+app.use("/auth", storeRoutes);
 
 // 🔹 エラーハンドリング（最後に記述）
 app.use(

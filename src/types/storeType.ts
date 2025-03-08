@@ -15,6 +15,5 @@ export interface StoreType {
 
 export interface createStoreType {
 	groupId: string;
-	storeId: string;
 	name: string;
 }

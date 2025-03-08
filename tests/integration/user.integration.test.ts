@@ -16,11 +16,11 @@ afterAll(async () => {
 	await prisma.$disconnect(); // Prisma の接続を閉じる
 });
 
-describe("User API Integration Test", () => {
+describe("User Integration Test", () => {
 	let userId: string;
 
 	it("ユーザーを作成できる (POST /users)", async () => {
-		const res = await request(app).post("/api/users").send({
+		const res = await request(app).post("/users").send({
 			lineId: "test123",
 			name: "Test User",
 			role: "OWNER",
@@ -35,7 +35,7 @@ describe("User API Integration Test", () => {
 	});
 
 	it("ユーザー作成時に必要なフィールドがない場合", async () => {
-		const res = await request(app).post("/api/users").send({
+		const res = await request(app).post("/users").send({
 			lineId: "test123",
 			name: "Test User",
 		});
@@ -45,7 +45,7 @@ describe("User API Integration Test", () => {
 	});
 
 	it("ユーザーを更新できる (PUT /users/:userId)", async () => {
-		const res = await request(app).put(`/api/users/${userId}`).send({
+		const res = await request(app).put(`/users/${userId}`).send({
 			name: "Updated User",
 			role: "STAFF",
 		});
@@ -56,7 +56,7 @@ describe("User API Integration Test", () => {
 	});
 
 	it("ユーザー更新時に必要なフィールドがない場合 (PUT /users/:userId)", async () => {
-		const res = await request(app).put(`/api/users/${userId}`).send({
+		const res = await request(app).put(`/users/${userId}`).send({
 			// name: "Updated User",
 			// role: "STAFF",
 		});
@@ -68,7 +68,7 @@ describe("User API Integration Test", () => {
 	});
 
 	it("ユーザーを削除できる (DELETE /users/:userId)", async () => {
-		const res = await request(app).delete(`/api/users/${userId}`);
+		const res = await request(app).delete(`/users/${userId}`);
 
 		expect(res.status).toBe(200);
 		expect(res.body).toHaveProperty("id", userId);
