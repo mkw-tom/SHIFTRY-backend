@@ -4,9 +4,6 @@ import {
 	isUserAndGetProfile,
 	sendStaffLoginMessage,
 } from "../services/auth.service";
-import { sendGroupMessage } from "../services/lineMessage.service";
-import { getUserProfile, isUserInGroup } from "../services/lineUser.service";
-import { createUser } from "../services/user.service";
 import type { LineUser } from "../types/lineType";
 
 // ---------- ユーザー認証 ----------
@@ -15,7 +12,8 @@ export const authController = async (req: Request, res: Response) => {
 		const { groupId, userId, storeId, role } = req.body;
 		if (!groupId || !userId || !storeId) {
 			console.log("リクエストエラー");
-			return res.status(400).json({ error: "リクエストエラー" });
+			res.status(400).json({ error: "リクエストエラー" });
+			return;
 		}
 
 		//オーナーがライングループに所属しているか確認
@@ -24,15 +22,17 @@ export const authController = async (req: Request, res: Response) => {
 			userId,
 		);
 		if (!userProfile) {
-			return res.status(401).json({
+			res.status(401).json({
 				error: `${role === "OWNER" ? "オーナー" : "スタッフ"}の認証に失敗しました`,
 			});
+			return;
 		}
 
 		//オーナーの情報をデータベースに登録
 		const userData = await createLoginUserData(userProfile, storeId, role);
 		if (!userData) {
-			return res.status(500).json({ error: "ユーザー登録に失敗しました" });
+			res.status(500).json({ error: "ユーザー登録に失敗しました" });
+			return;
 		}
 
 		//オーナー登録後にスタッフにログインメッセージをを送信
@@ -40,11 +40,11 @@ export const authController = async (req: Request, res: Response) => {
 			await sendStaffLoginMessage(groupId);
 		}
 
-		return res.json({
+		res.json({
 			message: `${role === "OWNER" ? "オーナー" : "スタッフ"}登録完了！`,
 		});
 	} catch (error) {
 		console.error("❌ 登録エラー:", error);
-		return res.status(500).json({ message: "サーバーエラー" });
+		res.status(500).json({ message: "サーバーエラー" });
 	}
 };

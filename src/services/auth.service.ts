@@ -40,7 +40,6 @@ export const createLoginUserData = async (
 	});
 
 	if (!user) {
-		console.log("❌ ユーザー登録に失敗しました");
 		throw new Error("ユーザー登録に失敗しました");
 	}
 
