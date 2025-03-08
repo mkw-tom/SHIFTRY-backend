@@ -21,7 +21,7 @@ describe("User API Integration Test", () => {
 	let storeName: string;
 
 	it("店舗を作成できる (POST /users)", async () => {
-		const res = await request(app).post("/api/store").send({
+		const res = await request(app).post("/store").send({
 			groupId: "test123",
 			name: "Test Store",
 		});
@@ -35,7 +35,7 @@ describe("User API Integration Test", () => {
 	});
 
 	it("店舗作成時に必要なフィールドがない場合", async () => {
-		const res = await request(app).post("/api/store").send({
+		const res = await request(app).post("/store").send({
 			groupId: "test123",
 			// name: "Test Store",
 		});
@@ -45,7 +45,7 @@ describe("User API Integration Test", () => {
 	});
 
 	it("店舗名を更新できる", async () => {
-		const res = await request(app).put(`/api/store/${storeId}`).send({
+		const res = await request(app).put(`/store/${storeId}`).send({
 			name: "Updated User",
 		});
 
@@ -54,7 +54,7 @@ describe("User API Integration Test", () => {
 	});
 
 	it("店舗更新時に必要なフィールドがない場合 (PUT /users/:storeId)", async () => {
-		const res = await request(app).put(`/api/store/${storeId}`).send({
+		const res = await request(app).put(`/store/${storeId}`).send({
 			// name: "Updated User",
 			// role: "STAFF",
 		});
@@ -64,7 +64,7 @@ describe("User API Integration Test", () => {
 	});
 
 	it("店舗を削除できる", async () => {
-		const res = await request(app).delete(`/api/store/${storeId}`);
+		const res = await request(app).delete(`/store/${storeId}`);
 
 		expect(res.status).toBe(200);
 		expect(res.body).toHaveProperty("id", storeId);
