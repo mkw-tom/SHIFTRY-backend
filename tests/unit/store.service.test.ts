@@ -69,7 +69,7 @@ const prisma = new PrismaClient();
 
 describe("store service", () => {
 	it("店舗を作成できる", async () => {
-		const user = await createStore({ groupId: "test123", storeId: "test123", name: "Test Store" });
+		const user = await createStore({ groupId: "test123", name: "Test Store" });
 
 		expect(user).toHaveProperty("id", "test-id");
 		expect(user).toHaveProperty("storeId", "test123");

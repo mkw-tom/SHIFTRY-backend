@@ -22,7 +22,6 @@ export const groupJoinController = async (req: Request, res: Response) => {
 					await createStore({
 						name: "",
 						groupId: event.source.groupId,
-						storeId: "",
 					});
 					console.log(`✅ グループ ${event.source.groupId} にメッセージ送信`);
 				} catch (error) {

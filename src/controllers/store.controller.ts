@@ -60,7 +60,6 @@ export const craeteStoreController = async (
 		const data: createStoreType = {
 			name: name,
 			groupId: groupId,
-			storeId: storeId,
 		};
 		const store = await createStore(data);
 		res.status(200).json(store);
