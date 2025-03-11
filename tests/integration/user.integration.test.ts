@@ -19,8 +19,8 @@ afterAll(async () => {
 describe("User Integration Test", () => {
 	let userId: string;
 
-	it("ユーザーを作成できる (POST /users)", async () => {
-		const res = await request(app).post("/users").send({
+	it("ユーザーを作成できる (POST /user)", async () => {
+		const res = await request(app).post("/user").send({
 			lineId: "test123",
 			name: "Test User",
 			role: "OWNER",
@@ -35,7 +35,7 @@ describe("User Integration Test", () => {
 	});
 
 	it("ユーザー作成時に必要なフィールドがない場合", async () => {
-		const res = await request(app).post("/users").send({
+		const res = await request(app).post("/user").send({
 			lineId: "test123",
 			name: "Test User",
 		});
@@ -44,8 +44,8 @@ describe("User Integration Test", () => {
 		expect(res.body).toEqual({ error: "Missing required fields" });
 	});
 
-	it("ユーザーを更新できる (PUT /users/:userId)", async () => {
-		const res = await request(app).put(`/users/${userId}`).send({
+	it("ユーザーを更新できる (PUT /user/:userId)", async () => {
+		const res = await request(app).put(`/user/${userId}`).send({
 			name: "Updated User",
 			role: "STAFF",
 		});
@@ -55,8 +55,8 @@ describe("User Integration Test", () => {
 		expect(res.body.role).toBe("STAFF");
 	});
 
-	it("ユーザー更新時に必要なフィールドがない場合 (PUT /users/:userId)", async () => {
-		const res = await request(app).put(`/users/${userId}`).send({
+	it("ユーザー更新時に必要なフィールドがない場合 (PUT /user/:userId)", async () => {
+		const res = await request(app).put(`/user/${userId}`).send({
 			// name: "Updated User",
 			// role: "STAFF",
 		});
@@ -67,8 +67,8 @@ describe("User Integration Test", () => {
 		});
 	});
 
-	it("ユーザーを削除できる (DELETE /users/:userId)", async () => {
-		const res = await request(app).delete(`/users/${userId}`);
+	it("ユーザーを削除できる (DELETE /user/:userId)", async () => {
+		const res = await request(app).delete(`/user/${userId}`);
 
 		expect(res.status).toBe(200);
 		expect(res.body).toHaveProperty("id", userId);

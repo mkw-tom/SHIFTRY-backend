@@ -1,13 +1,7 @@
-import type { LineUser } from "../types/lineType";
-import { User, type UserRole } from "../types/userTypes";
-import { sendGroupMessage } from "./lineMessage.service";
-import { getUserProfile, isUserInGroup } from "./lineUser.service";
-import {
-	createDataOwnerToStore,
-	createDataStaffToStore,
-} from "./store.service";
-import { createUser } from "./user.service";
+import axios from "axios";
+import type { LineUser } from "../types/authType";
 
+//　--------------- ✅ グループにメンバーが存在するか && おーなのプロフィールが取得できる 　------------
 export const isUserAndGetProfile = async (
 	groupId: string,
 	userId: string,
@@ -26,40 +20,82 @@ export const isUserAndGetProfile = async (
 	return userProfile;
 };
 
-export const createLoginUserData = async (
-	userProfile: LineUser,
-	storeId: string,
-	role: UserRole,
-) => {
-	// ✅ ユーザーを作成（既に存在する場合は上書きされない）
-	const user = await createUser({
-		lineId: userProfile.userId,
-		name: userProfile.displayName,
-		pictureUrl: userProfile.pictureUrl,
-		role: role,
-	});
+// ------------------- ☑️ 個別APi ----------------------
+// ☑️ グループ内のメンバーかどうかを確認
+export const isUserInGroup = async (
+	groupId: string,
+	userId: string,
+): Promise<boolean> => {
+	// グループメンバーのuserId一覧を取得
+	const res = await axios.get(
+		`https://api.line.me/v2/bot/group/${groupId}/members/ids`,
+		{
+			headers: { Authorization: `Bearer ${process.env.LINE_ACCESS_TOKEN}` },
+		},
+	);
+	const groupMembers = res.data.memberIds;
 
-	if (!user) {
-		throw new Error("ユーザー登録に失敗しました");
-	}
-
-	// ✅ オーナーまたはスタッフとして店舗に紐付ける
-	const storeAssociation =
-		role === "OWNER"
-			? await createDataOwnerToStore(userProfile.userId, storeId)
-			: await createDataStaffToStore(userProfile.userId, storeId);
-	if (!storeAssociation) {
-		throw new Error(`${role} の店舗登録に失敗しました`);
-	}
-	return user;
+	return groupMembers.includes(userId);
 };
 
-export const sendStaffLoginMessage = async (groupId: string): Promise<void> => {
+//　☑️　ユーザーのプロフィールを返す
+export const getUserProfile = async (
+	groupId: string,
+	userId: string,
+): Promise<LineUser | null> => {
 	try {
-		const staffLoginMessage =
-			"スタッフの皆さんにお願いです📢\n\n以下のリンクからスタッフ登録をお願いします！\n\n🔹 スタッフ登録画面\n👉 https://qiita.com";
-		await sendGroupMessage(groupId, staffLoginMessage);
+		const response = await axios.get(
+			`https://api.line.me/v2/bot/group/${groupId}/member/${userId}`,
+			{
+				headers: {
+					Authorization: `Bearer ${process.env.LINE_ACCESS_TOKEN}`,
+				},
+			},
+		);
+
+		return response.data; // ユーザー名を返す
 	} catch (error) {
-		throw new Error("スタッフ登録メッセージの送信に失敗しました");
+		console.error("❌ ユーザープロフィール取得エラー");
+		console.log(error);
+		return null;
 	}
 };
+
+// ------------------- ✅ lineグループのスタッフにログインURLを通知 ------------------------
+// export const sendStaffLoginMessage = async (groupId: string): Promise<void> => {
+//   try {
+//     const staffLoginMessage =
+//       "スタッフの皆さんにお願いです📢\n\n以下のリンクからスタッフ登録をお願いします！\n\n🔹 スタッフ登録画面\n👉 https://qiita.com";
+
+//     const response = await apiClient.post("/v2/bot/message/push", {
+//       to: groupId, // グループID
+//       messages: [{ type: "text", text: staffLoginMessage }], // 送信メッセージ
+//     });
+//     console.log("✅ メッセージ送信成功:", response.data);
+//   } catch (error) {
+//     throw new Error("スタッフ登録メッセージの送信に失敗しました");
+//   }
+// };
+
+// ------------------- ✅ ログインユーザーのデータ作成 ------------------------
+// export const createLoginUserData = async (
+//   userProfile: LineUser,
+//   storeId: string,
+//   role: UserRole
+// ) => {
+//   const user = await createLoginUser(userProfile, role);
+
+//   if (!user) {
+//     throw new Error("ユーザー登録に失敗しました");
+//   }
+
+//   // オーナーまたはスタッフとして店舗に紐付ける
+//   const storeAssociation =
+//     role === "OWNER"
+//       ? await createDataOwnerToStore(userProfile.userId, storeId)
+//       : await createDataStaffToStore(userProfile.userId, storeId);
+//   if (!storeAssociation) {
+//     throw new Error(`${role} の店舗登録に失敗しました`);
+//   }
+//   return user;
+// };

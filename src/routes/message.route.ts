@@ -1,5 +1,5 @@
 import express from "express";
-import { groupJoinController } from "../controllers/lineMessege.controller";
+import { groupJoinController } from "../controllers/messege.controller";
 
 const router = express.Router();
 

@@ -4,8 +4,19 @@ import {
 	deleteUser,
 	fetchUsers,
 	updateUser,
-} from "../services/user.service";
+} from "../repositories/user.repository";
+import { firstLoginUserFunc } from "../services/user.service";
 import type { CreateUserInput, UpdateUserInput } from "../types/userTypes";
+
+/// 初回ログイン時のユーザー登録 & メッセージ送信
+export const firstLoginUserController = async (req: Request, res: Response) => {
+	const { userProfile, storeId, role, groupId } = req.body;
+	try {
+		await firstLoginUserFunc(userProfile, storeId, role, groupId);
+	} catch (error) {
+		res.status(500).json({ error: "Failed to create user data" });
+	}
+};
 
 export const createUserController = async (
 	req: Request,

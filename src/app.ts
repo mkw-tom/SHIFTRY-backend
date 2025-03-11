@@ -1,7 +1,7 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import lineRoutes from "./routes/line.route";
+import lineRoutes from "./routes/message.route";
 import storeRoutes from "./routes/store.route";
 import userRoutes from "./routes/user.route";
 
@@ -16,7 +16,7 @@ app.use(express.json()); // JSON リクエストのパース
 app.use(express.urlencoded({ extended: true })); // URL エンコードのサポート
 
 // 🔹 ルーティング設定
-app.use("/users", userRoutes);
+app.use("/user", userRoutes);
 app.use("/store", storeRoutes);
 app.use("/webhook", lineRoutes);
 app.use("/auth", storeRoutes);

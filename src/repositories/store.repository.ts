@@ -1,5 +1,5 @@
 import prisma from "../config/database";
-import { StoreType, type createStoreType } from "../types/storeType";
+import type { createStoreType } from "../types/storeType";
 
 /////////////-------------------　storeテーブル　-----------------/////////////////////
 export const getStores = async () => {
@@ -24,46 +24,6 @@ export const deleteStore = async (storeId: string) => {
 };
 /////////////---------　中間テーブル(userStore ownerStore)　-------/////////////////////
 
-export const isOwnerStore = async (storeId: string, ownerId: string) => {
-	return prisma.ownerStore.findFirst({
-		where: { ownerId: ownerId, storeId: storeId },
-	});
-	/// データがある場合：{ ownerId: "xxxxxxx", storeId: "yyyyyy" }
-	/// データがない場合： null
-};
-
-export const isUserStore = async (storeId: string, userId: string) => {
-	return prisma.userStore.findFirst({
-		where: { userId: userId, storeId: storeId },
-	});
-	/// データがある場合：{ userId: "xxxxxxx", storeId: "yyyyyy" }
-	/// データがない場合： null
-};
-
-export const createDataOwnerToStore = async (
-	ownerId: string,
-	storeId: string,
-) => {
-	return prisma.ownerStore.create({
-		data: {
-			ownerId: ownerId,
-			storeId: storeId,
-		},
-	});
-};
-
-export const createDataStaffToStore = async (
-	userId: string,
-	storeId: string,
-) => {
-	return prisma.userStore.create({
-		data: {
-			userId: userId,
-			storeId: storeId,
-		},
-	});
-};
-
 export const getStoreStaffs = async (storeId: string) => {
 	return prisma.userStore.findMany({
 		where: { storeId: storeId },
@@ -81,3 +41,43 @@ export const getStoresByOwner = async (ownerId: string) => {
 		},
 	});
 };
+
+export const isOwnerStore = async (storeId: string, ownerId: string) => {
+	return prisma.ownerStore.findFirst({
+		where: { ownerId: ownerId, storeId: storeId },
+	});
+	/// データがある場合：{ ownerId: "xxxxxxx", storeId: "yyyyyy" }
+	/// データがない場合： null
+};
+
+export const isUserStore = async (storeId: string, userId: string) => {
+	return prisma.userStore.findFirst({
+		where: { userId: userId, storeId: storeId },
+	});
+	/// データがある場合：{ userId: "xxxxxxx", storeId: "yyyyyy" }
+	/// データがない場合： null
+};
+
+// export const createDataOwnerToStore = async (
+// 	ownerId: string,
+// 	storeId: string,
+// ) => {
+// 	return prisma.ownerStore.create({
+// 		data: {
+// 			ownerId: ownerId,
+// 			storeId: storeId,
+// 		},
+// 	});
+// };
+
+// export const createDataStaffToStore = async (
+// 	userId: string,
+// 	storeId: string,
+// ) => {
+// 	return prisma.userStore.create({
+// 		data: {
+// 			userId: userId,
+// 			storeId: storeId,
+// 		},
+// 	});
+// };
