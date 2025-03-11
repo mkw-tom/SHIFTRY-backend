@@ -4,7 +4,7 @@ import {
 	isUserAndGetProfile,
 	sendStaffLoginMessage,
 } from "../services/auth.service";
-import type { LineUser } from "../types/lineType";
+import { LineUser } from "../types/authType";
 
 // ---------- ユーザー認証 ----------
 export const authController = async (req: Request, res: Response) => {

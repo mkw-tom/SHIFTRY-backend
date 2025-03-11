@@ -1,10 +1,10 @@
 import type { Request, Response } from "express";
 import {
 	checkIsOwnerData,
+	createStore,
+	getDisplayName,
 	sendGroupMessageByTrigger,
 } from "../services/lineMessage.service";
-import { getUserProfile } from "../services/lineUser.service";
-import { createStore } from "../services/store.service";
 
 export const groupJoinController = async (req: Request, res: Response) => {
 	const events = req.body.events;
@@ -47,10 +47,8 @@ export const groupJoinController = async (req: Request, res: Response) => {
 
 				for (const member of members) {
 					if (member.type === "user" && member.userId) {
-						const displayName = await getUserProfile(groupId, member.userId); // 🔹 `user.service.ts` から `displayName` を取得
-						const memberName = displayName
-							? `@${displayName.displayName}`
-							: "新しいメンバー";
+
+						const memberName = await getDisplayName(groupId, member.userId)
 
 						const menberJoinedMessage = `${memberName} さん！はじめまして！🎉\n以下のリンクからスタッフ登録お願いします！\n🔹 スタッフ登録画面\n👉 https://qiita.com\n`;
 

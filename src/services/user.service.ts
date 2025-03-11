@@ -1,5 +1,5 @@
 import prisma from "../config/database";
-import { MemberInfo } from "../types/authType";
+
 import type { CreateUserInput, UpdateUserInput } from "../types/userTypes";
 
 export const createUser = async (data: CreateUserInput) => {

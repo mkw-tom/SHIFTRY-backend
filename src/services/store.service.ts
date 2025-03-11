@@ -1,5 +1,5 @@
 import prisma from "../config/database";
-import { StoreType, type createStoreType } from "../types/storeType";
+import { type createStoreType } from "../types/storeType";
 
 /////////////-------------------　storeテーブル　-----------------/////////////////////
 export const getStores = async () => {

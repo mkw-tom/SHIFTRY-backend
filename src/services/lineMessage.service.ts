@@ -4,38 +4,85 @@ import prisma from "../config/database";
 
 //✅ グループ招待時にメッセージを送信 （line内で何かのアクショントリガーがあった時）
 export const sendGroupMessageByTrigger = async (
-	replyToken: string,
-	message: string,
+  replyToken: string,
+  message: string
 ) => {
-	try {
-		await apiClient.post("/", {
-			replyToken: replyToken,
-			messages: [{ type: "text", text: message }],
-		});
+  try {
+    await apiClient.post("/", {
+      replyToken: replyToken,
+      messages: [{ type: "text", text: message }],
+    });
 
-		console.log("✅ LINEメッセージ送信成功！");
-	} catch (error) {
-		console.error("❌ LINEメッセージ送信エラー:", error);
-	}
+    console.log("✅ LINEメッセージ送信成功！");
+  } catch (error) {
+    console.error("❌ LINEメッセージ送信エラー:", error);
+  }
 };
+
+
 
 //✅ グループ招待時にメッセージを送信
 export const sendGroupMessage = async (groupId: string, message: string) => {
-	try {
-		const response = await apiClient.post("/v2/bot/message/push", {
-			to: groupId, // グループID
-			messages: [{ type: "text", text: message }], // 送信メッセージ
-		});
-		console.log("✅ メッセージ送信成功:", response.data);
-	} catch (error) {
-		console.error("❌ メッセージ送信エラー:", error);
-	}
+  try {
+    const response = await apiClient.post("/v2/bot/message/push", {
+      to: groupId, // グループID
+      messages: [{ type: "text", text: message }], // 送信メッセージ
+    });
+    console.log("✅ メッセージ送信成功:", response.data);
+  } catch (error) {
+    console.error("❌ メッセージ送信エラー:", error);
+  }
 };
 
+
+
+//✅オーナーの中間テーブルに該当データが存在するか
 export const checkIsOwnerData = async (storeId: string) => {
-	return prisma.ownerStore.findFirst({
-		where: { storeId: storeId },
-	});
-	/// データがある場合：{ ownerId: "xxxxxxx", storeId: "yyyyyy" }
-	/// データがない場合： null
+  return prisma.ownerStore.findFirst({
+    where: { storeId: storeId },
+  });
+  /// データがある場合：{ ownerId: "xxxxxxx", storeId: "yyyyyy" }
+  /// データがない場合： null
 };
+
+
+
+
+//✅店舗データを作成
+export const createStore = async (data: {
+	groupId: string;
+	name: string;
+}
+) => {
+	return prisma.store.create({ data });
+};
+
+
+
+
+//✅ユーザーの名前を返す （名無しの場合は "新しいユーザー"　表示）
+export const getDisplayName = async (groupId: string, userId: string) => {
+  try {
+    const response = await axios.get(
+      `https://api.line.me/v2/bot/group/${groupId}/member/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.LINE_ACCESS_TOKEN}`,
+        },
+      }
+    );
+
+    const displayName = response.data.displayName; // ユーザー名を返す
+    const memberName = displayName
+      ? `@${displayName}`
+      : "新しいメンバー";
+
+    return memberName;
+  } catch (error) {
+    console.error("❌ ユーザープロフィール取得エラー");
+    console.log(error);
+    return null;
+  }
+};
+
+
