@@ -1,8 +1,6 @@
 import type { Request, Response } from "express";
 import {
-	createLoginUserData,
 	isUserAndGetProfile,
-	sendStaffLoginMessage,
 } from "../services/auth.service";
 import { LineUser } from "../types/authType";
 
@@ -26,18 +24,6 @@ export const authController = async (req: Request, res: Response) => {
 				error: `${role === "OWNER" ? "オーナー" : "スタッフ"}の認証に失敗しました`,
 			});
 			return;
-		}
-
-		//オーナーの情報をデータベースに登録
-		const userData = await createLoginUserData(userProfile, storeId, role);
-		if (!userData) {
-			res.status(500).json({ error: "ユーザー登録に失敗しました" });
-			return;
-		}
-
-		//オーナー登録後にスタッフにログインメッセージをを送信
-		if (role === "OWNER") {
-			await sendStaffLoginMessage(groupId);
 		}
 
 		res.json({

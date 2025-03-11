@@ -1,9 +1,5 @@
 import axios from "axios";
-import apiClient from "../config/axios";
-import prisma from "../config/database";
-import { CreateUserInput, LineUser, UserRole } from "../types/authType";
-
-
+import { LineUser } from "../types/authType";
 
 //　--------------- ✅ グループにメンバーが存在するか && おーなのプロフィールが取得できる 　------------
 export const isUserAndGetProfile = async (
@@ -24,12 +20,14 @@ export const isUserAndGetProfile = async (
   return userProfile;
 };
 
-// ✔︎ グループ内のメンバーかどうかを確認
+
+// ------------------- ☑️ 個別APi ----------------------
+// ☑️ グループ内のメンバーかどうかを確認
 export const isUserInGroup = async (
   groupId: string,
   userId: string
 ): Promise<boolean> => {
-	// グループメンバーのuserId一覧を取得
+  // グループメンバーのuserId一覧を取得
   const res = await axios.get(
     `https://api.line.me/v2/bot/group/${groupId}/members/ids`,
     {
@@ -41,7 +39,7 @@ export const isUserInGroup = async (
   return groupMembers.includes(userId);
 };
 
-//　✔︎　ユーザーのプロフィールを返す
+//　☑️　ユーザーのプロフィールを返す
 export const getUserProfile = async (
   groupId: string,
   userId: string
@@ -68,82 +66,44 @@ export const getUserProfile = async (
 
 
 
+// ------------------- ✅ lineグループのスタッフにログインURLを通知 ------------------------
+// export const sendStaffLoginMessage = async (groupId: string): Promise<void> => {
+//   try {
+//     const staffLoginMessage =
+//       "スタッフの皆さんにお願いです📢\n\n以下のリンクからスタッフ登録をお願いします！\n\n🔹 スタッフ登録画面\n👉 https://qiita.com";
+
+//     const response = await apiClient.post("/v2/bot/message/push", {
+//       to: groupId, // グループID
+//       messages: [{ type: "text", text: staffLoginMessage }], // 送信メッセージ
+//     });
+//     console.log("✅ メッセージ送信成功:", response.data);
+//   } catch (error) {
+//     throw new Error("スタッフ登録メッセージの送信に失敗しました");
+//   }
+// };
+
+
 
 // ------------------- ✅ ログインユーザーのデータ作成 ------------------------
-export const createLoginUserData = async (
-  userProfile: LineUser,
-  storeId: string,
-  role: UserRole
-) => {
-	const data: CreateUserInput = {
-		lineId: userProfile.userId,
-		name: userProfile.displayName,
-		pictureUrl: userProfile.pictureUrl,
-		role: role
-	}
-
-	const user  = await prisma.user.upsert({
-		where: { lineId: data.lineId },
-		create: data,
-		update: data,
-	});
-
-  if (!user) {
-    throw new Error("ユーザー登録に失敗しました");
-  }
-  // オーナーまたはスタッフとして店舗に紐付ける
-  const storeAssociation =
-    role === "OWNER"
-      ? await createDataOwnerToStore(userProfile.userId, storeId)
-      : await createDataStaffToStore(userProfile.userId, storeId);
-  if (!storeAssociation) {
-    throw new Error(`${role} の店舗登録に失敗しました`);
-  }
-  return user;
-};
-
-// ✔︎ オーナーの中間データを作成
-export const createDataOwnerToStore = async (
-  ownerId: string,
-  storeId: string
-) => {
-  return prisma.ownerStore.create({
-    data: {
-      ownerId: ownerId,
-      storeId: storeId,
-    },
-  });
-};
-
-// ✔︎　オーナーの中間データを作成
-export const createDataStaffToStore = async (
-  userId: string,
-  storeId: string
-) => {
-  return prisma.userStore.create({
-    data: {
-      userId: userId,
-      storeId: storeId,
-    },
-  });
-};
+// export const createLoginUserData = async (
+//   userProfile: LineUser,
+//   storeId: string,
+//   role: UserRole
+// ) => {
+//   const user = await createLoginUser(userProfile, role);
+	
+//   if (!user) {
+//     throw new Error("ユーザー登録に失敗しました");
+//   }
 
 
-
-
-
-// ------------------- ✅ lineグループのスタッフにログインURLを通知 ------------------------
-export const sendStaffLoginMessage = async (groupId: string): Promise<void> => {
-  try {
-    const staffLoginMessage =
-      "スタッフの皆さんにお願いです📢\n\n以下のリンクからスタッフ登録をお願いします！\n\n🔹 スタッフ登録画面\n👉 https://qiita.com";
-
-    const response = await apiClient.post("/v2/bot/message/push", {
-      to: groupId, // グループID
-      messages: [{ type: "text", text: staffLoginMessage }], // 送信メッセージ
-    });
-    console.log("✅ メッセージ送信成功:", response.data);
-  } catch (error) {
-    throw new Error("スタッフ登録メッセージの送信に失敗しました");
-  }
-};
+//   // オーナーまたはスタッフとして店舗に紐付ける
+//   const storeAssociation =
+//     role === "OWNER"
+//       ? await createDataOwnerToStore(userProfile.userId, storeId)
+//       : await createDataStaffToStore(userProfile.userId, storeId);
+//   if (!storeAssociation) {
+//     throw new Error(`${role} の店舗登録に失敗しました`);
+//   }
+//   return user;
+// };
