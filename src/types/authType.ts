@@ -1,4 +1,3 @@
-
 export interface CreateUserInput {
 	lineId: string;
 	name: string;
@@ -15,7 +14,6 @@ export interface LineUser {
 	pictureUrl: string;
 	statusMessage: string;
 }
-
 
 export interface User {
 	id: string;

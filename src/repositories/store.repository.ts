@@ -1,5 +1,5 @@
 import prisma from "../config/database";
-import { type createStoreType } from "../types/storeType";
+import type { createStoreType } from "../types/storeType";
 
 /////////////-------------------　storeテーブル　-----------------/////////////////////
 export const getStores = async () => {
@@ -81,5 +81,3 @@ export const isUserStore = async (storeId: string, userId: string) => {
 // 		},
 // 	});
 // };
-
-

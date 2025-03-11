@@ -16,11 +16,11 @@ afterAll(async () => {
 	await prisma.$disconnect(); // Prisma の接続を閉じる
 });
 
-describe("User API Integration Test", () => {
+describe("store API Integration Test", () => {
 	let storeId: string;
 	let storeName: string;
 
-	it("店舗を作成できる (POST /users)", async () => {
+	it("店舗を作成できる (POST /store)", async () => {
 		const res = await request(app).post("/store").send({
 			groupId: "test123",
 			name: "Test Store",
@@ -46,16 +46,16 @@ describe("User API Integration Test", () => {
 
 	it("店舗名を更新できる", async () => {
 		const res = await request(app).put(`/store/${storeId}`).send({
-			name: "Updated User",
+			name: "Updated store",
 		});
 
 		expect(res.status).toBe(200);
-		expect(res.body.name).toBe("Updated User");
+		expect(res.body.name).toBe("Updated store");
 	});
 
-	it("店舗更新時に必要なフィールドがない場合 (PUT /users/:storeId)", async () => {
+	it("店舗更新時に必要なフィールドがない場合 (PUT /store/:storeId)", async () => {
 		const res = await request(app).put(`/store/${storeId}`).send({
-			// name: "Updated User",
+			// name: "Updated store",
 			// role: "STAFF",
 		});
 
@@ -70,7 +70,7 @@ describe("User API Integration Test", () => {
 		expect(res.body).toHaveProperty("id", storeId);
 
 		// 削除後、データベースに存在しないことを確認
-		// const checkUser = await prisma.user.findUnique({ where: { id: storeId } });
-		// expect(checkUser).toBeNull();
+		// const checkstore = await prisma.store.findUnique({ where: { id: storeId } });
+		// expect(checkstore).toBeNull();
 	});
 });

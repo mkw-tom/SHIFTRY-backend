@@ -1,9 +1,6 @@
 import type { Request, Response } from "express";
-import {
-	joinFunc,
-	memberJoinedFunc,
-} from "../services/message.service";
 import { checkIsOwnerData } from "../repositories/message.repository";
+import { joinFunc, memberJoinedFunc } from "../services/message.service";
 
 export const groupJoinController = async (req: Request, res: Response) => {
 	const events = req.body.events;
@@ -18,8 +15,7 @@ export const groupJoinController = async (req: Request, res: Response) => {
 			/// 🔹 グループに招待された時の自動メッセージ
 			if (event.type === "join" && event.source.groupId) {
 				try {
-					await joinFunc(event.replyToken, event.source.groupId)
-
+					await joinFunc(event.replyToken, event.source.groupId);
 				} catch (error) {
 					console.error("❌ Webhook処理エラー:", error);
 				}
@@ -37,9 +33,8 @@ export const groupJoinController = async (req: Request, res: Response) => {
 
 				for (const member of members) {
 					if (member.type === "user" && member.userId) {
-						const userId = member.userId  /// 参加したメンバーのuserId
-						await memberJoinedFunc(event.replyToken, groupId, userId)
-						
+						const userId = member.userId; /// 参加したメンバーのuserId
+						await memberJoinedFunc(event.replyToken, groupId, userId);
 					}
 				}
 			}

@@ -27,31 +27,29 @@ export const deleteUser = async (userId: string) => {
 	});
 };
 
-
-
 //// ----　　✅　中間テーブルにユーザーデータを追加 --------------------0
 // ✔︎ オーナーの中間データを作成
 export const createDataOwnerToStore = async (
-  ownerId: string,
-  storeId: string
+	ownerId: string,
+	storeId: string,
 ) => {
-  return prisma.ownerStore.create({
-    data: {
-      ownerId: ownerId,
-      storeId: storeId,
-    },
-  });
+	return prisma.ownerStore.create({
+		data: {
+			ownerId: ownerId,
+			storeId: storeId,
+		},
+	});
 };
 
 // ✔︎　オーナーの中間データを作成
 export const createDataStaffToStore = async (
-  userId: string,
-  storeId: string
+	userId: string,
+	storeId: string,
 ) => {
-  return prisma.userStore.create({
-    data: {
-      userId: userId,
-      storeId: storeId,
-    },
-  });
+	return prisma.userStore.create({
+		data: {
+			userId: userId,
+			storeId: storeId,
+		},
+	});
 };

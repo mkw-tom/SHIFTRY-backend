@@ -1,8 +1,6 @@
 import type { Request, Response } from "express";
-import {
-	isUserAndGetProfile,
-} from "../services/auth.service";
-import { LineUser } from "../types/authType";
+import { isUserAndGetProfile } from "../services/auth.service";
+import type { LineUser } from "../types/authType";
 
 // ---------- ユーザー認証 ----------
 export const authController = async (req: Request, res: Response) => {
