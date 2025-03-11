@@ -34,7 +34,7 @@ export const getStoreStaffs = async (storeId: string) => {
 };
 
 export const getStoresByOwner = async (ownerId: string) => {
-	return prisma.ownerStore.findFirst({
+	return prisma.ownerStore.findMany({
 		where: { ownerId: ownerId },
 		include: {
 			store: true, // user テーブルをJOINして、user情報を取得

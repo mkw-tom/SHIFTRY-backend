@@ -18,9 +18,9 @@ model User {
 
   // M:N のリレーション（オーナーが管理する店舗）
   ownedStores OwnerStore[]
-
   // M:N のリレーション（スタッフとして所属する店舗）
   userStores  UserStore[]
+  submittedShifts  SubmittedShift[]
 }
 
 enum UserRole {
@@ -44,6 +44,8 @@ model Store {
 
   // シフトデータ
   storeShifts StoreShift[]
+  submittedShifts  SubmittedShift[]
+
 }
 
 
@@ -70,14 +72,36 @@ model UserStore {
 }
 
 // シフトデータ
+// 確定シフトデータ（店舗用）
 model StoreShift {
   id        String   @id @default(uuid())
   storeId   String
   weekStart DateTime
   weekEnd   DateTime? 
-  shifts    Json
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
   store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  submittedShifts SubmittedShift[] @relation("StoreToSubmitted")
+
+}
+
+// ユーザーの提出シフト
+model SubmittedShift {
+  id          String   @id @default(uuid())
+  userId      String    
+  storeId     String   
+  shifts      Json    
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // 🔥 修正：store のリレーションに `map` を追加して、外部キー名を明示的に設定
+  store       Store      @relation(fields: [storeId], references: [id], onDelete: Cascade, map: "SubmittedShift_storeId_store_fkey")
+  
+  // 🔥 修正：storeShift のリレーションにも `map` を追加して、別の外部キー名を設定
+  storeShift  StoreShift @relation("StoreToSubmitted", fields: [storeId], references: [id], onDelete: Cascade, map: "SubmittedShift_storeId_storeShift_fkey")
+
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, storeId]) // ✅ 1ユーザー1店舗につき1レコードのみ
 }
