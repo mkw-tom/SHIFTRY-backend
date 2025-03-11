@@ -6,7 +6,7 @@ import {
 	getStores,
 	getStoresByOwner,
 	updateStoreName,
-} from "../services/store.service";
+} from "../repositories/store.repository";
 import type { createStoreType } from "../types/storeType";
 
 //✅ 全ての店舗一覧を取得
