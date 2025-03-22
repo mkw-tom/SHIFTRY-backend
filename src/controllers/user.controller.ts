@@ -1,24 +1,70 @@
 import type { Request, Response } from "express";
 import {
-	createUser,
 	deleteUser,
-	fetchUsers,
+	getStoreUser,
+	getUserAndStore,
+	getUsers,
 	updateUser,
+	upsertUser,
 } from "../repositories/user.repository";
-import { firstLoginUserFunc } from "../services/user.service";
-import type { CreateUserInput, UpdateUserInput } from "../types/userTypes";
+import type {
+	UpdateUserInput,
+	UpsertUserInput,
+	UserRole,
+} from "../types/user.types";
 
-/// 初回ログイン時のユーザー登録 & メッセージ送信
-export const firstLoginUserController = async (req: Request, res: Response) => {
-	const { userProfile, storeId, role, groupId } = req.body;
+export const getAlluserController = async (req: Request, res: Response) => {
 	try {
-		await firstLoginUserFunc(userProfile, storeId, role, groupId);
+		const users = await getUsers();
+		res.status(200).json(users);
 	} catch (error) {
-		res.status(500).json({ error: "Failed to create user data" });
+		console.error("Error in getAlluserController:", error);
+		res.status(500).json({ error: "Failed to get users" });
 	}
 };
 
-export const createUserController = async (
+/// ✅ 店舗ユーザーを取得
+export const getUserAndStoreController = async (
+	req: Request,
+	res: Response,
+) => {
+	try {
+		const { storeId, userId } = req.params;
+		if (!storeId || !userId) {
+			res.status(400).json({ error: "Missing required fields" });
+			return;
+		}
+
+		const storeUsers = await getUserAndStore(storeId, userId);
+		if (!storeUsers) {
+			res.status(400).json({ error: "store users are not found" });
+			return;
+		}
+		res.status(200).json(storeUsers);
+	} catch (error) {
+		console.error("Error in getStoreUsersController:", error);
+		res.status(500).json({ error: "Failed to get store users" });
+	}
+};
+
+/// ✅ 店舗の全てのユーザーを取得
+export const getStoreController = async (req: Request, res: Response) => {
+	try {
+		const { storeId } = req.params;
+		if (!storeId) {
+			return res.status(400).json({ error: "storeId が必要です" });
+		}
+
+		const users = await getStoreUser(storeId);
+		return res.json(users);
+	} catch (error) {
+		console.error("❌ スタッフ取得エラー:", error);
+		return res.status(500).json({ error: "faild get staffs" });
+	}
+};
+
+///　✅　ユーザーを作成
+export const upsertUserController = async (
 	req: Request,
 	res: Response,
 ): Promise<void> => {
@@ -30,14 +76,14 @@ export const createUserController = async (
 			return;
 		}
 
-		const data: CreateUserInput = {
+		const data: UpsertUserInput = {
 			lineId,
 			name,
 			pictureUrl,
-			role: role as CreateUserInput["role"],
+			role: role as UserRole,
 		};
 
-		const user = await createUser(data);
+		const user = await upsertUser(data);
 		res.status(201).json(user);
 	} catch (error) {
 		console.error("Error in registerUser:", error);
@@ -45,19 +91,26 @@ export const createUserController = async (
 	}
 };
 
-export const getUsersController = async (
-	req: Request,
-	res: Response,
-): Promise<void> => {
+/// ✅　ユーザーのプロフィール編集　・　権限の変更や
+export const deleteUserController = async (req: Request, res: Response) => {
 	try {
-		const users = await fetchUsers();
-		res.status(200).json(users);
+		const { userId } = req.params;
+		if (!userId) {
+			res.status(400).json({
+				error: "userId are required",
+			});
+			return;
+		}
+
+		const deleted = await deleteUser(userId);
+		res.status(200).json(deleted);
 	} catch (error) {
-		console.error("Error in getUsers:", error);
-		res.status(500).json({ error: "Failed to get users" });
+		console.error("Error in deleteUser:", error);
+		res.status(500).json({ error: "Failed to delete user" });
 	}
 };
 
+/// ✅ ユーザーのプロフィール編集
 export const updateUserController = async (
 	req: Request,
 	res: Response,
@@ -86,20 +139,16 @@ export const updateUserController = async (
 	}
 };
 
-export const deleteUserController = async (req: Request, res: Response) => {
-	try {
-		const { userId } = req.params;
-		if (!userId) {
-			res.status(400).json({
-				error: "userId are required",
-			});
-			return;
-		}
-
-		const deleted = await deleteUser(userId);
-		res.status(200).json(deleted);
-	} catch (error) {
-		console.error("Error in deleteUser:", error);
-		res.status(500).json({ error: "Failed to delete user" });
-	}
-};
+///　❌　多分使わない
+// export const getUsersController = async (
+// 	req: Request,
+// 	res: Response,
+// ): Promise<void> => {
+// 	try {
+// 		const users = await fetchUsers();
+// 		res.status(200).json(users);
+// 	} catch (error) {
+// 		console.error("Error in getUsers:", error);
+// 		res.status(500).json({ error: "Failed to get users" });
+// 	}
+// };

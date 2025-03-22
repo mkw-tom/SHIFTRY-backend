@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { LineUser } from "../types/authType";
+import type { LineUser } from "../types/auth.type";
 
 //　--------------- ✅ グループにメンバーが存在するか && おーなのプロフィールが取得できる 　------------
 export const isUserAndGetProfile = async (

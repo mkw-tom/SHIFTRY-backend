@@ -1,15 +1,17 @@
 import express from "express";
 import {
-	createUserController,
 	deleteUserController,
-	getUsersController,
+	getAlluserController,
+	getUserAndStoreController,
 	updateUserController,
+	upsertUserController,
 } from "../controllers/user.controller";
 
 const router = express.Router();
-
-router.get("/", getUsersController);
-router.post("/", createUserController);
+router.get("/", getAlluserController);
+router.get("/:storeId/:userId", getUserAndStoreController);
+router.get("/:storeId", getUserAndStoreController);
+router.post("/", upsertUserController);
 router.put("/:userId", updateUserController);
 router.delete("/:userId", deleteUserController);
 

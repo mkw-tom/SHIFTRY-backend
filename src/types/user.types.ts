@@ -10,7 +10,7 @@ export interface User {
 
 export type UserRole = "OWNER" | "STAFF";
 
-export interface CreateUserInput {
+export interface UpsertUserInput {
 	lineId: string;
 	name: string;
 	pictureUrl?: string;
