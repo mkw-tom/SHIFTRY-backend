@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { isUserAndGetProfile } from "../services/auth.service";
-import type { LineUser } from "../types/authType";
+import type { LineUser } from "../types/auth.type";
 
 // ---------- ユーザー認証 ----------
 export const authController = async (req: Request, res: Response) => {
@@ -25,7 +25,7 @@ export const authController = async (req: Request, res: Response) => {
 		}
 
 		res.json({
-			message: `${role === "OWNER" ? "オーナー" : "スタッフ"}登録完了！`,
+			message: `${role === "OWNER" ? "オーナー" : "スタッフ"}認証完了！`,
 		});
 	} catch (error) {
 		console.error("❌ 登録エラー:", error);

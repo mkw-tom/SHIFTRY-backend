@@ -13,7 +13,7 @@ export interface StoreType {
 	updatedAt: Date;
 }
 
-export interface createStoreType {
-	groupId: string;
-	name: string;
-}
+// export interface createStoreType {
+// 	groupId: string;
+// 	name: string;
+// }

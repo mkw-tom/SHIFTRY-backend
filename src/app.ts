@@ -1,8 +1,8 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import lineRoutes from "./routes/message.route";
-import storeRoutes from "./routes/store.route";
+import authRoutes from "./routes/auth.route";
+import messageRoutes from "./routes/message.route";
 import userRoutes from "./routes/user.route";
 
 dotenv.config();
@@ -17,9 +17,12 @@ app.use(express.urlencoded({ extended: true })); // URL エンコードのサポ
 
 // 🔹 ルーティング設定
 app.use("/user", userRoutes);
-app.use("/store", storeRoutes);
-app.use("/webhook", lineRoutes);
-app.use("/auth", storeRoutes);
+
+app.use("/webhook", messageRoutes);
+app.use("/auth", authRoutes);
+// app.use("/request", shiftRequestRoutes)
+// app.use("/submitted", submittedShiftRoutes)
+// app.unsubscribe("/assign", assignShiftRoutes)
 
 // 🔹 エラーハンドリング（最後に記述）
 app.use(
