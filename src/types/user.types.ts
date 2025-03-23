@@ -8,7 +8,7 @@ export interface User {
 	updatedAt: Date;
 }
 
-export type UserRole = "OWNER" | "STAFF";
+export type UserRole = "OWNER" | "STAFF" | "MANAGER";
 
 export interface UpsertUserInput {
 	lineId: string;

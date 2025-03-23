@@ -1,34 +1,82 @@
 import type { Request, Response } from "express";
-import { isUserAndGetProfile } from "../services/auth.service";
-import type { LineUser } from "../types/auth.type";
+import {
+	authMe,
+	login,
+	registerOwner,
+	registerStaff,
+	storeLogin,
+} from "../services/auth.service";
+import { generateJWT } from "../utils/JWT/jwt";
 
-// ---------- ユーザー認証 ----------
-export const authController = async (req: Request, res: Response) => {
+/// ログイン時に　bearer認証　（JWT）
+export const authMeUserController = async (req: Request, res: Response) => {
 	try {
-		const { groupId, userId, storeId, role } = req.body;
-		if (!groupId || !userId || !storeId) {
-			console.log("リクエストエラー");
-			res.status(400).json({ error: "リクエストエラー" });
-			return;
-		}
-
-		//オーナーがライングループに所属しているか確認
-		const userProfile: LineUser | undefined = await isUserAndGetProfile(
-			groupId,
-			userId,
-		);
-		if (!userProfile) {
-			res.status(401).json({
-				error: `${role === "OWNER" ? "オーナー" : "スタッフ"}の認証に失敗しました`,
-			});
-			return;
-		}
-
-		res.json({
-			message: `${role === "OWNER" ? "オーナー" : "スタッフ"}認証完了！`,
-		});
+		const userId = req.userId as string;
+		const user = await authMe(userId);
+		res.status(200).json({ ok: true, user });
 	} catch (error) {
-		console.error("❌ 登録エラー:", error);
-		res.status(500).json({ message: "サーバーエラー" });
+		console.error("Error in getAuthenticatedUserController:", error);
+		res
+			.status(401)
+			.json({ ok: false, message: "Not affiliated with any stores" });
+	}
+};
+
+/// オーナーの新規登録
+export const registerOwnerController = async (req: Request, res: Response) => {
+	try {
+		const { userInput, storeInput } = req.body;
+		const { user, store } = await registerOwner(userInput, storeInput);
+		const token = generateJWT(user.id);
+
+		res.json({ ok: true, user, store, token });
+	} catch (error) {
+		console.error("Error in registerOwnerController:", error);
+		res.status(500).json({ ok: false, message: "failed to register owner" });
+	}
+};
+
+/// スタッフの新規登録
+export const registerStaffController = async (req: Request, res: Response) => {
+	try {
+		const { userInput, groupId } = req.body;
+		const { user, store } = await registerStaff(userInput, groupId);
+		const token = generateJWT(user.id);
+
+		res.json({ ok: true, user, store, token });
+	} catch (error) {
+		console.error("Error in registerStaffController:", error);
+		res.status(500).json({ ok: false, message: "failed to register staff" });
+	}
+};
+
+//// 通常ログイン
+export const loginController = async (req: Request, res: Response) => {
+	try {
+		const userId = req.userId as string;
+
+		const { user, store } = await login(userId);
+		const token = generateJWT(user.id);
+
+		res.json({ ok: true, user, store, token });
+	} catch (error) {
+		console.error("Error in loginController:", error);
+		res.status(500).json({ ok: false, message: "failed to login" });
+	}
+};
+
+//// 店舗データに即ログイン　　（シフト提出・確定通知リンクからのログイン）
+export const storeLoginControler = async (req: Request, res: Response) => {
+	try {
+		const userId = req.userId as string;
+		const { groupId } = req.body;
+
+		const { user, store } = await storeLogin(userId, groupId);
+		const token = generateJWT(user.id);
+
+		res.json({ ok: true, user, store, token });
+	} catch (error) {
+		console.error("Error in loginController:", error);
+		res.status(500).json({ ok: false, message: "failed to login to store" });
 	}
 };
