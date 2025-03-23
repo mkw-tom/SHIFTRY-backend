@@ -40,7 +40,7 @@ describe("Auth Controller Integration", () => {
         where: { id: res.body.user.id },
       });
       const store = await prisma.store.findUnique({
-        where: { id: res.body.store.id },
+        where: { id: res.body.store.id }
       });
 
       expect(user).toBeTruthy();
