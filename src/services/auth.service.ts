@@ -1,101 +1,86 @@
-import axios from "axios";
-import type { LineUser } from "../types/auth.type";
+import {
+	createStore,
+	getStoreByGroupId,
+	getStoreById,
+} from "../repositories/store.repository";
+import { getUserById, upsertUser } from "../repositories/user.repository";
+import {
+	createUserStore,
+	getUserStoreByUserId,
+	getUserStoreByUserIdAndStoreId,
+} from "../repositories/userStore.repository";
+import type { UpsertUserInput } from "../types/user.types";
 
-//　--------------- ✅ グループにメンバーが存在するか && おーなのプロフィールが取得できる 　------------
-export const isUserAndGetProfile = async (
-	groupId: string,
-	userId: string,
-): Promise<LineUser> => {
-	const isUser = await isUserInGroup(groupId, userId);
-	if (!isUser) {
-		throw new Error("オーナーの認証に失敗しました");
-	}
+export const authMe = async (userId: string) => {
+	const user = await getUserById(userId);
+	if (!user) throw new Error("User not found");
 
-	//オーナーのプロフィールを取得
-	const userProfile = await getUserProfile(groupId, userId);
-	if (!userProfile) {
-		throw new Error("オーナープロファイルの取得に失敗しました");
-	}
+	const userStore = await getUserStoreByUserId(userId);
+	if (!userStore) throw new Error("User is not linked to any store");
 
-	return userProfile;
+	return {
+		id: user.id,
+		name: user.name,
+		role: userStore.role,
+		storeId: userStore.storeId,
+	};
 };
 
-// ------------------- ☑️ 個別APi ----------------------
-// ☑️ グループ内のメンバーかどうかを確認
-export const isUserInGroup = async (
-	groupId: string,
-	userId: string,
-): Promise<boolean> => {
-	// グループメンバーのuserId一覧を取得
-	const res = await axios.get(
-		`https://api.line.me/v2/bot/group/${groupId}/members/ids`,
-		{
-			headers: { Authorization: `Bearer ${process.env.LINE_ACCESS_TOKEN}` },
-		},
-	);
-	const groupMembers = res.data.memberIds;
+export const registerOwner = async (
+	userInput: UpsertUserInput,
+	storeInput: { name: string; groupId: string },
+) => {
+	const user = await upsertUser(userInput);
+	if (!user) throw new Error("Failed to create user");
 
-	return groupMembers.includes(userId);
+	// store作成
+	const store = await createStore(storeInput.name, storeInput.groupId);
+	if (!store) throw new Error("Failed to create store");
+
+	// userStoreにオーナー登録
+	await createUserStore(user.id, store.id, "OWNER");
+
+	return { user, store };
 };
 
-//　☑️　ユーザーのプロフィールを返す
-export const getUserProfile = async (
+export const registerStaff = async (
+	userInput: UpsertUserInput,
 	groupId: string,
-	userId: string,
-): Promise<LineUser | null> => {
-	try {
-		const response = await axios.get(
-			`https://api.line.me/v2/bot/group/${groupId}/member/${userId}`,
-			{
-				headers: {
-					Authorization: `Bearer ${process.env.LINE_ACCESS_TOKEN}`,
-				},
-			},
-		);
+) => {
+	const store = await getStoreByGroupId(groupId);
+	if (!store || !store.storeId) throw new Error("Store not found");
+	const user = await upsertUser(userInput);
+	if (!user) throw new Error("Failed to create user");
 
-		return response.data; // ユーザー名を返す
-	} catch (error) {
-		console.error("❌ ユーザープロフィール取得エラー");
-		console.log(error);
-		return null;
-	}
+	await createUserStore(user.id, store.id, "STAFF");
+
+	return { user, store };
 };
 
-// ------------------- ✅ lineグループのスタッフにログインURLを通知 ------------------------
-// export const sendStaffLoginMessage = async (groupId: string): Promise<void> => {
-//   try {
-//     const staffLoginMessage =
-//       "スタッフの皆さんにお願いです📢\n\n以下のリンクからスタッフ登録をお願いします！\n\n🔹 スタッフ登録画面\n👉 https://qiita.com";
+///　通常ログイン
+export const login = async (userId: string) => {
+	const user = await getUserById(userId);
+	if (!user) throw new Error("User not found");
 
-//     const response = await apiClient.post("/v2/bot/message/push", {
-//       to: groupId, // グループID
-//       messages: [{ type: "text", text: staffLoginMessage }], // 送信メッセージ
-//     });
-//     console.log("✅ メッセージ送信成功:", response.data);
-//   } catch (error) {
-//     throw new Error("スタッフ登録メッセージの送信に失敗しました");
-//   }
-// };
+	const userStore = await getUserStoreByUserId(userId);
+	if (!userStore) throw new Error("User is not associated with a store");
 
-// ------------------- ✅ ログインユーザーのデータ作成 ------------------------
-// export const createLoginUserData = async (
-//   userProfile: LineUser,
-//   storeId: string,
-//   role: UserRole
-// ) => {
-//   const user = await createLoginUser(userProfile, role);
+	const store = await getStoreById(userStore.storeId);
+	if (!store) throw new Error("Store not found");
 
-//   if (!user) {
-//     throw new Error("ユーザー登録に失敗しました");
-//   }
+	return { user, store };
+};
 
-//   // オーナーまたはスタッフとして店舗に紐付ける
-//   const storeAssociation =
-//     role === "OWNER"
-//       ? await createDataOwnerToStore(userProfile.userId, storeId)
-//       : await createDataStaffToStore(userProfile.userId, storeId);
-//   if (!storeAssociation) {
-//     throw new Error(`${role} の店舗登録に失敗しました`);
-//   }
-//   return user;
-// };
+/// 店舗データに即ログイン　　（シフト提出・確定通知リンクからのログイン）
+export const storeLogin = async (userId: string, groupId: string) => {
+	const user = await getUserById(userId);
+	if (!user) throw new Error("User not found");
+
+	const store = await getStoreByGroupId(groupId);
+	if (!store) throw new Error("Store not found");
+
+	const userStore = await getUserStoreByUserIdAndStoreId(user.id, store.id);
+	if (!userStore) throw new Error("User is not associated with this store");
+
+	return { user, store };
+};
