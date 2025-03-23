@@ -6,7 +6,7 @@ export const createMockUserInput = () => ({
   lineId: faker.string.uuid(),
   name: faker.person.fullName(),
   pictureUrl: faker.internet.url(),
-  role: faker.helpers.arrayElement(["OWNER", "STAFF", "MANAGER"]),
+  role: faker.helpers.arrayElement(["OWNER", "STAFF", "MANAGER"])
 });
 
 export const createMockStoreInput = () => ({
