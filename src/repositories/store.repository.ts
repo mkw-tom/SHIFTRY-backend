@@ -1,7 +1,7 @@
 import prisma from "../config/database";
 
-export const createStore = (name: string, groupId: string) => {
-	return prisma.store.create({
+export const createStore = async (name: string, groupId: string) => {
+	return await prisma.store.create({
 		data: {
 			name: name,
 			groupId: groupId, ///　LIFFで取得したグループIDを保存
@@ -9,20 +9,20 @@ export const createStore = (name: string, groupId: string) => {
 	});
 };
 
-export const getStoreByGroupId = (groupId: string) => {
-	return prisma.store.findFirst({
+export const getStoreByGroupId = async (groupId: string) => {
+	return await prisma.store.findFirst({
 		where: { groupId: groupId },
 	});
 };
 
-export const getStoreById = (id: string) => {
-	return prisma.store.findMany({
+export const getStoreById = async (id: string) => {
+	return await prisma.store.findMany({
 		where: { id: id },
 	});
 };
 
-export const updateStoreGroupId = (storeId: string, groupId: string) => {
-	return prisma.store.update({
+export const updateStoreGroupId = async (storeId: string, groupId: string) => {
+	return await prisma.store.update({
 		where: { storeId: storeId },
 		data: { groupId },
 	});

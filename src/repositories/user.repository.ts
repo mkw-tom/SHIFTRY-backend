@@ -4,14 +4,14 @@ import type { UpdateUserInput, UpsertUserInput } from "../types/user.types";
 
 /// ✅ userIdからユーザーの取得
 export const getUserById = async (userId: string) => {
-	return prisma.user.findUnique({
+	return await prisma.user.findUnique({
 		where: { id: userId },
 	});
 };
 
 /// ユーザーの作成・更新
 export const upsertUser = async (data: UpsertUserInput) => {
-	return prisma.user.upsert({
+	return await prisma.user.upsert({
 		where: { lineId: data.lineId },
 		create: data,
 		update: data,
@@ -20,12 +20,12 @@ export const upsertUser = async (data: UpsertUserInput) => {
 
 /// ✅ ユーザーの全取得
 export const getUsers = async () => {
-	return prisma.user.findMany();
+	return await prisma.user.findMany();
 };
 
 /// ✅✅ ログインで使うかも　店舗のユーザー取得
 export const getUserAndStore = async (storeId: string, userId: string) => {
-	return prisma.userStore.findFirst({
+	return await prisma.userStore.findFirst({
 		where: { storeId, userId },
 		include: {
 			user: true,
