@@ -1,3 +1,5 @@
+// import { UserRole } from "@prisma/client";
+
 export interface User {
 	id: string;
 	lineId: string;

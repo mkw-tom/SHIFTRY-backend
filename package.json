@@ -7,16 +7,16 @@
 		"start": "dotenv -e .env -- node dist/server.js",
 		"dev": "dotenv -e .env.test -- node dist/server.js",
 		"build": "tsc",
-		"test": "cross-env NODE_ENV=test dotenv -e .env.test -- jest --coverage",
-		"test:unit": "cross-env NODE_ENV=test jest --testPathPattern=tests/unit --coverage",
-		"test:integration": "cross-env NODE_ENV=test jest --testPathPattern=tests/integration",
+		"test:unit": "dotenv -e .env.test -- jest --testPathPattern=tests/unit --coverage",
+		"test:integration": "dotenv -e .env.test -- jest --testPathPattern=tests/integration",
 		"biome": "npx @biomejs/biome check --write ./src",
 		"biome:fix": "npx @biomejs/biome check  --fix --unsafe ./src",
 		"type-check": "npx tsc --noEmit",
-		"generate": "npx prisma generate",
-		"generate:test": "cross-env DATABASE_URL=$(cat .env.test | grep DATABASE_URL | cut -d '=' -f2) npx prisma generate",
+		"generate:prod": "dotenv -e .env -- npx prisma generate",
+		"generate:test": "dotenv -e .env.test -- npx prisma generate",
 		"migrate:prod": "dotenv -e .env -- npx prisma migrate deploy",
-		"migrate:test": "dotenv -e .env.test -- npx prisma migrate dev",
+		"migrate:test": "dotenv -e .env.test -- npx prisma migrate reset --force --skip-seed",
+		"db:push:test": "dotenv -e .env.test  npx prisma db push",
 		"studio:prod": "dotenv -e .env -- npx prisma studio",
 		"studio:test": "dotenv -e .env.test -- npx prisma studio"
 	},
@@ -29,7 +29,8 @@
 		"axios": "^1.8.1",
 		"cors": "^2.8.5",
 		"express": "^4.21.2",
-		"jsonwebtoken": "^9.0.2"
+		"jsonwebtoken": "^9.0.2",
+		"zod": "^3.24.2"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",

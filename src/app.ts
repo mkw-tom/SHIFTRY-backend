@@ -1,9 +1,12 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import assignShiftRoutes from "./routes/assignShift.route";
 import authRoutes from "./routes/auth.route";
 import messageRoutes from "./routes/message.route";
+import shiftRequestRoutes from "./routes/shiftRerquest.route";
 import storeRoutes from "./routes/store.route";
+import submittedShiftRoutes from "./routes/submittedShift.route";
 import userRoutes from "./routes/user.route";
 
 dotenv.config();
@@ -21,9 +24,9 @@ app.use("/api/user", userRoutes);
 app.use("/webhook", messageRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/store", storeRoutes);
-// app.use("/request", shiftRequestRoutes)
-// app.use("/submitted", submittedShiftRoutes)
-// app.unsubscribe("/assign", assignShiftRoutes)
+app.use("/api/shift/request", shiftRequestRoutes);
+app.use("/api/shift/submit", submittedShiftRoutes);
+app.use("/api/shift/assign", assignShiftRoutes);
 
 // 🔹 エラーハンドリング（最後に記述）
 app.use(

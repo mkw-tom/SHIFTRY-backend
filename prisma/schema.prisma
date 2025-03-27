@@ -28,7 +28,7 @@ enum UserRole {
 
 model Store {
   id               String           @id @default(uuid())
-  groupId          String           @unique
+  groupId          String?           @unique
   storeId          String?          @unique @default(uuid())
   name             String           @unique
   createdAt        DateTime         @default(now())

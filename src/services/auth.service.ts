@@ -1,3 +1,4 @@
+import type { Store, User, UserStore } from "@prisma/client";
 import {
 	createStore,
 	getStoreByGroupId,
@@ -29,7 +30,7 @@ export const authMe = async (userId: string) => {
 export const registerOwner = async (
 	userInput: UpsertUserInput,
 	storeInput: { name: string; groupId: string },
-) => {
+): Promise<{ user: User; store: Store }> => {
 	const user = await upsertUser(userInput);
 	if (!user) throw new Error("Failed to create user");
 
@@ -38,7 +39,7 @@ export const registerOwner = async (
 	if (!store) throw new Error("Failed to create store");
 
 	// userStoreにオーナー登録
-	await createUserStore(user.id, store.id, "OWNER");
+	const userStore = await createUserStore(user.id, store.id, "OWNER");
 
 	return { user, store };
 };
@@ -46,7 +47,7 @@ export const registerOwner = async (
 export const registerStaff = async (
 	userInput: UpsertUserInput,
 	groupId: string,
-) => {
+): Promise<{ user: User; store: Store }> => {
 	const store = await getStoreByGroupId(groupId);
 	if (!store || !store.storeId) throw new Error("Store not found");
 	const user = await upsertUser(userInput);
@@ -58,7 +59,9 @@ export const registerStaff = async (
 };
 
 ///　通常ログイン
-export const login = async (userId: string) => {
+export const login = async (
+	userId: string,
+): Promise<{ user: User; store: Store[]; userStore: UserStore }> => {
 	const user = await getUserById(userId);
 	if (!user) throw new Error("User not found");
 
@@ -68,11 +71,14 @@ export const login = async (userId: string) => {
 	const store = await getStoreById(userStore.storeId);
 	if (!store) throw new Error("Store not found");
 
-	return { user, store };
+	return { user, store, userStore };
 };
 
 /// 店舗データに即ログイン　　（シフト提出・確定通知リンクからのログイン）
-export const storeLogin = async (userId: string, groupId: string) => {
+export const storeLogin = async (
+	userId: string,
+	groupId: string,
+): Promise<{ user: User; store: Store }> => {
 	const user = await getUserById(userId);
 	if (!user) throw new Error("User not found");
 
