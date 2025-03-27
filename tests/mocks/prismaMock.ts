@@ -1,0 +1,40 @@
+// tests/mocks/prismaMock.ts
+export const mockPrisma = {
+  user: {
+    findMany: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+    upsert: jest.fn(),
+    findUnique: jest.fn(),
+    findFirst: jest.fn(),
+    deleteMany: jest.fn(),
+  },
+  store: {
+    findMany: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+    findUnique: jest.fn(),
+    findFirst: jest.fn(),
+    deleteMany: jest.fn(),
+    delete: jest.fn(),
+  },
+  userStore: {
+    findMany: jest.fn(),
+    create: jest.fn(),
+    findFirst: jest.fn(),
+    findUnique: jest.fn(),
+    deleteMany: jest.fn(),
+    delete: jest.fn(),
+  },
+  shiftRequest: {
+    findMany: jest.fn(),
+    upsert: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+    findFirst: jest.fn(),
+    findUnique: jest.fn(),
+    deleteMany: jest.fn(),
+    delete: jest.fn(),
+  },
+  $disconnect: jest.fn(),
+};
