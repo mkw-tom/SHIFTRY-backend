@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { updateStoreGroupId } from "../repositories/store.repository";
+import { getUserById } from "../repositories/user.repository";
 import { getUserStoreByUserId } from "../repositories/userStore.repository";
 
 export const storeConnectLineGroupController = async (
@@ -8,6 +9,8 @@ export const storeConnectLineGroupController = async (
 ) => {
 	const userId = req.userId as string;
 	const { groupId } = req.body;
+	const user = await getUserById(userId);
+	if (!user) throw new Error("User not found");
 
 	const userStore = await getUserStoreByUserId(userId);
 	if (!userStore || userStore.role !== "OWNER") {
@@ -16,6 +19,5 @@ export const storeConnectLineGroupController = async (
 	}
 
 	await updateStoreGroupId(userStore.storeId, groupId);
-
 	res.json({ ok: true });
 };

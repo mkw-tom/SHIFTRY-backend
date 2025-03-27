@@ -1,9 +1,11 @@
 import type { Request, Response } from "express";
+import { getUserStoreByUserIdAndStoreId } from "../repositories/userStore.repository";
 import {
 	joinFunc,
 	sendCofirmedShiftFunc,
 	sendShiftRequestFunc,
 } from "../services/message.service";
+import { pushMessageValidate } from "../validations/message.validation";
 
 export const groupJoinController = async (req: Request, res: Response) => {
 	const events = req.body.events;
@@ -36,12 +38,23 @@ export const sendShiftRequestFuncController = async (
 	res: Response,
 ) => {
 	try {
-		const { groupId, storeId, weekStart } = req.body;
-		if (!groupId || !storeId || !weekStart) {
+		const userId = req.userId as string;
+		const bodyParesed = pushMessageValidate.safeParse(req.body);
+		if (!bodyParesed.success) {
 			res.status(400).json({ error: "Missing require field" });
 			return;
 		}
-		await sendShiftRequestFunc(groupId, storeId, weekStart);
+		const { storeId, groupId } = bodyParesed.data;
+
+		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
+		if (!userStore || userStore.role === "STAFF") {
+			res
+				.status(403)
+				.json({ message: "User is not authorized to perform this action" });
+			return;
+		}
+
+		await sendShiftRequestFunc(groupId);
 
 		res.status(200).json({ message: "sucess send a shift request" });
 	} catch (error) {
@@ -56,12 +69,23 @@ export const sendConfirmShiftFuncController = async (
 	res: Response,
 ) => {
 	try {
-		const { groupId, storeId, weekStart } = req.body;
-		if (!groupId || !storeId || !weekStart) {
+		const userId = req.userId as string;
+		const bodyParesed = pushMessageValidate.safeParse(req.body);
+		if (!bodyParesed.success) {
 			res.status(400).json({ error: "Missing require field" });
 			return;
 		}
-		await sendCofirmedShiftFunc(groupId, storeId, weekStart);
+		const { storeId, groupId } = bodyParesed.data;
+
+		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
+		if (!userStore || userStore.role === "STAFF") {
+			res
+				.status(403)
+				.json({ message: "User is not authorized to perform this action" });
+			return;
+		}
+
+		await sendCofirmedShiftFunc(groupId);
 
 		res.status(200).json({ message: "sucess send a shift confirmed message" });
 	} catch (error) {
