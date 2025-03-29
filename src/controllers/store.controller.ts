@@ -11,6 +11,12 @@ import {
 	getUserStoreByUserId,
 	getUserStoreByUserIdAndStoreId,
 } from "../repositories/userStore.repository";
+import {
+	verifyUser,
+	verifyUserForOwner,
+	verifyUserStoreForOwner,
+	verifyUserStoreForOwnerAndManager,
+} from "../services/common/authorization.service";
 import { generateJWT } from "../utils/JWT/jwt";
 import {
 	connectGoupIdValidate,
@@ -25,24 +31,14 @@ export const storeConnectLineGroupController = async (
 	try {
 		const userId = req.userId as string;
 		const storeId = req.storeId as string;
+		await verifyUserStoreForOwner(userId, storeId);
+
 		const bodyParesed = connectGoupIdValidate.parse(req.body);
 		const groupId = bodyParesed.groupId;
 		const user = await getUserById(userId);
 		if (!user) throw new Error("User not found");
 
-		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-		if (!userStore || userStore.role !== "OWNER") {
-			res.status(403).json({ message: "Only owner can update store" });
-			return;
-		}
-
-		// const userStore = await getUserStoreByUserId(userId);
-		// if (!userStore || userStore.role !== "OWNER") {
-		// 	res.status(403).json({ message: "Only owner can update store" });
-		// 	return;
-		// }
-
-		await updateStoreGroupId(userStore.storeId, groupId);
+		await updateStoreGroupId(storeId, groupId);
 		res.json({ ok: true });
 	} catch (error) {
 		console.error(error);
@@ -57,8 +53,7 @@ export const getStoreFromUserController = async (
 ) => {
 	try {
 		const userId = req.userId as string;
-		const user = await getUserById(userId);
-		if (!user) throw new Error("User not found");
+		await verifyUser(userId);
 
 		const stores = await getStoreFromUser(userId);
 		res.json({ stores });
@@ -71,8 +66,7 @@ export const getStoreFromUserController = async (
 export const addManageStoreController = async (req: Request, res: Response) => {
 	try {
 		const userId = req.userId as string;
-		const user = await getUserById(userId);
-		if (!user || user.role !== "OWNER") throw new Error("User not found");
+		const user = await verifyUserForOwner(userId);
 		const storeInputParsed = storeInputValidate.safeParse(req.body.storeInput);
 		if (!storeInputParsed.success) {
 			res.status(400).json({
@@ -101,13 +95,7 @@ export const updateStoreNameControler = async (req: Request, res: Response) => {
 	try {
 		const userId = req.userId as string;
 		const storeId = req.storeId as string;
-		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-		if (!userStore || userStore.role !== "OWNER") {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
-			return;
-		}
+		await verifyUserStoreForOwnerAndManager(userId, storeId);
 
 		const bodyParesed = updateStoreNameValidate.parse(req.body);
 		if (!bodyParesed.name) {

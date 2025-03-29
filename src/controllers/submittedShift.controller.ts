@@ -5,6 +5,7 @@ import {
 	upsertSubmittedShift,
 } from "../repositories/submittedShift.repository";
 import { getUserStoreByUserIdAndStoreId } from "../repositories/userStore.repository";
+import { verifyUserStore } from "../services/common/authorization.service";
 import { upsertSubmittedShifttValidate } from "../validations/submittedShift.vaidation";
 
 export const upsertSubmittedShiftController = async (
@@ -14,19 +15,14 @@ export const upsertSubmittedShiftController = async (
 	try {
 		const userId = req.userId as string;
 		const storeId = req.storeId as string;
+		await verifyUserStore(userId, storeId);
+
 		const parsedBody = upsertSubmittedShifttValidate.safeParse(req.body);
 		if (!parsedBody.success) {
 			res.status(400).json({
 				message: "Invalid request value",
 				errors: parsedBody.error.errors,
 			});
-			return;
-		}
-		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-		if (!userStore) {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
 			return;
 		}
 
@@ -46,13 +42,7 @@ export const getSubmittedShiftUserController = async (
 	try {
 		const userId = req.userId as string;
 		const storeId = req.storeId as string;
-		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-		if (!userStore) {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
-			return;
-		}
+		await verifyUserStore(userId, storeId);
 
 		const upsertSubmittedShift = await getSubmittedShiftUser(userId, storeId);
 
@@ -70,14 +60,9 @@ export const getWeeklySubmittedShiftsController = async (
 	try {
 		const userId = req.userId as string;
 		const storeId = req.storeId as string;
+		await verifyUserStore(userId, storeId);
+
 		const { weekStart } = req.params;
-		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-		if (!userStore) {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
-			return;
-		}
 
 		const weeklySubmittedShifts = await getWeeklySubmittedShifts(
 			storeId,

@@ -4,6 +4,10 @@ import {
 	upsertAssignShfit,
 } from "../repositories/assingShift.repostory";
 import { getUserStoreByUserIdAndStoreId } from "../repositories/userStore.repository";
+import {
+	verifyUserStore,
+	verifyUserStoreForOwnerAndManager,
+} from "../services/common/authorization.service";
 import { upsertAssignShfitValidate } from "../validations/assignShift.validation";
 
 export const upsertAssignShfitController = async (
@@ -13,23 +17,14 @@ export const upsertAssignShfitController = async (
 	try {
 		const userId = req.userId as string;
 		const storeId = req.storeId as string;
+		await verifyUserStoreForOwnerAndManager(userId, storeId);
+
 		const parsedBody = upsertAssignShfitValidate.safeParse(req.body);
 		if (!parsedBody.success) {
 			res.status(400).json({
 				message: "Invalid request value",
 				errors: parsedBody.error.errors,
 			});
-			return;
-		}
-
-		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-		if (
-			!userStore ||
-			(userStore?.role !== "OWNER" && userStore?.role !== "MANAGER")
-		) {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
 			return;
 		}
 
@@ -45,15 +40,9 @@ export const getAssignShiftController = async (req: Request, res: Response) => {
 	try {
 		const userId = req.userId as string;
 		const storeId = req.storeId as string;
-		const { weekStart } = req.params;
+		await verifyUserStore(userId, storeId);
 
-		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-		if (!userStore) {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
-			return;
-		}
+		const { weekStart } = req.params;
 
 		const assingShift = await getAssignShift(storeId, weekStart);
 

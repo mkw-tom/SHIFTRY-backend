@@ -7,6 +7,10 @@ import {
 } from "../repositories/shiftRequest.repository";
 import { getUserById } from "../repositories/user.repository";
 import { getUserStoreByUserIdAndStoreId } from "../repositories/userStore.repository";
+import {
+	verifyUserStore,
+	verifyUserStoreForOwnerAndManager,
+} from "../services/common/authorization.service";
 import { upsertShfitRequestValidate } from "../validations/shiftRequest.validation";
 
 export const getShiftRequestController = async (
@@ -16,17 +20,10 @@ export const getShiftRequestController = async (
 	try {
 		const userId = req.userId as string;
 		const storeId = req.storeId as string;
+		await verifyUserStore(userId, storeId);
 
 		if (!storeId) {
 			res.status(400).json({ message: "storId is not found" });
-		}
-
-		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-		if (!userStore) {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
-			return;
 		}
 
 		const shiftRequests = await getShiftRequestByStoreId(storeId);
@@ -45,16 +42,10 @@ export const getShiftRequestWeekController = async (
 	try {
 		const userId = req.userId as string;
 		const storeId = req.storeId as string;
+		await verifyUserStore(userId, storeId);
+
 		const weekStart = req.params.weekStart;
 		const weekShift = await getShiftRequestWeek(storeId, weekStart);
-
-		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-		if (!userStore) {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
-			return;
-		}
 
 		res.json({ weekShift });
 	} catch (error) {
@@ -70,6 +61,7 @@ export const upsertShiftRequestController = async (
 	try {
 		const userId = req.userId as string;
 		const storeId = req.storeId as string;
+		await verifyUserStoreForOwnerAndManager(userId, storeId);
 
 		const bodyParesed = upsertShfitRequestValidate.safeParse(req.body);
 		if (!bodyParesed.success) {
@@ -80,14 +72,6 @@ export const upsertShiftRequestController = async (
 			return;
 		}
 		const { weekStart, weekEnd, requests, status, deadline } = bodyParesed.data;
-
-		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-		if (userStore?.role !== "OWNER" && userStore?.role !== "MANAGER") {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
-			return;
-		}
 
 		const upsertData = {
 			weekStart,
@@ -113,14 +97,9 @@ export const deleteShiftRequestController = async (
 	try {
 		const userId = req.userId as string;
 		const storeId = req.storeId as string;
+		await verifyUserStoreForOwnerAndManager(userId, storeId);
+
 		const weekStart = req.params.weekStart;
-		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-		if (!userStore) {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
-			return;
-		}
 
 		await deleteShiftRequest(storeId, weekStart);
 

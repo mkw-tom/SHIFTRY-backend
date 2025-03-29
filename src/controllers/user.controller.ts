@@ -11,6 +11,11 @@ import {
 	getUserFromStore,
 	getUserStoreByUserIdAndStoreId,
 } from "../repositories/userStore.repository";
+import {
+	verifyUser,
+	verifyUserStore,
+	verifyUserStoreForOwnerAndManager,
+} from "../services/common/authorization.service";
 import { changeUserRoleService } from "../services/user.service";
 import type {
 	UpdateUserInput,
@@ -40,35 +45,13 @@ export const getUserFromStoreController = async (
 	try {
 		const userId = req.userId as string;
 		const storeId = req.storeId as string;
-		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-		if (!userStore) {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
-			return;
-		}
+		await verifyUserStore(userId, storeId);
 
 		const storeUsers = await getUserFromStore(storeId);
 		res.status(200).json(storeUsers);
 	} catch (error) {
 		console.error("Error in getStoreUsersController:", error);
 		res.status(500).json({ error: "Failed to get store users" });
-	}
-};
-
-/// 店舗に所属する全てのユーザーを取得
-export const getStoreController = async (req: Request, res: Response) => {
-	try {
-		const storeId = req.storeId as string;
-		if (!storeId) {
-			return res.status(400).json({ error: "storeId が必要です" });
-		}
-
-		const users = await getStoreUser(storeId);
-		return res.json(users);
-	} catch (error) {
-		console.error("❌ スタッフ取得エラー:", error);
-		return res.status(500).json({ error: "faild get staffs" });
 	}
 };
 
@@ -79,13 +62,8 @@ export const updateUserProfileController = async (
 ): Promise<void> => {
 	try {
 		const userId = req.userId as string;
-		const user = await getUserById(userId);
-		if (!user) {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
-			return;
-		}
+		await verifyUser(userId);
+
 		const bodyParesed = updateUserProlfileValidate.safeParse(req.body);
 		if (!bodyParesed.success) {
 			res.status(400).json({
@@ -109,13 +87,7 @@ export const updateUserProfileController = async (
 export const deleteUserController = async (req: Request, res: Response) => {
 	try {
 		const userId = req.userId as string;
-		const user = await getUserById(userId);
-		if (!user) {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
-			return;
-		}
+		await verifyUser(userId);
 
 		const deleted = await deleteUser(userId);
 		res.status(200).json(deleted);
@@ -130,13 +102,7 @@ export const changeUserRoleController = async (req: Request, res: Response) => {
 	try {
 		const userId = req.userId as string;
 		const storeId = req.storeId as string;
-		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-		if (!userStore || userStore.role !== "OWNER") {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
-			return;
-		}
+		await verifyUserStoreForOwnerAndManager(userId, storeId);
 
 		const bodyParesed = changeUserRoleValidate.safeParse(req.body);
 		if (!bodyParesed.success) {

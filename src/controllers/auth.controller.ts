@@ -6,6 +6,7 @@ import {
 	registerStaff,
 	storeLogin,
 } from "../services/auth.service";
+import { verifyUser } from "../services/common/authorization.service";
 import { generateJWT } from "../utils/JWT/jwt";
 import {
 	groupIdValidate,
@@ -21,6 +22,7 @@ export const authMeUserController = async (
 ): Promise<void> => {
 	try {
 		const userId = req.userId as string;
+		await verifyUser(userId);
 		const user = await authMe(userId);
 		res.status(200).json({ ok: true, user });
 	} catch (error) {
@@ -118,10 +120,10 @@ export const loginController = async (
 	try {
 		const userId = req.userId as string;
 
-		const { user, stores, userStore } = await login(userId);
+		const { user, stores } = await login(userId);
 		const token = generateJWT(user.id);
 
-		res.json({ ok: true, user, stores, userStore, token });
+		res.json({ ok: true, user, stores, token });
 	} catch (error) {
 		console.error("Error in loginController:", error);
 		res.status(500).json({ ok: false, message: "failed to login" });
