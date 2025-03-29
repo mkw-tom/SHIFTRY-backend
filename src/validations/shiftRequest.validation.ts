@@ -24,7 +24,6 @@ export const requestJsonSchema = z.object({
 export type RequestJsonType = z.infer<typeof requestJsonSchema>;
 
 export const upsertShfitRequestValidate = z.object({
-	storeId: z.string(),
 	weekStart: z.string().refine((val) => !Number.isNaN(Date.parse(val)), {
 		message: "Invalid date format",
 	}),

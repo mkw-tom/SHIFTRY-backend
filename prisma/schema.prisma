@@ -130,16 +130,29 @@ model SubmittedShift {
 
 // Stripe連携などの支払い情報
 model Payment {
-  id                  String   @id @default(uuid())
-  storeId             String   @unique
-  userId              String
-  customerId          String
-  subscriptionId      String
-  priceId             String
-  subscription_status String
-  next_billing_date   DateTime
-  trial_end_date      DateTime
+  id                          String   @id @default(uuid())
+  storeId                     String   @unique
+  userId                      String
+  customerId                  String
+  subscriptionId              String
+  priceId                     String   // Stripe Price ID
+  subscription_status         String   // active, trialing, canceled, etc.
 
-  store               Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  
+  isTrial                     Boolean  @default(false) // 無料トライアル中かどうか
+  trial_end_date              DateTime?                // トライアル終了日
+  trial_end_notification_sent Boolean  @default(false) // トライアル終了通知済か
+
+  cancel_requested_at         DateTime?                // 解約予約日
+  cancel_at_period_end        Boolean  @default(false) // 次回請求で自動キャンセルか
+  delete_scheduled_at         DateTime?                // データ削除予定日時
+  deleted_at                  DateTime?                // 実際の削除日（or 論理削除用）
+
+  current_plan                String   // 例: "basic", "pro", etc
+  next_billing_date           DateTime?
+
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+
+  store                       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
 }
+

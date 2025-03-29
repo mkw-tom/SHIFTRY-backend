@@ -4,18 +4,19 @@ import type { upsertSubmittedShiftInput } from "../validations/submittedShift.va
 
 export const upsertSubmittedShift = async (
 	userId: string,
+	storeId: string,
 	data: upsertSubmittedShiftInput,
 ) => {
 	return await prisma.submittedShift.upsert({
 		where: {
 			userId_storeId_weekStart: {
 				userId: userId,
-				storeId: data.storeId,
+				storeId: storeId,
 				weekStart: new Date(data.weekStart),
 			},
 		},
 		update: {
-			storeId: data.storeId,
+			storeId: storeId,
 			attendCount: data.attendCount,
 			shifts: data.shifts,
 			status: data.status,
@@ -24,7 +25,7 @@ export const upsertSubmittedShift = async (
 		},
 		create: {
 			userId: userId,
-			storeId: data.storeId,
+			storeId: storeId,
 			shiftRequestId: data.shiftRequestId,
 			attendCount: data.attendCount,
 			shifts: data.shifts,

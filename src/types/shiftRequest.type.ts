@@ -1,4 +1,3 @@
-import { StoreIdAndWeekStartParamValidate } from "../middlewares/validations/storeIdAndWeekStart.validate";
 import type { UpsertShiftRequetBody } from "../validations/shiftRequest.validation";
 
 export type UpsertShiftRequetInput = UpsertShiftRequetBody;

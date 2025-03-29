@@ -2,16 +2,30 @@ import type { Request, Response } from "express";
 import {
 	deleteUser,
 	getStoreUser,
-	getUserAndStore,
+	getUserById,
 	getUsers,
 	updateUser,
 	upsertUser,
 } from "../repositories/user.repository";
+import {
+	getUserFromStore,
+	getUserStoreByUserIdAndStoreId,
+} from "../repositories/userStore.repository";
+import {
+	verifyUser,
+	verifyUserStore,
+	verifyUserStoreForOwnerAndManager,
+} from "../services/common/authorization.service";
+import { changeUserRoleService } from "../services/user.service";
 import type {
 	UpdateUserInput,
 	UpsertUserInput,
 	UserRole,
 } from "../types/user.types";
+import {
+	changeUserRoleValidate,
+	updateUserProlfileValidate,
+} from "../validations/user.validation";
 
 export const getAlluserController = async (req: Request, res: Response) => {
 	try {
@@ -23,23 +37,17 @@ export const getAlluserController = async (req: Request, res: Response) => {
 	}
 };
 
-/// ✅ 店舗ユーザーを取得
-export const getUserAndStoreController = async (
+/// 店舗ユーザーを取得
+export const getUserFromStoreController = async (
 	req: Request,
 	res: Response,
 ) => {
 	try {
-		const { storeId, userId } = req.params;
-		if (!storeId || !userId) {
-			res.status(400).json({ error: "Missing required fields" });
-			return;
-		}
+		const userId = req.userId as string;
+		const storeId = req.storeId as string;
+		await verifyUserStore(userId, storeId);
 
-		const storeUsers = await getUserAndStore(storeId, userId);
-		if (!storeUsers) {
-			res.status(400).json({ error: "store users are not found" });
-			return;
-		}
+		const storeUsers = await getUserFromStore(storeId);
 		res.status(200).json(storeUsers);
 	} catch (error) {
 		console.error("Error in getStoreUsersController:", error);
@@ -47,60 +55,39 @@ export const getUserAndStoreController = async (
 	}
 };
 
-/// ✅ 店舗の全てのユーザーを取得
-export const getStoreController = async (req: Request, res: Response) => {
-	try {
-		const { storeId } = req.params;
-		if (!storeId) {
-			return res.status(400).json({ error: "storeId が必要です" });
-		}
-
-		const users = await getStoreUser(storeId);
-		return res.json(users);
-	} catch (error) {
-		console.error("❌ スタッフ取得エラー:", error);
-		return res.status(500).json({ error: "faild get staffs" });
-	}
-};
-
-///　✅　ユーザーを作成
-export const upsertUserController = async (
+/// ユーザーのプロフィール編集
+export const updateUserProfileController = async (
 	req: Request,
 	res: Response,
 ): Promise<void> => {
 	try {
-		const { lineId, name, pictureUrl, role } = req.body;
+		const userId = req.userId as string;
+		await verifyUser(userId);
 
-		if (!lineId || !name || !role) {
-			res.status(400).json({ error: "Missing required fields" });
-			return;
-		}
-
-		const data: UpsertUserInput = {
-			lineId,
-			name,
-			pictureUrl,
-			role: role as UserRole,
-		};
-
-		const user = await upsertUser(data);
-		res.status(201).json(user);
-	} catch (error) {
-		console.error("Error in registerUser:", error);
-		res.status(500).json({ error: "Failed to create user" });
-	}
-};
-
-/// ✅　ユーザーのプロフィール編集　・　権限の変更や
-export const deleteUserController = async (req: Request, res: Response) => {
-	try {
-		const { userId } = req.params;
-		if (!userId) {
+		const bodyParesed = updateUserProlfileValidate.safeParse(req.body);
+		if (!bodyParesed.success) {
 			res.status(400).json({
-				error: "userId are required",
+				message: "Invalid request",
+				errors: {
+					user: bodyParesed.error?.errors,
+				},
 			});
 			return;
 		}
+		const updateData = bodyParesed.data;
+
+		await updateUser(userId, updateData);
+		res.status(200).json({ ok: true });
+	} catch (error) {
+		console.error("Error in updateUser:", error);
+		res.status(500).json({ error: "Failed to update user" });
+	}
+};
+
+export const deleteUserController = async (req: Request, res: Response) => {
+	try {
+		const userId = req.userId as string;
+		await verifyUser(userId);
 
 		const deleted = await deleteUser(userId);
 		res.status(200).json(deleted);
@@ -110,45 +97,27 @@ export const deleteUserController = async (req: Request, res: Response) => {
 	}
 };
 
-/// ✅ ユーザーのプロフィール編集
-export const updateUserController = async (
-	req: Request,
-	res: Response,
-): Promise<void> => {
+///　スタッフ権限の変更
+export const changeUserRoleController = async (req: Request, res: Response) => {
 	try {
-		const { userId } = req.params;
-		const { name, pictureUrl, role } = req.body;
+		const userId = req.userId as string;
+		const storeId = req.storeId as string;
+		await verifyUserStoreForOwnerAndManager(userId, storeId);
 
-		if (!userId || (!name && !role)) {
+		const bodyParesed = changeUserRoleValidate.safeParse(req.body);
+		if (!bodyParesed.success) {
 			res.status(400).json({
-				error: "User ID and at least one field (name or role) are required",
+				message: "invalid request value",
+				errors: bodyParesed.error.errors,
 			});
 			return;
 		}
+		const { userId: staffId, role } = bodyParesed.data;
 
-		const data: UpdateUserInput = {};
-		if (name) data.name = name;
-		if (role) data.role = role;
-		if (pictureUrl) data.pictureUrl = pictureUrl;
-
-		const updatedUser = await updateUser(userId, data);
-		res.status(200).json(updatedUser);
+		await changeUserRoleService(staffId, storeId, role);
+		res.json({ ok: true });
 	} catch (error) {
 		console.error("Error in updateUser:", error);
-		res.status(500).json({ error: "Failed to update user" });
+		res.status(500).json({ error: "Failed to update user role" });
 	}
 };
-
-///　❌　多分使わない
-// export const getUsersController = async (
-// 	req: Request,
-// 	res: Response,
-// ): Promise<void> => {
-// 	try {
-// 		const users = await fetchUsers();
-// 		res.status(200).json(users);
-// 	} catch (error) {
-// 		console.error("Error in getUsers:", error);
-// 		res.status(500).json({ error: "Failed to get users" });
-// 	}
-// };

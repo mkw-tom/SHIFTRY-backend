@@ -2,6 +2,7 @@ import express from "express";
 import {
 	authMeUserController,
 	loginController,
+	loginStoreControler,
 	reLoginController,
 	registerOwnerController,
 	registerStaffController,
@@ -15,6 +16,6 @@ router.post("/re-login", reLoginController);
 router.post("/register-owner", registerOwnerController);
 router.post("/register-staff", registerStaffController);
 router.post("/login", verifyJWT, loginController);
-router.post("/login-store", verifyJWT, loginController);
+router.post("/login-store", verifyJWT, loginStoreControler);
 
 export default router;

@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { getUserStoreByUserIdAndStoreId } from "../repositories/userStore.repository";
+import { verifyUserStoreForOwnerAndManager } from "../services/common/authorization.service";
 import {
 	joinFunc,
 	sendCofirmedShiftFunc,
@@ -39,20 +40,14 @@ export const sendShiftRequestFuncController = async (
 ) => {
 	try {
 		const userId = req.userId as string;
-		const bodyParesed = pushMessageValidate.safeParse(req.body);
-		if (!bodyParesed.success) {
+		const storeId = req.storeId as string;
+		await verifyUserStoreForOwnerAndManager(userId, storeId);
+		const bodyParesed = pushMessageValidate.parse(req.body);
+		if (!bodyParesed.groupId) {
 			res.status(400).json({ error: "Missing require field" });
 			return;
 		}
-		const { storeId, groupId } = bodyParesed.data;
-
-		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-		if (!userStore || userStore.role === "STAFF") {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
-			return;
-		}
+		const groupId = bodyParesed.groupId;
 
 		await sendShiftRequestFunc(groupId);
 
@@ -70,20 +65,15 @@ export const sendConfirmShiftFuncController = async (
 ) => {
 	try {
 		const userId = req.userId as string;
-		const bodyParesed = pushMessageValidate.safeParse(req.body);
-		if (!bodyParesed.success) {
+		const storeId = req.storeId as string;
+		await verifyUserStoreForOwnerAndManager(userId, storeId);
+
+		const bodyParesed = pushMessageValidate.parse(req.body);
+		if (!bodyParesed.groupId) {
 			res.status(400).json({ error: "Missing require field" });
 			return;
 		}
-		const { storeId, groupId } = bodyParesed.data;
-
-		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-		if (!userStore || userStore.role === "STAFF") {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
-			return;
-		}
+		const groupId = bodyParesed.groupId;
 
 		await sendCofirmedShiftFunc(groupId);
 

@@ -7,14 +7,15 @@ import {
 import { getUserById, upsertUser } from "../repositories/user.repository";
 import {
 	createUserStore,
+	getStoreFromUser,
 	getUserStoreByUserId,
 	getUserStoreByUserIdAndStoreId,
 } from "../repositories/userStore.repository";
 import type { UpsertUserInput } from "../types/user.types";
+import { verifyUser, verifyUserStore } from "./common/authorization.service";
 
 export const authMe = async (userId: string) => {
-	const user = await getUserById(userId);
-	if (!user) throw new Error("User not found");
+	const user = await verifyUser(userId);
 
 	const userStore = await getUserStoreByUserId(userId);
 	if (!userStore) throw new Error("User is not linked to any store");
@@ -61,17 +62,15 @@ export const registerStaff = async (
 ///　通常ログイン
 export const login = async (
 	userId: string,
-): Promise<{ user: User; store: Store[]; userStore: UserStore }> => {
-	const user = await getUserById(userId);
-	if (!user) throw new Error("User not found");
+): Promise<{ user: User; stores: Store[] }> => {
+	const user = await verifyUser(userId);
 
-	const userStore = await getUserStoreByUserId(userId);
-	if (!userStore) throw new Error("User is not associated with a store");
+	const stores = (await getStoreFromUser(userId)).map((s) => s.store);
 
-	const store = await getStoreById(userStore.storeId);
-	if (!store) throw new Error("Store not found");
+	// const store = await getStoreById(userStore.storeId);
+	if (!stores) throw new Error("Store not found");
 
-	return { user, store, userStore };
+	return { user, stores };
 };
 
 /// 店舗データに即ログイン　　（シフト提出・確定通知リンクからのログイン）
@@ -85,8 +84,7 @@ export const storeLogin = async (
 	const store = await getStoreByGroupId(groupId);
 	if (!store) throw new Error("Store not found");
 
-	const userStore = await getUserStoreByUserIdAndStoreId(user.id, store.id);
-	if (!userStore) throw new Error("User is not associated with this store");
+	await verifyUserStore(user.id, store.id);
 
 	return { user, store };
 };

@@ -4,18 +4,19 @@ import {
 	getWeeklySubmittedShiftsController,
 	upsertSubmittedShiftController,
 } from "../controllers/submittedShift.controller";
-import { validateStoreId } from "../middlewares/validations/storeId.validate";
-import { validateStoreIdAndWeekStart } from "../middlewares/validations/storeIdAndWeekStart.validate";
+import { attachStoreId } from "../middlewares/attach-storeId";
+import { validateWeekStart } from "../middlewares/validations/weekStart.validate";
 import { verifyJWT } from "../middlewares/verify-JWT";
 
 const router = express.Router();
 router.use(verifyJWT);
+router.use(attachStoreId);
 
 router.post("/", upsertSubmittedShiftController);
-router.get("/me/:storeId", validateStoreId, getSubmittedShiftUserController);
+router.get("/me", getSubmittedShiftUserController);
 router.get(
-	"/all/:storeId/:weekStart",
-	validateStoreIdAndWeekStart,
+	"/all/:weekStart",
+	validateWeekStart,
 	getWeeklySubmittedShiftsController,
 );
 

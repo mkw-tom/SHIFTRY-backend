@@ -4,6 +4,10 @@ import {
 	upsertAssignShfit,
 } from "../repositories/assingShift.repostory";
 import { getUserStoreByUserIdAndStoreId } from "../repositories/userStore.repository";
+import {
+	verifyUserStore,
+	verifyUserStoreForOwnerAndManager,
+} from "../services/common/authorization.service";
 import { upsertAssignShfitValidate } from "../validations/assignShift.validation";
 
 export const upsertAssignShfitController = async (
@@ -12,6 +16,9 @@ export const upsertAssignShfitController = async (
 ) => {
 	try {
 		const userId = req.userId as string;
+		const storeId = req.storeId as string;
+		await verifyUserStoreForOwnerAndManager(userId, storeId);
+
 		const parsedBody = upsertAssignShfitValidate.safeParse(req.body);
 		if (!parsedBody.success) {
 			res.status(400).json({
@@ -20,20 +27,8 @@ export const upsertAssignShfitController = async (
 			});
 			return;
 		}
-		const storeId = parsedBody.data.storeId;
 
-		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-		if (
-			!userStore ||
-			(userStore?.role !== "OWNER" && userStore?.role !== "MANAGER")
-		) {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
-			return;
-		}
-
-		const assignShift = await upsertAssignShfit(parsedBody.data);
+		const assignShift = await upsertAssignShfit(storeId, parsedBody.data);
 		res.json({ ok: true });
 	} catch (error) {
 		console.error("Failed to upsert assign shift:", error);
@@ -44,15 +39,10 @@ export const upsertAssignShfitController = async (
 export const getAssignShiftController = async (req: Request, res: Response) => {
 	try {
 		const userId = req.userId as string;
-		const { storeId, weekStart } = req.params;
+		const storeId = req.storeId as string;
+		await verifyUserStore(userId, storeId);
 
-		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-		if (!userStore) {
-			res
-				.status(403)
-				.json({ message: "User is not authorized to perform this action" });
-			return;
-		}
+		const { weekStart } = req.params;
 
 		const assingShift = await getAssignShift(storeId, weekStart);
 

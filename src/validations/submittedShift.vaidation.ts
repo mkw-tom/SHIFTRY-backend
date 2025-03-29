@@ -1,6 +1,5 @@
 import { ShiftStatus } from "@prisma/client";
-import { string, z } from "zod";
-import { storeIdParamValidate } from "../middlewares/validations/storeId.validate";
+import { z } from "zod";
 
 const timeSlotValidate = z.object({
 	time: z.string(), // より厳密にするなら後述
@@ -20,7 +19,6 @@ const ShiftToSubmitValidate = z.object({
 export type ShiftToSubmitType = z.infer<typeof ShiftToSubmitValidate>;
 
 export const upsertSubmittedShifttValidate = z.object({
-	storeId: z.string(),
 	shiftRequestId: z.string(),
 	attendCount: z.number().min(1).max(7),
 	weekStart: z.string().refine((val) => !Number.isNaN(Date.parse(val)), {

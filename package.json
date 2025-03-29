@@ -15,7 +15,7 @@
 		"generate:prod": "dotenv -e .env -- npx prisma generate",
 		"generate:test": "dotenv -e .env.test -- npx prisma generate",
 		"migrate:prod": "dotenv -e .env -- npx prisma migrate deploy",
-		"migrate:test": "dotenv -e .env.test -- npx prisma migrate reset --force --skip-seed",
+		"migrate:test": "dotenv -e .env.test -- npx prisma migrate dev",
 		"db:push:test": "dotenv -e .env.test  npx prisma db push",
 		"studio:prod": "dotenv -e .env -- npx prisma studio",
 		"studio:test": "dotenv -e .env.test -- npx prisma studio"
@@ -30,6 +30,7 @@
 		"cors": "^2.8.5",
 		"express": "^4.21.2",
 		"jsonwebtoken": "^9.0.2",
+		"stripe": "^17.7.0",
 		"zod": "^3.24.2"
 	},
 	"devDependencies": {

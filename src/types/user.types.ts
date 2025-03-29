@@ -22,7 +22,6 @@ export interface UpsertUserInput {
 export interface UpdateUserInput {
 	name?: string;
 	pictureUrl?: string;
-	role?: "OWNER" | "STAFF";
 }
 
 export interface LineUser {
