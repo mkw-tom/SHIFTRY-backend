@@ -1,7 +1,10 @@
-import "express";
+import type { Request } from "express";
 
-declare module "express" {
-	export interface Request {
-		userId?: string;
+declare global {
+	namespace Express {
+		interface Request {
+			userId?: string;
+			storeId?: string;
+		}
 	}
 }

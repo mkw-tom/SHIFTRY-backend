@@ -19,7 +19,6 @@ export const shiftToAssignValidate = z.object({
 export type shiftToAssignType = z.infer<typeof shiftToAssignValidate>;
 
 export const upsertAssignShfitValidate = z.object({
-	storeId: z.string().uuid(),
 	shiftRequestId: z.string().uuid(),
 	weekStart: z.string().refine((val) => !Number.isNaN(Date.parse(val)), {
 		message: "Invalid date format",
