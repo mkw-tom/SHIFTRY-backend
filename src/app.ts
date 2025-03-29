@@ -4,8 +4,10 @@ import express from "express";
 import assignShiftRoutes from "./routes/assignShift.route";
 import authRoutes from "./routes/auth.route";
 import messageRoutes from "./routes/message.route";
+import paymentRoutes from "./routes/payment.route";
 import shiftRequestRoutes from "./routes/shiftRerquest.route";
 import storeRoutes from "./routes/store.route";
+import stripeRoutes from "./routes/stripe.route";
 import submittedShiftRoutes from "./routes/submittedShift.route";
 import userRoutes from "./routes/user.route";
 
@@ -27,8 +29,9 @@ app.use("/api/store", storeRoutes);
 app.use("/api/shift/request", shiftRequestRoutes);
 app.use("/api/shift/submit", submittedShiftRoutes);
 app.use("/api/shift/assign", assignShiftRoutes);
+app.use("/api/payment", paymentRoutes);
+app.use("/webhook/strip", stripeRoutes);
 
-// 🔹 エラーハンドリング（最後に記述）
 app.use(
 	(
 		err: Error,
