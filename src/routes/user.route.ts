@@ -1,18 +1,19 @@
 import express from "express";
 import {
+	changeUserRoleController,
 	deleteUserController,
 	getAlluserController,
-	getUserAndStoreController,
-	updateUserController,
-	upsertUserController,
+	getUserFromStoreController,
+	updateUserProfileController,
 } from "../controllers/user.controller";
+import { attachStoreId } from "../middlewares/attach-storeId";
+import { verifyJWT } from "../middlewares/verify-JWT";
 
 const router = express.Router();
-router.get("/", getAlluserController);
-router.get("/:storeId/:userId", getUserAndStoreController);
-router.get("/:storeId", getUserAndStoreController);
-router.post("/", upsertUserController);
-router.put("/:userId", updateUserController);
-router.delete("/:userId", deleteUserController);
+router.get("/all", attachStoreId, getAlluserController);
+router.get("/", attachStoreId, getUserFromStoreController);
+router.put("/", verifyJWT, updateUserProfileController);
+router.delete("/", verifyJWT, deleteUserController);
+router.put("/change-role", verifyJWT, attachStoreId, changeUserRoleController);
 
 export default router;

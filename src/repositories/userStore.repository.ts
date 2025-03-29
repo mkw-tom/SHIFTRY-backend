@@ -35,3 +35,37 @@ export const getUserStoreByUserIdAndStoreId = async (
 		select: { userId: true, storeId: true, role: true },
 	});
 };
+
+///ユーザーが所属する全ての店舗データを取得
+export const getStoreFromUser = async (userId: string) => {
+	return await prisma.userStore.findMany({
+		where: { userId },
+		select: { store: true },
+	});
+};
+
+///店舗に所属するすべてのユーザーデータを取得
+export const getUserFromStore = async (storeId: string) => {
+	return await prisma.userStore.findMany({
+		where: { storeId },
+		select: { user: true },
+	});
+};
+
+export const changeUserRoleToUserStore = async (
+	userId: string,
+	storeId: string,
+	role: UserRole,
+) => {
+	return await prisma.userStore.update({
+		where: {
+			userId_storeId: {
+				userId: userId,
+				storeId: storeId,
+			},
+		},
+		data: {
+			role: role,
+		},
+	});
+};

@@ -1,7 +1,13 @@
-import type { User } from "@prisma/client";
+import type { User, UserRole } from "@prisma/client";
 import prisma from "../config/database";
 
 import type { UpdateUserInput, UpsertUserInput } from "../types/user.types";
+import type { updateUserProlfileType } from "../validations/user.validation";
+
+/// ✅ ユーザーの全取得
+export const getUsers = async (): Promise<User[] | [] | null> => {
+	return await prisma.user.findMany();
+};
 
 /// ✅ userIdからユーザーの取得
 export const getUserById = async (userId: string): Promise<User | null> => {
@@ -21,22 +27,6 @@ export const upsertUser = async (
 	});
 };
 
-/// ✅ ユーザーの全取得
-export const getUsers = async (): Promise<User[] | [] | null> => {
-	return await prisma.user.findMany();
-};
-
-/// ✅✅ ログインで使うかも　店舗のユーザー取得
-export const getUserAndStore = async (storeId: string, userId: string) => {
-	return await prisma.userStore.findFirst({
-		where: { storeId, userId },
-		include: {
-			user: true,
-			store: true,
-		},
-	});
-};
-
 /// ✅ 店舗に紐づくユーザーを取得　　（中間テーブル : userStore）
 export const getStoreUser = async (storeId: string) => {
 	return prisma.userStore.findMany({
@@ -48,10 +38,22 @@ export const getStoreUser = async (storeId: string) => {
 };
 
 ///　✅ ユーザーのプロフィール編集（role name）
-export const updateUser = async (userId: string, data: UpdateUserInput) => {
+export const updateUser = async (
+	userId: string,
+	data: updateUserProlfileType,
+) => {
 	return prisma.user.update({
 		where: { id: userId },
 		data,
+	});
+};
+
+export const changeUserRole = async (userId: string, role: UserRole) => {
+	return await prisma.user.update({
+		where: { id: userId },
+		data: {
+			role: role as UserRole,
+		},
 	});
 };
 
@@ -61,33 +63,3 @@ export const deleteUser = async (userId: string) => {
 		where: { id: userId },
 	});
 };
-// export const fetchUsers = async () => {
-// 	return prisma.user.findMany();
-// };
-
-//// ----　　✅　中間テーブルにユーザーデータを追加 --------------------0
-// ✔︎ オーナーの中間データを作成
-// export const createDataOwnerToStore = async (
-// 	ownerId: string,
-// 	storeId: string,
-// ) => {
-// 	return prisma.ownerStore.create({
-// 		data: {
-// 			ownerId: ownerId,
-// 			storeId: storeId,
-// 		},
-// 	});
-// };
-
-// // ✔︎　オーナーの中間データを作成
-// export const createDataStaffToStore = async (
-// 	userId: string,
-// 	storeId: string,
-// ) => {
-// 	return prisma.userStore.create({
-// 		data: {
-// 			userId: userId,
-// 			storeId: storeId,
-// 		},
-// 	});
-// };

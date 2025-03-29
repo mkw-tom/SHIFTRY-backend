@@ -1,5 +1,7 @@
 import type { Store } from "@prisma/client";
+import { string } from "zod";
 import prisma from "../config/database";
+import { updateStoreNameInput } from "../validations/store.validation";
 
 export const createStore = async (
 	name: string,
@@ -8,7 +10,7 @@ export const createStore = async (
 	return await prisma.store.create({
 		data: {
 			name: name,
-			groupId: groupId, ///　LIFFで取得したグループIDを保存
+			groupId: groupId,
 		},
 	});
 };
@@ -36,5 +38,24 @@ export const updateStoreGroupId = async (
 	return await prisma.store.update({
 		where: { id },
 		data: { groupId: groupId },
+	});
+};
+
+export const updateStoreName = async (
+	storeId: string,
+	name: string,
+): Promise<Store> => {
+	return await prisma.store.update({
+		where: { id: storeId },
+		data: {
+			name: name,
+		},
+	});
+};
+
+// 店舗削除
+export const deleteStore = async (id: string) => {
+	return await prisma.store.delete({
+		where: { id },
 	});
 };
