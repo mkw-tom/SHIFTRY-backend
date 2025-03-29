@@ -5,7 +5,6 @@ import {
 	upsertSubmittedShift,
 } from "../repositories/submittedShift.repository";
 import { getUserStoreByUserIdAndStoreId } from "../repositories/userStore.repository";
-import { upsertShfitRequestValidate } from "../validations/shiftRequest.validation";
 import { upsertSubmittedShifttValidate } from "../validations/submittedShift.vaidation";
 
 export const upsertSubmittedShiftController = async (
@@ -14,6 +13,7 @@ export const upsertSubmittedShiftController = async (
 ) => {
 	try {
 		const userId = req.userId as string;
+		const storeId = req.storeId as string;
 		const parsedBody = upsertSubmittedShifttValidate.safeParse(req.body);
 		if (!parsedBody.success) {
 			res.status(400).json({
@@ -22,7 +22,6 @@ export const upsertSubmittedShiftController = async (
 			});
 			return;
 		}
-		const storeId = parsedBody.data.storeId;
 		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
 		if (!userStore) {
 			res
@@ -31,7 +30,7 @@ export const upsertSubmittedShiftController = async (
 			return;
 		}
 
-		await upsertSubmittedShift(userId, parsedBody.data);
+		await upsertSubmittedShift(userId, storeId, parsedBody.data);
 
 		res.json({ ok: true });
 	} catch (error) {
@@ -46,7 +45,7 @@ export const getSubmittedShiftUserController = async (
 ) => {
 	try {
 		const userId = req.userId as string;
-		const { storeId } = req.params;
+		const storeId = req.storeId as string;
 		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
 		if (!userStore) {
 			res
@@ -70,7 +69,8 @@ export const getWeeklySubmittedShiftsController = async (
 ) => {
 	try {
 		const userId = req.userId as string;
-		const { storeId, weekStart } = req.params;
+		const storeId = req.storeId as string;
+		const { weekStart } = req.params;
 		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
 		if (!userStore) {
 			res

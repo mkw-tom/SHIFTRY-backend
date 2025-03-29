@@ -1,16 +1,19 @@
 import prisma from "../config/database";
 import type { upsertAssignShfitInput } from "../validations/assignShift.validation";
 
-export const upsertAssignShfit = async (data: upsertAssignShfitInput) => {
+export const upsertAssignShfit = async (
+	storeId: string,
+	data: upsertAssignShfitInput,
+) => {
 	return await prisma.assignShift.upsert({
 		where: {
 			storeId_weekStart: {
-				storeId: data.storeId,
+				storeId: storeId,
 				weekStart: new Date(data.weekStart),
 			},
 		},
 		update: {
-			storeId: data.storeId,
+			storeId: storeId,
 			shiftRequestId: data.shiftRequestId,
 			weekStart: new Date(data.weekStart),
 			weekEnd: new Date(data.weekEnd),
@@ -18,7 +21,7 @@ export const upsertAssignShfit = async (data: upsertAssignShfitInput) => {
 			status: data.status,
 		},
 		create: {
-			storeId: data.storeId,
+			storeId: storeId,
 			shiftRequestId: data.shiftRequestId,
 			weekStart: new Date(data.weekStart),
 			weekEnd: new Date(data.weekEnd),

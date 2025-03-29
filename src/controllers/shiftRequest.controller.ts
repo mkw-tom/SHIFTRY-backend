@@ -15,8 +15,8 @@ export const getShiftRequestController = async (
 ): Promise<void> => {
 	try {
 		const userId = req.userId as string;
+		const storeId = req.storeId as string;
 
-		const { storeId } = req.params;
 		if (!storeId) {
 			res.status(400).json({ message: "storId is not found" });
 		}
@@ -44,7 +44,7 @@ export const getShiftRequestWeekController = async (
 ): Promise<void> => {
 	try {
 		const userId = req.userId as string;
-		const storeId = req.params.storeId;
+		const storeId = req.storeId as string;
 		const weekStart = req.params.weekStart;
 		const weekShift = await getShiftRequestWeek(storeId, weekStart);
 
@@ -69,6 +69,7 @@ export const upsertShiftRequestController = async (
 ): Promise<void> => {
 	try {
 		const userId = req.userId as string;
+		const storeId = req.storeId as string;
 
 		const bodyParesed = upsertShfitRequestValidate.safeParse(req.body);
 		if (!bodyParesed.success) {
@@ -78,8 +79,7 @@ export const upsertShiftRequestController = async (
 			});
 			return;
 		}
-		const { storeId, weekStart, weekEnd, requests, status, deadline } =
-			bodyParesed.data;
+		const { weekStart, weekEnd, requests, status, deadline } = bodyParesed.data;
 
 		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
 		if (userStore?.role !== "OWNER" && userStore?.role !== "MANAGER") {
@@ -89,14 +89,15 @@ export const upsertShiftRequestController = async (
 			return;
 		}
 
-		await upsertShiftRequest({
-			storeId,
+		const upsertData = {
 			weekStart,
 			weekEnd,
 			requests,
 			status,
 			deadline,
-		});
+		};
+
+		await upsertShiftRequest(storeId, upsertData);
 
 		res.json({ ok: true });
 	} catch (error) {
@@ -111,7 +112,7 @@ export const deleteShiftRequestController = async (
 ): Promise<void> => {
 	try {
 		const userId = req.userId as string;
-		const storeId = req.params.storeId;
+		const storeId = req.storeId as string;
 		const weekStart = req.params.weekStart;
 		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
 		if (!userStore) {

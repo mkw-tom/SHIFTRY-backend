@@ -12,6 +12,7 @@ export const upsertAssignShfitController = async (
 ) => {
 	try {
 		const userId = req.userId as string;
+		const storeId = req.storeId as string;
 		const parsedBody = upsertAssignShfitValidate.safeParse(req.body);
 		if (!parsedBody.success) {
 			res.status(400).json({
@@ -20,7 +21,6 @@ export const upsertAssignShfitController = async (
 			});
 			return;
 		}
-		const storeId = parsedBody.data.storeId;
 
 		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
 		if (
@@ -33,7 +33,7 @@ export const upsertAssignShfitController = async (
 			return;
 		}
 
-		const assignShift = await upsertAssignShfit(parsedBody.data);
+		const assignShift = await upsertAssignShfit(storeId, parsedBody.data);
 		res.json({ ok: true });
 	} catch (error) {
 		console.error("Failed to upsert assign shift:", error);
@@ -44,7 +44,8 @@ export const upsertAssignShfitController = async (
 export const getAssignShiftController = async (req: Request, res: Response) => {
 	try {
 		const userId = req.userId as string;
-		const { storeId, weekStart } = req.params;
+		const storeId = req.storeId as string;
+		const { weekStart } = req.params;
 
 		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
 		if (!userStore) {

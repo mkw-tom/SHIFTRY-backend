@@ -39,12 +39,13 @@ export const sendShiftRequestFuncController = async (
 ) => {
 	try {
 		const userId = req.userId as string;
-		const bodyParesed = pushMessageValidate.safeParse(req.body);
-		if (!bodyParesed.success) {
+		const storeId = req.storeId as string;
+		const bodyParesed = pushMessageValidate.parse(req.body);
+		if (!bodyParesed.groupId) {
 			res.status(400).json({ error: "Missing require field" });
 			return;
 		}
-		const { storeId, groupId } = bodyParesed.data;
+		const groupId = bodyParesed.groupId;
 
 		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
 		if (!userStore || userStore.role === "STAFF") {
@@ -70,12 +71,13 @@ export const sendConfirmShiftFuncController = async (
 ) => {
 	try {
 		const userId = req.userId as string;
-		const bodyParesed = pushMessageValidate.safeParse(req.body);
-		if (!bodyParesed.success) {
+		const storeId = req.storeId as string;
+		const bodyParesed = pushMessageValidate.parse(req.body);
+		if (!bodyParesed.groupId) {
 			res.status(400).json({ error: "Missing require field" });
 			return;
 		}
-		const { storeId, groupId } = bodyParesed.data;
+		const groupId = bodyParesed.groupId;
 
 		const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
 		if (!userStore || userStore.role === "STAFF") {

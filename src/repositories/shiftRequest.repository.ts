@@ -3,17 +3,18 @@ import prisma from "../config/database";
 import type { UpsertShiftRequetInput } from "../types/shiftRequest.type";
 
 export const upsertShiftRequest = async (
+	storeId: string,
 	data: UpsertShiftRequetInput,
 ): Promise<ShiftRequest> => {
 	return await prisma.shiftRequest.upsert({
 		where: {
 			storeId_weekStart: {
-				storeId: data.storeId,
+				storeId: storeId,
 				weekStart: new Date(data.weekStart),
 			},
 		},
 		update: {
-			storeId: data.storeId,
+			storeId: storeId,
 			requests: data.requests,
 			status: data.status,
 			deadline: new Date(data.deadline),
@@ -21,7 +22,7 @@ export const upsertShiftRequest = async (
 			weekEnd: new Date(data.weekEnd),
 		},
 		create: {
-			storeId: data.storeId,
+			storeId: storeId,
 			requests: data.requests,
 			status: data.status,
 			deadline: new Date(data.deadline),

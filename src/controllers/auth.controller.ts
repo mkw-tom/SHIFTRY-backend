@@ -10,9 +10,9 @@ import { generateJWT } from "../utils/JWT/jwt";
 import {
 	groupIdValidate,
 	reLoginUserIdValidate,
-	storeInputValidate,
 	userInputValidate,
 } from "../validations/auth.validation";
+import { storeInputValidate } from "../validations/store.validation";
 
 /// ログイン時に　bearer認証　（JWT）
 export const authMeUserController = async (
@@ -101,8 +101,9 @@ export const registerStaffController = async (
 
 		const { user, store } = await registerStaff(userInput, groupId);
 		const token = generateJWT(user.id);
+		const storeToken = generateJWT(store.id);
 
-		res.json({ ok: true, user, store, token });
+		res.json({ ok: true, user, store, token, storeToken });
 	} catch (error) {
 		console.error("Error in registerStaffController:", error);
 		res.status(500).json({ ok: false, message: "failed to register staff" });
@@ -117,10 +118,10 @@ export const loginController = async (
 	try {
 		const userId = req.userId as string;
 
-		const { user, store, userStore } = await login(userId);
+		const { user, stores, userStore } = await login(userId);
 		const token = generateJWT(user.id);
 
-		res.json({ ok: true, user, store, userStore, token });
+		res.json({ ok: true, user, stores, userStore, token });
 	} catch (error) {
 		console.error("Error in loginController:", error);
 		res.status(500).json({ ok: false, message: "failed to login" });
@@ -128,7 +129,7 @@ export const loginController = async (
 };
 
 //// 店舗データに即ログイン　　（シフト提出・確定通知リンクからのログイン）
-export const storeLoginControler = async (
+export const loginStoreControler = async (
 	req: Request,
 	res: Response,
 ): Promise<void> => {

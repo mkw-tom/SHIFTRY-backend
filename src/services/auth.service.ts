@@ -7,6 +7,7 @@ import {
 import { getUserById, upsertUser } from "../repositories/user.repository";
 import {
 	createUserStore,
+	getStoreFromUser,
 	getUserStoreByUserId,
 	getUserStoreByUserIdAndStoreId,
 } from "../repositories/userStore.repository";
@@ -61,17 +62,19 @@ export const registerStaff = async (
 ///　通常ログイン
 export const login = async (
 	userId: string,
-): Promise<{ user: User; store: Store[]; userStore: UserStore }> => {
+): Promise<{ user: User; stores: Store[]; userStore: UserStore }> => {
 	const user = await getUserById(userId);
 	if (!user) throw new Error("User not found");
 
 	const userStore = await getUserStoreByUserId(userId);
 	if (!userStore) throw new Error("User is not associated with a store");
 
-	const store = await getStoreById(userStore.storeId);
-	if (!store) throw new Error("Store not found");
+	const stores = (await getStoreFromUser(userId)).map((s) => s.store);
 
-	return { user, store, userStore };
+	// const store = await getStoreById(userStore.storeId);
+	if (!stores) throw new Error("Store not found");
+
+	return { user, stores, userStore };
 };
 
 /// 店舗データに即ログイン　　（シフト提出・確定通知リンクからのログイン）
