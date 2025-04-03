@@ -103,9 +103,8 @@ export const registerStaffController = async (
 
 		const { user, store } = await registerStaff(userInput, groupId);
 		const token = generateJWT(user.id);
-		const storeToken = generateJWT(store.id);
 
-		res.json({ ok: true, user, store, token, storeToken });
+		res.json({ ok: true, user, store, token });
 	} catch (error) {
 		console.error("Error in registerStaffController:", error);
 		res.status(500).json({ ok: false, message: "failed to register staff" });
