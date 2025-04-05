@@ -27,8 +27,10 @@
 		"@faker-js/faker": "^9.6.0",
 		"@prisma/client": "^6.5.0",
 		"axios": "^1.8.1",
+		"cookie-parser": "^1.4.7",
 		"cors": "^2.8.5",
 		"express": "^4.21.2",
+		"helmet": "^8.1.0",
 		"jsonwebtoken": "^9.0.2",
 		"stripe": "^17.7.0",
 		"zod": "^3.24.2"
@@ -36,9 +38,11 @@
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
 		"@types/cookie": "^0.6.0",
+		"@types/cookie-parser": "^1.4.8",
 		"@types/cors": "^2.8.17",
 		"@types/express": "^5.0.0",
 		"@types/faker": "^6.6.8",
+		"@types/helmet": "^0.0.48",
 		"@types/jest": "^29.5.14",
 		"@types/jsonwebtoken": "^9.0.9",
 		"@types/node": "^22.13.5",

@@ -10,6 +10,8 @@ import storeRoutes from "./routes/store.route";
 import stripeRoutes from "./routes/stripe.route";
 import submittedShiftRoutes from "./routes/submittedShift.route";
 import userRoutes from "./routes/user.route";
+import helmet from "helmet";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -18,6 +20,8 @@ const https = require("node:https");
 
 // 🔹 ミドルウェアの設定
 app.use(cors()); // CORS の許可
+app.use(helmet()); // セキュリティヘッダーの追加
+app.use(cookieParser());
 app.use(express.json()); // JSON リクエストのパース
 app.use(express.urlencoded({ extended: true })); // URL エンコードのサポート
 
