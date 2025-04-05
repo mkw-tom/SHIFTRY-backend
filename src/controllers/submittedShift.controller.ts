@@ -62,12 +62,10 @@ export const getWeeklySubmittedShiftsController = async (
 		const storeId = req.storeId as string;
 		await verifyUserStore(userId, storeId);
 
-		const { weekStart } = req.params;
+		const { shiftRequestId } = req.params;
 
-		const weeklySubmittedShifts = await getWeeklySubmittedShifts(
-			storeId,
-			weekStart,
-		);
+		const weeklySubmittedShifts =
+			await getWeeklySubmittedShifts(shiftRequestId);
 
 		res.json({ weeklySubmittedShifts });
 	} catch (error) {

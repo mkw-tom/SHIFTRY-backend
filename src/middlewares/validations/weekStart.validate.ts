@@ -1,6 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
 import { z } from "zod";
-import prisma from "../../config/database";
 
 const WeekStartParamValidate = z.object({
 	weekStart: z.string().refine((val) => !Number.isNaN(Date.parse(val)), {

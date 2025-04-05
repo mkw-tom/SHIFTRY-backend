@@ -9,19 +9,15 @@ export const upsertSubmittedShift = async (
 ) => {
 	return await prisma.submittedShift.upsert({
 		where: {
-			userId_storeId_weekStart: {
+			userId_shiftRequestId: {
 				userId: userId,
-				storeId: storeId,
-				weekStart: new Date(data.weekStart),
+				shiftRequestId: data.shiftRequestId,
 			},
 		},
 		update: {
-			storeId: storeId,
 			attendCount: data.attendCount,
 			shifts: data.shifts,
 			status: data.status,
-			weekStart: new Date(data.weekStart),
-			weekEnd: new Date(data.weekEnd),
 		},
 		create: {
 			userId: userId,
@@ -29,8 +25,6 @@ export const upsertSubmittedShift = async (
 			shiftRequestId: data.shiftRequestId,
 			attendCount: data.attendCount,
 			shifts: data.shifts,
-			weekStart: new Date(data.weekStart),
-			weekEnd: new Date(data.weekEnd),
 			status: data.status,
 		},
 	});
@@ -45,11 +39,8 @@ export const getSubmittedShiftUser = async (
 	});
 };
 
-export const getWeeklySubmittedShifts = async (
-	storeId: string,
-	weekStart: string,
-) => {
+export const getWeeklySubmittedShifts = async (shiftRequestId: string) => {
 	return await prisma.submittedShift.findMany({
-		where: { storeId, weekStart: new Date(weekStart) },
+		where: { shiftRequestId },
 	});
 };
