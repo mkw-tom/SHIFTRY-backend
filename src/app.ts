@@ -1,6 +1,8 @@
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import helmet from "helmet";
 import assignShiftRoutes from "./routes/assignShift.route";
 import authRoutes from "./routes/auth.route";
 import messageRoutes from "./routes/message.route";
@@ -10,8 +12,6 @@ import storeRoutes from "./routes/store.route";
 import stripeRoutes from "./routes/stripe.route";
 import submittedShiftRoutes from "./routes/submittedShift.route";
 import userRoutes from "./routes/user.route";
-import helmet from "helmet";
-import cookieParser from "cookie-parser";
 
 dotenv.config();
 
