@@ -6,13 +6,13 @@ import {
 	createPaymentController,
 	getPaymentController,
 } from "../controllers/payment.controller";
-import { attachStoreId } from "../middlewares/attach-storeId";
-import { verifyJWT } from "../middlewares/verify-JWT";
+import { attachStoreIdFromHeader } from "../middlewares/request/attachStoreIdFromHeader";
+import { attachUserIdFromCookie } from "../middlewares/request/attachUserIdFromCookie";
 
 const router = express.Router();
 
-router.use(verifyJWT);
-router.use(attachStoreId);
+router.use(attachUserIdFromCookie);
+router.use(attachStoreIdFromHeader);
 
 router.get("/", getPaymentController);
 router.post("/", createPaymentController);

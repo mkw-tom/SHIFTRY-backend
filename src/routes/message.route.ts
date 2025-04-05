@@ -4,22 +4,22 @@ import {
 	sendConfirmShiftFuncController,
 	sendShiftRequestFuncController,
 } from "../controllers/messege.controller";
-import { attachStoreId } from "../middlewares/attach-storeId";
-import { verifyJWT } from "../middlewares/verify-JWT";
+import { attachStoreIdFromHeader } from "../middlewares/request/attachStoreIdFromHeader";
+import { attachUserIdFromCookie } from "../middlewares/request/attachUserIdFromCookie";
 
 const router = express.Router();
 
 router.post("/", groupJoinController);
 router.post(
 	"/request-shift",
-	verifyJWT,
-	attachStoreId,
+	attachUserIdFromCookie,
+	attachStoreIdFromHeader,
 	sendShiftRequestFuncController,
 );
 router.post(
 	"/confirm-shift",
-	verifyJWT,
-	attachStoreId,
+	attachUserIdFromCookie,
+	attachStoreIdFromHeader,
 	sendConfirmShiftFuncController,
 );
 

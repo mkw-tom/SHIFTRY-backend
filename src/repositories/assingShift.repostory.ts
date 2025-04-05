@@ -6,38 +6,22 @@ export const upsertAssignShfit = async (
 	data: upsertAssignShfitInput,
 ) => {
 	return await prisma.assignShift.upsert({
-		where: {
-			storeId_weekStart: {
-				storeId: storeId,
-				weekStart: new Date(data.weekStart),
-			},
-		},
+		where: { shiftRequestId: data.shiftRequestId },
 		update: {
-			storeId: storeId,
-			shiftRequestId: data.shiftRequestId,
-			weekStart: new Date(data.weekStart),
-			weekEnd: new Date(data.weekEnd),
 			shifts: data.shifts,
 			status: data.status,
 		},
 		create: {
 			storeId: storeId,
 			shiftRequestId: data.shiftRequestId,
-			weekStart: new Date(data.weekStart),
-			weekEnd: new Date(data.weekEnd),
 			shifts: data.shifts,
 			status: data.status,
 		},
 	});
 };
 
-export const getAssignShift = async (storeId: string, weekStart: string) => {
+export const getAssignShift = async (shiftRequestId: string) => {
 	return await prisma.assignShift.findUnique({
-		where: {
-			storeId_weekStart: {
-				storeId,
-				weekStart: new Date(weekStart),
-			},
-		},
+		where: { shiftRequestId },
 	});
 };

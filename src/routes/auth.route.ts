@@ -7,15 +7,15 @@ import {
 	registerOwnerController,
 	registerStaffController,
 } from "../controllers/auth.controller";
-import { verifyJWT } from "../middlewares/verify-JWT";
+import { attachUserIdFromCookie } from "../middlewares/request/attachUserIdFromCookie";
 
 const router = express.Router();
 
-router.post("/me", verifyJWT, authMeUserController);
+router.post("/me", attachUserIdFromCookie, authMeUserController);
 router.post("/re-login", reLoginController);
 router.post("/register-owner", registerOwnerController);
 router.post("/register-staff", registerStaffController);
-router.post("/login", verifyJWT, loginController);
-router.post("/login-store", verifyJWT, loginStoreControler);
+router.post("/login", attachUserIdFromCookie, loginController);
+router.post("/login-store", attachUserIdFromCookie, loginStoreControler);
 
 export default router;

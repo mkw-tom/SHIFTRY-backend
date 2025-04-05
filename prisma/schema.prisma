@@ -85,9 +85,7 @@ enum RequestStatus {
 model AssignShift {
   id              String        @id @default(uuid())
   storeId         String
-  shiftRequestId  String        @unique
-  weekStart       DateTime
-  weekEnd         DateTime?
+  shiftRequestId  String        @unique 
   shifts          Json
   status          ShiftStatus   @default(ADJUSTMENT)
 
@@ -96,9 +94,8 @@ model AssignShift {
 
   store           Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
   shiftRequest    ShiftRequest  @relation(fields: [shiftRequestId], references: [id], onDelete: Cascade)
-
-  @@unique([storeId, weekStart])
 }
+
 
 enum ShiftStatus {
   ADJUSTMENT
@@ -111,10 +108,9 @@ model SubmittedShift {
   userId          String
   storeId         String
   shiftRequestId  String
+
   attendCount     Int
   shifts          Json
-  weekStart       DateTime
-  weekEnd         DateTime
   status          ShiftStatus
 
   createdAt       DateTime       @default(now())
@@ -124,9 +120,9 @@ model SubmittedShift {
   store           Store          @relation(fields: [storeId], references: [id], onDelete: Cascade)
   shiftRequest    ShiftRequest   @relation(fields: [shiftRequestId], references: [id], onDelete: Cascade)
 
-
-  @@unique([userId, storeId, weekStart])
+  @@unique([userId, shiftRequestId])
 }
+
 
 // Stripe連携などの支払い情報
 model Payment {

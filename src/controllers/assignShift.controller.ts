@@ -42,9 +42,9 @@ export const getAssignShiftController = async (req: Request, res: Response) => {
 		const storeId = req.storeId as string;
 		await verifyUserStore(userId, storeId);
 
-		const { weekStart } = req.params;
+		const { shiftRequestId } = req.params;
 
-		const assingShift = await getAssignShift(storeId, weekStart);
+		const assingShift = await getAssignShift(shiftRequestId);
 
 		res.json({ assingShift });
 	} catch (error) {

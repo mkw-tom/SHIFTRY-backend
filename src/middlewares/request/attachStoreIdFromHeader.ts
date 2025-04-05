@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
-export const attachStoreId = (
+
+export const attachStoreIdFromHeader = (
 	req: Request,
 	res: Response,
 	next: NextFunction,
@@ -18,6 +18,5 @@ export const attachStoreId = (
 		res
 			.status(401)
 			.json({ message: "Unexpected error while attaching storeId" });
-		return;
 	}
 };

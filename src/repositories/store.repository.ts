@@ -32,11 +32,11 @@ export const getStoreById = async (
 };
 
 export const updateStoreGroupId = async (
-	id: string,
+	storeId: string,
 	groupId: string,
 ): Promise<Store | null> => {
 	return await prisma.store.update({
-		where: { id },
+		where: { id: storeId },
 		data: { groupId: groupId },
 	});
 };
