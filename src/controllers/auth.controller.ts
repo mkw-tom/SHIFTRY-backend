@@ -1,4 +1,6 @@
 import type { Request, Response } from "express";
+import { setUserLoginCookie } from "../lib/server/cookies/setLoginUserCookies";
+import { setRegisterOwnerCookies } from "../lib/server/cookies/setRegisterOwnerCookies";
 import {
 	authMe,
 	login,
@@ -37,9 +39,9 @@ export const reLoginController = async (req: Request, res: Response) => {
 	try {
 		const bodyParesed = reLoginUserIdValidate.parse(req.body);
 		const userId = bodyParesed.userId;
-		const token = generateJWT(userId);
+		setUserLoginCookie(res, userId);
 
-		res.json({ ok: true, token });
+		res.json({ ok: true });
 	} catch (error) {
 		console.error("Error in getAuthenticatedUserController:", error);
 		res.status(401).json({ ok: false, message: " Faild to authentication" });
@@ -72,9 +74,10 @@ export const registerOwnerController = async (
 		};
 
 		const { user, store } = await registerOwner(userInput, storeInput);
-		const token = generateJWT(user.id);
+		// const token = generateJWT(user.id);
+		setRegisterOwnerCookies(res, user.id, store.id);
 
-		res.json({ ok: true, user, store, token });
+		res.json({ ok: true, user, store });
 	} catch (error) {
 		console.error("Error in registerOwnerController:", error);
 		res.status(500).json({ ok: false, message: "failed to register owner" });
@@ -102,9 +105,10 @@ export const registerStaffController = async (
 		const userInput = userInputParsed.data;
 
 		const { user, store } = await registerStaff(userInput, groupId);
-		const token = generateJWT(user.id);
+		// const token = generateJWT(user.id);
+		setUserLoginCookie(res, user.id);
 
-		res.json({ ok: true, user, store, token });
+		res.json({ ok: true, user, store });
 	} catch (error) {
 		console.error("Error in registerStaffController:", error);
 		res.status(500).json({ ok: false, message: "failed to register staff" });
@@ -120,9 +124,10 @@ export const loginController = async (
 		const userId = req.userId as string;
 
 		const { user, stores } = await login(userId);
-		const token = generateJWT(user.id);
+		// const token = generateJWT(user.id);
+		setUserLoginCookie(res, user.id);
 
-		res.json({ ok: true, user, stores, token });
+		res.json({ ok: true, user, stores });
 	} catch (error) {
 		console.error("Error in loginController:", error);
 		res.status(500).json({ ok: false, message: "failed to login" });
@@ -140,9 +145,10 @@ export const loginStoreControler = async (
 		const { groupId } = groupIdValidate.parse(req.body);
 
 		const { user, store } = await storeLogin(userId, groupId);
-		const token = generateJWT(user.id);
+		// const token = generateJWT(user.id);
+		setUserLoginCookie(res, user.id);
 
-		res.json({ ok: true, user, store, token });
+		res.json({ ok: true, user, store });
 	} catch (error) {
 		console.error("Error in loginController:", error);
 		res.status(500).json({ ok: false, message: "failed to login to store" });

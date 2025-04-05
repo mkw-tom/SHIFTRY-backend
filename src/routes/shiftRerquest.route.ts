@@ -5,22 +5,17 @@ import {
 	getShiftRequestWeekController,
 	upsertShiftRequestController,
 } from "../controllers/shiftRequest.controller";
-import { attachStoreId } from "../middlewares/attach-storeId";
+import { attachStoreIdFromHeader } from "../middlewares/request/attachStoreIdFromHeader";
+import { attachUserIdFromCookie } from "../middlewares/request/attachUserIdFromCookie";
 import { validateWeekStart } from "../middlewares/validations/weekStart.validate";
-import { verifyJWT } from "../middlewares/verify-JWT";
 
 const router = express.Router();
-router.use(verifyJWT);
-router.use(attachStoreId);
+router.use(attachUserIdFromCookie);
+router.use(attachStoreIdFromHeader);
 
 router.get("/", getShiftRequestController);
 router.get("/:weekStart", validateWeekStart, getShiftRequestWeekController);
 router.post("/", upsertShiftRequestController);
-router.delete(
-	"/:weekStart",
-
-	validateWeekStart,
-	deleteShiftRequestController,
-);
+router.delete("/:weekStart", validateWeekStart, deleteShiftRequestController);
 
 export default router;

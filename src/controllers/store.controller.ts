@@ -17,7 +17,6 @@ import {
 	verifyUserStoreForOwner,
 	verifyUserStoreForOwnerAndManager,
 } from "../services/common/authorization.service";
-import { generateJWT } from "../utils/JWT/jwt";
 import {
 	connectGoupIdValidate,
 	storeInputValidate,
@@ -32,13 +31,15 @@ export const storeConnectLineGroupController = async (
 		const userId = req.userId as string;
 		const storeId = req.storeId as string;
 		await verifyUserStoreForOwner(userId, storeId);
+		console.log(storeId, userId);
 
 		const bodyParesed = connectGoupIdValidate.parse(req.body);
 		const groupId = bodyParesed.groupId;
 		const user = await getUserById(userId);
 		if (!user) throw new Error("User not found");
 
-		await updateStoreGroupId(storeId, groupId);
+		const response = await updateStoreGroupId(storeId, groupId);
+		console.log(response);
 		res.json({ ok: true });
 	} catch (error) {
 		console.error(error);
