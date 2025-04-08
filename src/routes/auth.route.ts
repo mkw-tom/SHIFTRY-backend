@@ -1,6 +1,7 @@
 import express from "express";
 import {
 	authMeUserController,
+	lineAuthController,
 	loginController,
 	loginStoreControler,
 	reLoginController,
@@ -13,6 +14,7 @@ import { attachUserId } from "../middlewares/request/attachUserId";
 
 const router = express.Router();
 
+router.post("/line-auth", lineAuthController);
 router.post("/me", attachUserId, authMeUserController);
 router.post("/re-login", reLoginController);
 router.post("/register-owner", registerOwnerController);
