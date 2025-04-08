@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 
-export const attachStoreIdFromHeader = (
+export const attachStoreId = (
 	req: Request,
 	res: Response,
 	next: NextFunction,
@@ -15,6 +15,7 @@ export const attachStoreIdFromHeader = (
 		req.storeId = storeId;
 		next();
 	} catch (err) {
+		console.error("attachStoreId error:", err);
 		res
 			.status(401)
 			.json({ message: "Unexpected error while attaching storeId" });

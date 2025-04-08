@@ -5,20 +5,23 @@ import {
 	storeConnectLineGroupController,
 	updateStoreNameControler,
 } from "../controllers/store.controller";
-import { attachStoreIdFromCookie } from "../middlewares/request/attachStoreIdFromCookie";
-import { attachStoreIdFromHeader } from "../middlewares/request/attachStoreIdFromHeader";
-import { attachUserIdFromCookie } from "../middlewares/request/attachUserIdFromCookie";
+import { attachGroupId } from "../middlewares/request/attachGroupId";
+// import { attachStoreIdFromCookie } from "../middlewares/request/cookie/attachStoreIdFromCookie";
+import { attachStoreId } from "../middlewares/request/attachStoreId";
+import { attachUserId } from "../middlewares/request/attachUserId";
+// import { attachUserIdFromCookie } from "../middlewares/request/cookie/attachUserIdFromCookie";
 
 const router = express.Router();
-router.use(attachUserIdFromCookie);
+router.use(attachUserId);
 
 router.put(
 	"/connect-lineGroup",
-	attachStoreIdFromCookie,
+	attachStoreId,
+	attachGroupId,
 	storeConnectLineGroupController,
 );
 router.get("/me", getStoreFromUserController);
 router.post("/add", addManageStoreController);
-router.put("/", attachStoreIdFromHeader, updateStoreNameControler);
+router.put("/", attachStoreId, updateStoreNameControler);
 
 export default router;

@@ -6,18 +6,19 @@ import {
 	getUserFromStoreController,
 	updateUserProfileController,
 } from "../controllers/user.controller";
-import { attachStoreIdFromHeader } from "../middlewares/request/attachStoreIdFromHeader";
-import { attachUserIdFromCookie } from "../middlewares/request/attachUserIdFromCookie";
+import { attachStoreId } from "../middlewares/request/attachStoreId";
+import { attachUserId } from "../middlewares/request/attachUserId";
+// import { attachUserIdFromCookie } from "../middlewares/request/cookie/attachUserIdFromCookie";
 
 const router = express.Router();
-router.get("/all", attachStoreIdFromHeader, getAlluserController);
-router.get("/", attachStoreIdFromHeader, getUserFromStoreController);
-router.put("/", attachUserIdFromCookie, updateUserProfileController);
-router.delete("/", attachUserIdFromCookie, deleteUserController);
+router.get("/all", attachStoreId, getAlluserController);
+router.get("/", attachStoreId, getUserFromStoreController);
+router.put("/", attachUserId, updateUserProfileController);
+router.delete("/", attachUserId, deleteUserController);
 router.put(
 	"/change-role",
-	attachUserIdFromCookie,
-	attachStoreIdFromHeader,
+	attachUserId,
+	attachStoreId,
 	changeUserRoleController,
 );
 

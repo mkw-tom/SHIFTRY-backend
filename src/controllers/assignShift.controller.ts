@@ -29,7 +29,7 @@ export const upsertAssignShfitController = async (
 		}
 
 		const assignShift = await upsertAssignShfit(storeId, parsedBody.data);
-		res.json({ ok: true });
+		res.json({ ok: true, assignShift });
 	} catch (error) {
 		console.error("Failed to upsert assign shift:", error);
 		res.status(500).json({ message: "Internal Server Error" });
