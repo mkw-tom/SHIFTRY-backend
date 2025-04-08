@@ -21,12 +21,12 @@ export type ShiftToSubmitType = z.infer<typeof ShiftToSubmitValidate>;
 export const upsertSubmittedShifttValidate = z.object({
 	shiftRequestId: z.string(),
 	attendCount: z.number().min(1).max(7),
-	weekStart: z.string().refine((val) => !Number.isNaN(Date.parse(val)), {
-		message: "Invalid date format",
-	}),
-	weekEnd: z.string().refine((val) => !Number.isNaN(Date.parse(val)), {
-		message: "Invalid date format",
-	}),
+	// weekStart: z.string().refine((val) => !Number.isNaN(Date.parse(val)), {
+	// 	message: "Invalid date format",
+	// }),
+	// weekEnd: z.string().refine((val) => !Number.isNaN(Date.parse(val)), {
+	// 	message: "Invalid date format",
+	// }),
 	shifts: ShiftToSubmitValidate,
 	status: z.nativeEnum(ShiftStatus, {
 		errorMap: () => ({ message: "Invalid status" }),

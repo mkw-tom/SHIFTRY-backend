@@ -20,12 +20,12 @@ export type shiftToAssignType = z.infer<typeof shiftToAssignValidate>;
 
 export const upsertAssignShfitValidate = z.object({
 	shiftRequestId: z.string().uuid(),
-	weekStart: z.string().refine((val) => !Number.isNaN(Date.parse(val)), {
-		message: "Invalid date format",
-	}),
-	weekEnd: z.string().refine((val) => !Number.isNaN(Date.parse(val)), {
-		message: "Invalid date format",
-	}),
+	// weekStart: z.string().refine((val) => !Number.isNaN(Date.parse(val)), {
+	// 	message: "Invalid date format",
+	// }),
+	// weekEnd: z.string().refine((val) => !Number.isNaN(Date.parse(val)), {
+	// 	message: "Invalid date format",
+	// }),
 	shifts: shiftToAssignValidate,
 	status: z.nativeEnum(ShiftStatus, {
 		errorMap: () => ({ message: "Invalid status" }),

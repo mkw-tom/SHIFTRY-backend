@@ -14,7 +14,10 @@ export const verifyUserStoreForOwner = async (
 	storeId: string,
 ) => {
 	const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
-	if (!userStore || userStore.role !== "OWNER") {
+	if (!userStore) {
+		throw new Error("User is not authorized");
+	}
+	if (userStore.role !== "OWNER") {
 		throw new Error("User is not authorized as OWNER");
 	}
 	return userStore;
@@ -25,6 +28,9 @@ export const verifyUserStoreForOwnerAndManager = async (
 	storeId: string,
 ) => {
 	const userStore = await getUserStoreByUserIdAndStoreId(userId, storeId);
+	if (!userStore) {
+		throw new Error("User is not authorized ");
+	}
 	if (!userStore || userStore.role === "STAFF") {
 		throw new Error("User is not authorized as Owner or Manager");
 	}
@@ -39,7 +45,9 @@ export const verifyUser = async (userId: string) => {
 
 export const verifyUserForOwner = async (userId: string) => {
 	const user = await getUserById(userId);
-	if (!user || user.role !== "OWNER")
-		throw new Error("User is not authorized as Owner");
+	if (!user) {
+		throw new Error("User is not authorized");
+	}
+	if (user.role !== "OWNER") throw new Error("User is not authorized as Owner");
 	return user;
 };
