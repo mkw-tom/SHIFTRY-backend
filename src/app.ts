@@ -19,7 +19,18 @@ const app = express();
 const https = require("node:https");
 
 // 🔹 ミドルウェアの設定
-app.use(cors()); // CORS の許可
+app.use(
+	cors({
+		origin: process.env.CROSS_ORIGIN,
+		credentials: true,
+		allowedHeaders: [
+			"Content-Type",
+			"Authorization",
+			"X-Group-Id",
+			"X-Store-Token",
+		],
+	}),
+); // CORS の許可
 app.use(helmet()); // セキュリティヘッダーの追加
 app.use(cookieParser());
 app.use(express.json()); // JSON リクエストのパース

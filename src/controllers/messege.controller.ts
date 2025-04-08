@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { getUserStoreByUserIdAndStoreId } from "../repositories/userStore.repository";
 import { verifyUserStoreForOwnerAndManager } from "../services/common/authorization.service";
 import {
-	joinFunc,
+	lineEventMessageFunc,
 	sendCofirmedShiftFunc,
 	sendShiftRequestFunc,
 } from "../services/message.service";
@@ -21,7 +21,39 @@ export const groupJoinController = async (req: Request, res: Response) => {
 			/// 🔹 グループに招待された時の自動メッセージ
 			if (event.type === "join" && event.source.groupId) {
 				try {
-					await joinFunc(event.replyToken, event.source.groupId);
+					const joinMessage = {
+						text1: "グループに招待ありがとうございます！🎉",
+						text2: "今日からシフト作成をお手伝いします！",
+						text3: "オーナー様のみ連携お願いします！",
+						label: "LINEグループ連携",
+						uri: "https://qiita.com",
+					};
+
+					await lineEventMessageFunc(
+						event.replyToken,
+						event.source.groupId,
+						joinMessage,
+					);
+				} catch (error) {
+					console.error("❌ Webhook処理エラー:", error);
+				}
+			}
+
+			if (event.type === "follow" && event.source.userId) {
+				try {
+					const followMessage = {
+						text1: "オーナー様は、以下の手順で登録✨",
+						text2: "1. オーナー＆店舗登録",
+						text3: "2. 「SHIFTRY」をlineグループに招待",
+						label: "登録へ進む",
+						uri: "https://shiftry.app/owner-link",
+					};
+
+					await lineEventMessageFunc(
+						event.replyToken,
+						event.source.groupId,
+						followMessage,
+					);
 				} catch (error) {
 					console.error("❌ Webhook処理エラー:", error);
 				}

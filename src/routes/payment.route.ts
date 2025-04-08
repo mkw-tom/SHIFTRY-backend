@@ -6,13 +6,14 @@ import {
 	createPaymentController,
 	getPaymentController,
 } from "../controllers/payment.controller";
-import { attachStoreIdFromHeader } from "../middlewares/request/attachStoreIdFromHeader";
-import { attachUserIdFromCookie } from "../middlewares/request/attachUserIdFromCookie";
+import { attachStoreId } from "../middlewares/request/attachStoreId";
+import { attachUserId } from "../middlewares/request/attachUserId";
+// import { attachUserIdFromCookie } from "../middlewares/request/cookie/attachUserIdFromCookie";
 
 const router = express.Router();
 
-router.use(attachUserIdFromCookie);
-router.use(attachStoreIdFromHeader);
+router.use(attachUserId);
+router.use(attachStoreId);
 
 router.get("/", getPaymentController);
 router.post("/", createPaymentController);

@@ -30,11 +30,12 @@ export const storeConnectLineGroupController = async (
 	try {
 		const userId = req.userId as string;
 		const storeId = req.storeId as string;
+		const groupId = req.groupId as string;
 		await verifyUserStoreForOwner(userId, storeId);
 		console.log(storeId, userId);
 
-		const bodyParesed = connectGoupIdValidate.parse(req.body);
-		const groupId = bodyParesed.groupId;
+		// const bodyParesed = connectGoupIdValidate.parse(req.body);
+		// const groupId = bodyParesed.groupId;
 		const user = await getUserById(userId);
 		if (!user) throw new Error("User not found");
 
