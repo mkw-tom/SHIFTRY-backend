@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { setUserLoginCookie } from "../lib/server/cookies/setLoginUserCookies";
 import {
 	authMe,
+	lineAuth,
 	login,
 	registerOwner,
 	registerStaff,
@@ -15,6 +16,33 @@ import {
 	userInputValidate,
 } from "../validations/auth.validation";
 import { storeInputValidate } from "../validations/store.validation";
+
+/// lineAuth認証でuserIdを取得
+export const lineAuthController = async (
+	req: Request,
+	res: Response,
+): Promise<void> => {
+	try {
+		const { code } = req.body;
+		const userData = await lineAuth(code);
+		if (!userData) {
+			res
+				.status(400)
+				.json({ ok: false, message: " faild line authentication" });
+			return;
+		}
+		const { userId, name, pictureUrl } = userData;
+		if (!userId || !name || !pictureUrl) {
+			res.status(400).json({ ok: false, message: " faild get user profile" });
+			return;
+		}
+
+		res.status(200).json({ ok: true, userId, name, pictureUrl });
+	} catch (error) {
+		console.error("Error in getAuthenticatedUserController:", error);
+		res.status(500).json({ ok: false, message: "faild line Authentication" });
+	}
+};
 
 /// ログイン時に　bearer認証　（JWT）
 export const authMeUserController = async (

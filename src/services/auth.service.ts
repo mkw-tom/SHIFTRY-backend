@@ -2,7 +2,6 @@ import type { Store, User, UserStore } from "@prisma/client";
 import {
 	createStore,
 	getStoreByGroupId,
-	getStoreById,
 } from "../repositories/store.repository";
 import { getUserById, upsertUser } from "../repositories/user.repository";
 import {
@@ -11,8 +10,64 @@ import {
 	getUserStoreByUserId,
 	getUserStoreByUserIdAndStoreId,
 } from "../repositories/userStore.repository";
+import type { lineAuthResponse } from "../types/auth.type";
 import type { UpsertUserInput } from "../types/user.types";
 import { verifyUser, verifyUserStore } from "./common/authorization.service";
+
+export const lineAuth = async (code: string): Promise<lineAuthResponse> => {
+	const params = new URLSearchParams();
+	params.append("grant_type", "authorization_code");
+	params.append("code", code);
+	params.append("redirect_uri", process.env.LINE_REDIRECT_URI as string);
+	params.append("client_id", process.env.LINE_CHANNEL_ID as string);
+	params.append("client_secret", process.env.LINE_CHANNEL_SECRET as string);
+
+	const tokenRes = await fetch("https://api.line.me/oauth2/v2.1/token", {
+		method: "POST",
+		headers: { "Content-Type": "application/x-www-form-urlencoded" },
+		body: params,
+	});
+	if (!tokenRes.ok) {
+		throw new Error("トークン取得失敗");
+	}
+
+	const tokenData = await tokenRes.json();
+	if (!tokenData.id_token) {
+		throw new Error("LINEトークンの取得に失敗しました");
+	}
+
+	const userInfoRes = await fetch("https://api.line.me/oauth2/v2.1/verify", {
+		method: "POST",
+		headers: { "Content-Type": "application/x-www-form-urlencoded" },
+		body: new URLSearchParams({
+			id_token: tokenData.id_token,
+			client_id: process.env.LINE_CHANNEL_ID as string,
+		}),
+	});
+	if (!userInfoRes.ok) {
+		throw new Error("LINEユーザー情報の取得に失敗");
+	}
+
+	const userInfo = await userInfoRes.json();
+	const userId = userInfo.sub;
+
+	const profileRes = await fetch("https://api.line.me/v2/profile", {
+		method: "GET",
+		headers: {
+			Authorization: `Bearer ${tokenData.access_token}`,
+		},
+	});
+
+	if (!profileRes.ok) throw new Error("プロフィール取得に失敗");
+
+	const profile = await profileRes.json();
+
+	return {
+		userId,
+		name: profile.displayName,
+		pictureUrl: profile.pictureUrl,
+	};
+};
 
 export const authMe = async (userId: string) => {
 	const user = await verifyUser(userId);
