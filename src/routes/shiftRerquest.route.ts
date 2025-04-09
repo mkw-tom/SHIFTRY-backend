@@ -2,7 +2,7 @@ import express from "express";
 import {
 	deleteShiftRequestController,
 	getShiftRequestController,
-	getShiftRequestWeekController,
+	getShiftRequestSpecificController,
 	upsertShiftRequestController,
 } from "../controllers/shiftRequest.controller";
 import { attachStoreId } from "../middlewares/request/attachStoreId";
@@ -15,7 +15,7 @@ router.use(attachUserId);
 router.use(attachStoreId);
 
 router.get("/", getShiftRequestController);
-router.get("/:weekStart", validateWeekStart, getShiftRequestWeekController);
+router.get("/:weekStart", validateWeekStart, getShiftRequestSpecificController);
 router.post("/", upsertShiftRequestController);
 router.delete("/:weekStart", validateWeekStart, deleteShiftRequestController);
 

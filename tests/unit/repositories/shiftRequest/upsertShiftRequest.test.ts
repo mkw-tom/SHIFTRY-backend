@@ -3,7 +3,8 @@ import { PrismaClient } from "@prisma/client";
 import { upsertShiftRequest } from "../../../../src/repositories/shiftRequest.repository";
 import { mockOwnerUser, mockShiftRequest, mockStore, mockUserStore, upsertMockShiftRequestInput } from "../../../mocks/mockData";
 import { UpsertShiftRequetInput } from "../../../../src/types/shiftRequest.type";
-import { RequestJsonType } from "../../../../src/validations/shiftRequest.validation";
+import { ShiftsOfRequestsType } from "../../../../src/validations/shiftRequest.validation";
+// import { RequestJsonType } from "../../../../src/validations/shiftRequest.validation";
 
 jest.mock("@prisma/client", () => {
   return { PrismaClient: jest.fn(() => mockPrisma) };
@@ -22,7 +23,7 @@ describe("upsertShiftRequest (mocked)", () => {
     const shiftRequestInput = {
       weekStart: shiftRequest.weekStart, // ✅ string に変換
       weekEnd: shiftRequest.weekEnd,
-      requests: shiftRequest.requests as RequestJsonType,
+      requests: shiftRequest.requests as ShiftsOfRequestsType,
       status: shiftRequest.status,
       deadline: shiftRequest.deadline ? shiftRequest.deadline : null,
     } as UpsertShiftRequetInput

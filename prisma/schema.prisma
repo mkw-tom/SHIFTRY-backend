@@ -60,6 +60,7 @@ model ShiftRequest {
   weekStart       DateTime
   weekEnd         DateTime?
   requests        Json
+  type            ShiftType       @default(WEEKLY)
   status          RequestStatus   @default(HOLD)
   deadline        DateTime?
 
@@ -72,6 +73,11 @@ model ShiftRequest {
   submittedShifts SubmittedShift[]
 
   @@unique([storeId, weekStart])
+}
+
+enum ShiftType {
+  MONTHLY
+  WEEKLY
 }
 
 enum RequestStatus {

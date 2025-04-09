@@ -12,3 +12,7 @@ export interface UpsertAssignShiftInput {
 	shifts: AssignData;
 	status: ShiftStatus;
 }
+
+export type AssignShifts = {
+	[userId: string]: { date: string; time: string }[];
+};

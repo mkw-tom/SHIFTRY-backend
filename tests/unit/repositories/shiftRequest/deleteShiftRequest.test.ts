@@ -1,9 +1,7 @@
 import { mockPrisma } from "../../../mocks/prismaMock";
 import { PrismaClient } from "@prisma/client";
 import { deleteShiftRequest, upsertShiftRequest } from "../../../../src/repositories/shiftRequest.repository";
-import { mockOwnerUser, mockShiftRequest, mockStore, mockUserStore, upsertMockShiftRequestInput } from "../../../mocks/mockData";
-import { UpsertShiftRequetInput } from "../../../../src/types/shiftRequest.type";
-import { RequestJsonType } from "../../../../src/validations/shiftRequest.validation";
+import { upsertMockShiftRequestInput } from "../../../mocks/mockData";
 
 jest.mock("@prisma/client", () => {
   return { PrismaClient: jest.fn(() => mockPrisma) };
