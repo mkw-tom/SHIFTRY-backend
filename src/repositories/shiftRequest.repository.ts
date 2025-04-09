@@ -49,7 +49,7 @@ export const getShiftRequestByStoreId = async (
 	});
 };
 
-export const getShiftRequestWeek = async (
+export const getShiftRequestSpecific = async (
 	storeId: string,
 	weekStart: string,
 ): Promise<ShiftRequest | null> => {

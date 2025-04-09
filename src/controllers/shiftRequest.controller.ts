@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import {
 	deleteShiftRequest,
 	getShiftRequestByStoreId,
-	getShiftRequestWeek,
+	getShiftRequestSpecific,
 	upsertShiftRequest,
 } from "../repositories/shiftRequest.repository";
 import { getUserById } from "../repositories/user.repository";
@@ -35,7 +35,7 @@ export const getShiftRequestController = async (
 	}
 };
 
-export const getShiftRequestWeekController = async (
+export const getShiftRequestSpecificController = async (
 	req: Request,
 	res: Response,
 ): Promise<void> => {
@@ -45,7 +45,7 @@ export const getShiftRequestWeekController = async (
 		await verifyUserStore(userId, storeId);
 
 		const weekStart = req.params.weekStart;
-		const weekShift = await getShiftRequestWeek(storeId, weekStart);
+		const weekShift = await getShiftRequestSpecific(storeId, weekStart);
 
 		res.json({ weekShift });
 	} catch (error) {
@@ -71,11 +71,13 @@ export const upsertShiftRequestController = async (
 			});
 			return;
 		}
-		const { weekStart, weekEnd, requests, status, deadline } = bodyParesed.data;
+		const { weekStart, weekEnd, type, requests, status, deadline } =
+			bodyParesed.data;
 
 		const upsertData = {
 			weekStart,
 			weekEnd,
+			type,
 			requests,
 			status,
 			deadline,

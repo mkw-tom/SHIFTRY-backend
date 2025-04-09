@@ -1,7 +1,7 @@
 import express from "express";
 import {
 	getSubmittedShiftUserController,
-	getWeeklySubmittedShiftsController,
+	getSubmittedShiftsSpesificController,
 	upsertSubmittedShiftController,
 } from "../controllers/submittedShift.controller";
 
@@ -19,7 +19,7 @@ router.get("/me", getSubmittedShiftUserController);
 router.get(
 	"/all/:shiftRequestId",
 	validateshiftRequestId,
-	getWeeklySubmittedShiftsController,
+	getSubmittedShiftsSpesificController,
 );
 
 export default router;

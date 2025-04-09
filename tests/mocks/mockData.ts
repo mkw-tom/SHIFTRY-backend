@@ -1,7 +1,6 @@
 // tests/utils/mockData.ts
 import { faker } from "@faker-js/faker";
 import { UserRole } from "../../src/types/user.types";
-import { RequestJsonType } from "../../src/types/shiftRequest.type";
 import { $Enums, Prisma, ShiftRequest, Store, User, UserStore } from "@prisma/client";
 
 export const createMockUserInput = (role: UserRole) => ({
@@ -54,36 +53,21 @@ export const mockUserStore = (userId: string, storeId: string, role: UserRole): 
   role: role,
 });
 
-
-
-// const mockTimeSlot = (): { time: string; required: number } => ({
-//   time: `${faker.number.int({ min: 6, max: 21 })}:00`,
-//   required: faker.number.int({ min: 1, max: 3 }),
-// });
-
-// // requests の JsonValue（曜日ごとの TimeSlot 配列）
-// export const mockRequests: Prisma.JsonValue = {
-//   monday: Array.from({ length: 2 }, mockTimeSlot),
-//   tuesday: Array.from({ length: 2 }, mockTimeSlot),
-//   wednesday: Array.from({ length: 2 }, mockTimeSlot),
-//   thursday: Array.from({ length: 2 }, mockTimeSlot),
-//   friday: Array.from({ length: 2 }, mockTimeSlot),
-//   saturday: Array.from({ length: 2 }, mockTimeSlot),
-//   sunday: Array.from({ length: 2 }, mockTimeSlot),
-// };
-
 export const mockRequests = {
-  monday: [{ time: "09:00", required: 2 }],
-  tuesday: [{ time: "09:00", required: 2 }],
-  wednesday: [{ time: "09:00", required: 2 }],
-  thursday: [{ time: "09:00", required: 2 }],
-  friday: [{ time: "09:00", required: 2 }],
-  saturday: [{ time: "09:00", required: 2 }],
-  sunday: [{ time: "09:00", required: 2 }],
+  defaultTimePositions: {
+    Monday: ["09:00-13:00"],
+    Tuesday: ["10:00-14:00"],
+    Wednesday: [],
+    Thursday: [],
+    Friday: [],
+    Saturday: [],
+    Sunday: [],
+  },
+  overrideDates: {
+    "2025-04-10": ["08:00-12:00"],
+    "2025-04-14": [],
+  },
 };
-
-
-
 
 // モックデータ本体
 export const mockShiftRequest = (status: $Enums.RequestStatus) => ( {
@@ -97,6 +81,27 @@ export const mockShiftRequest = (status: $Enums.RequestStatus) => ( {
   status: status,
   deadline: faker.datatype.boolean() ? faker.date.soon() : null,
 });
+
+export const MocksubmittedShift = {
+  off: [
+    { date: "2025-04-15", time: null }, // 終日休み希望
+    { date: "2025-04-17", time: "14:00-18:00" }, // 部分的に休み希望
+    { date: "2025-04-19", time: null },
+  ],
+  details: "この週は学校のテストがあるため、午前は出勤可能です。",
+};
+
+export const assignShiftMock = {
+  "user-001": [
+    { date: "2025-04-15", time: "09:00-13:00" },
+    { date: "2025-04-16", time: "14:00-18:00" },
+  ],
+  "user-002": [
+    { date: "2025-04-15", time: "10:00-14:00" },
+    { date: "2025-04-17", time: "12:00-16:00" },
+    { date: "2025-04-18", time: "09:00-12:00" },
+  ],
+};
 
 export const upsertMockShiftRequestInput = (status: $Enums.RequestStatus, start: string, end: string, dead: string) => ( {
   id: faker.string.uuid(),

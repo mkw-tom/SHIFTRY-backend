@@ -39,7 +39,7 @@ export const getSubmittedShiftUser = async (
 	});
 };
 
-export const getWeeklySubmittedShifts = async (shiftRequestId: string) => {
+export const getSubmittedShiftsSpecific = async (shiftRequestId: string) => {
 	return await prisma.submittedShift.findMany({
 		where: { shiftRequestId },
 	});

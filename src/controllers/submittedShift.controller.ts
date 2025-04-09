@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import {
 	getSubmittedShiftUser,
-	getWeeklySubmittedShifts,
+	getSubmittedShiftsSpecific,
 	upsertSubmittedShift,
 } from "../repositories/submittedShift.repository";
 import { getUserStoreByUserIdAndStoreId } from "../repositories/userStore.repository";
@@ -53,7 +53,7 @@ export const getSubmittedShiftUserController = async (
 	}
 };
 
-export const getWeeklySubmittedShiftsController = async (
+export const getSubmittedShiftsSpesificController = async (
 	req: Request,
 	res: Response,
 ) => {
@@ -65,7 +65,7 @@ export const getWeeklySubmittedShiftsController = async (
 		const { shiftRequestId } = req.params;
 
 		const weeklySubmittedShifts =
-			await getWeeklySubmittedShifts(shiftRequestId);
+			await getSubmittedShiftsSpecific(shiftRequestId);
 
 		res.json({ weeklySubmittedShifts });
 	} catch (error) {
