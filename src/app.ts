@@ -21,7 +21,10 @@ const https = require("node:https");
 // 🔹 ミドルウェアの設定
 app.use(
 	cors({
-		origin: process.env.CROSS_ORIGIN,
+		origin: [
+			process.env.CROSS_ORIGIN_PROD as string,
+			process.env.CROSS_ORIGIN_DEV as string,
+		],
 		credentials: true,
 		allowedHeaders: [
 			"Content-Type",
