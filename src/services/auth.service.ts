@@ -20,7 +20,7 @@ export const lineAuth = async (code: string): Promise<lineAuthResponse> => {
 	params.append("code", code);
 	params.append("redirect_uri", process.env.LINE_AUTH_REDIRECT_URI as string);
 	params.append("client_id", process.env.LINE_AUTH_CHANNEL_ID as string);
-	params.append("client_secret", process.env.LINE_AUTH_CHANNEL_SECRE as string);
+	params.append("client_secret", process.env.LINE_AUTH_CHANNEL_SECRET as string);
 
 	const tokenRes = await fetch("https://api.line.me/oauth2/v2.1/token", {
 		method: "POST",
