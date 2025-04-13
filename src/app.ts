@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
+import { CROSS_ORIGIN_DEV, CROSS_ORIGIN_PROD } from "./lib/env";
 import assignShiftRoutes from "./routes/assignShift.route";
 import authRoutes from "./routes/auth.route";
 import messageRoutes from "./routes/message.route";
@@ -21,10 +22,7 @@ const https = require("node:https");
 // 🔹 ミドルウェアの設定
 app.use(
 	cors({
-		origin: [
-			process.env.CROSS_ORIGIN_PROD as string,
-			process.env.CROSS_ORIGIN_DEV as string,
-		],
+		origin: [CROSS_ORIGIN_PROD, CROSS_ORIGIN_DEV],
 		credentials: true,
 		allowedHeaders: [
 			"Content-Type",

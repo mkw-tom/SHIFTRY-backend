@@ -1,5 +1,10 @@
 import type { Store, User, UserStore } from "@prisma/client";
 import {
+	LINE_AUTH_CHANNEL_ID,
+	LINE_AUTH_CHANNEL_SECRET,
+	LINE_AUTH_REDIRECT_URI,
+} from "../lib/env";
+import {
 	createStore,
 	getStoreByGroupId,
 } from "../repositories/store.repository";
@@ -18,12 +23,9 @@ export const lineAuth = async (code: string): Promise<lineAuthResponse> => {
 	const params = new URLSearchParams();
 	params.append("grant_type", "authorization_code");
 	params.append("code", code);
-	params.append("redirect_uri", process.env.LINE_AUTH_REDIRECT_URI as string);
-	params.append("client_id", process.env.LINE_AUTH_CHANNEL_ID as string);
-	params.append(
-		"client_secret",
-		process.env.LINE_AUTH_CHANNEL_SECRET as string,
-	);
+	params.append("redirect_uri", LINE_AUTH_REDIRECT_URI);
+	params.append("client_id", LINE_AUTH_CHANNEL_ID);
+	params.append("client_secret", LINE_AUTH_CHANNEL_SECRET);
 
 	const tokenRes = await fetch("https://api.line.me/oauth2/v2.1/token", {
 		method: "POST",
@@ -44,7 +46,7 @@ export const lineAuth = async (code: string): Promise<lineAuthResponse> => {
 		headers: { "Content-Type": "application/x-www-form-urlencoded" },
 		body: new URLSearchParams({
 			id_token: tokenData.id_token,
-			client_id: process.env.LINE_AUTH_CHANNEL_ID as string,
+			client_id: LINE_AUTH_CHANNEL_ID,
 		}),
 	});
 	if (!userInfoRes.ok) {
