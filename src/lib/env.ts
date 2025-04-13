@@ -4,6 +4,7 @@ export const PORT = process.env.PORT as string;
 /// クロスオリジン
 export const CROSS_ORIGIN_PROD = process.env.CROSS_ORIGIN_PROD as string;
 export const CROSS_ORIGIN_DEV = process.env.CROSS_ORIGIN_DEV as string;
+export const CROSS_ORIGIN_LIFF = process.env.CROSS_ORIGIN_LIFF as string;
 
 export const DATABASE_URL = process.env.DATABASE_URL as string;
 
