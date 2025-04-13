@@ -1,6 +1,5 @@
 import type { Request, Response } from "express";
 import { URI_CONNECT_LINE_GROUP, URI_REGISTER_OWNER } from "../lib/env";
-import { getUserStoreByUserIdAndStoreId } from "../repositories/userStore.repository";
 import { verifyUserStoreForOwnerAndManager } from "../services/common/authorization.service";
 import {
 	lineEventMessageFunc,
@@ -27,7 +26,7 @@ export const groupJoinController = async (req: Request, res: Response) => {
 						text2: "今日からシフト作成をお手伝いします！",
 						text3: "オーナー様のみ連携お願いします！",
 						label: "LINEグループ連携",
-						uri: URI_REGISTER_OWNER,
+						uri: URI_CONNECT_LINE_GROUP,
 					};
 
 					await lineEventMessageFunc(
@@ -47,7 +46,7 @@ export const groupJoinController = async (req: Request, res: Response) => {
 						text2: "1. オーナー＆店舗登録",
 						text3: "2. 「SHIFTRY」をlineグループに招待",
 						label: "登録へ進む",
-						uri: URI_CONNECT_LINE_GROUP,
+						uri: URI_REGISTER_OWNER,
 					};
 
 					await lineEventMessageFunc(
