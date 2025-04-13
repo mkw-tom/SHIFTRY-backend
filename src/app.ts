@@ -31,8 +31,8 @@ app.use(
 		allowedHeaders: [
 			"Content-Type",
 			"Authorization",
-			"X-Group-Id",
-			"X-Store-Token",
+			"x-group-id",
+			"x-store-id",
 		],
 	}),
 ); // CORS の許可
