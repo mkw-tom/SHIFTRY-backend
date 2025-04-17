@@ -33,6 +33,9 @@ export const STRIPE_WEBHOOK_SECRET = process.env
 
 /// ルーティング
 export const URI_REGISTER_OWNER = process.env.URI_REGISTER_OWNER as string;
-
 export const URI_CONNECT_LINE_GROUP = process.env
 	.URI_CONNECT_LINE_GROUP as string;
+export const URI_REGISTER_STAFF = process.env.URI_REGISTER_STAFF as string;
+export const URI_SHIFT_SUBMITTED = process.env.URI_SHIFT_SUBMITTED as string;
+export const URI_SHIFT_CONFIRMATIOIN = process.env
+	.URI_SHIFT_CONFIRMATIOIN as string;
