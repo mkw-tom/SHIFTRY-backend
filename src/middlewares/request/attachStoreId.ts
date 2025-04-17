@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import jwt from "jsonwebtoken";
 
 export const attachStoreId = (
 	req: Request,
@@ -6,13 +7,25 @@ export const attachStoreId = (
 	next: NextFunction,
 ) => {
 	try {
-		const storeId = req.headers["x-store-id"];
-		if (!storeId || typeof storeId !== "string") {
+		const storeId_token = req.headers["x-store-id"];
+		if (!storeId_token || typeof storeId_token !== "string") {
 			res.status(400).json({ message: "Missing or invalid storeId" });
 			return;
 		}
 
-		req.storeId = storeId;
+		const decoded = jwt.verify(
+			storeId_token,
+			process.env.JWT_SECRET as string,
+		) as {
+			storeId: string;
+		};
+
+		if (!decoded.storeId) {
+			res.status(400).json({ message: "Invalid token payload" });
+			return;
+		}
+
+		req.storeId = decoded.storeId;
 		next();
 	} catch (err) {
 		console.error("attachStoreId error:", err);

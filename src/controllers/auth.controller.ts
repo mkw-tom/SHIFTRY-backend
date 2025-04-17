@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { setUserLoginCookie } from "../lib/server/cookies/setLoginUserCookies";
 import {
+	Init,
 	authMe,
 	lineAuth,
 	login,
@@ -8,11 +8,15 @@ import {
 	registerStaff,
 	storeLogin,
 } from "../services/auth.service";
-import { verifyUser } from "../services/common/authorization.service";
+import {
+	verifyUser,
+	verifyUserByLineId,
+} from "../services/common/authorization.service";
 import { generateJWT } from "../utils/JWT/jwt";
 import {
-	groupIdValidate,
 	reLoginUserIdValidate,
+	storeIdValidate,
+	storeIdandShfitReruestIdValidate,
 	userInputValidate,
 } from "../validations/auth.validation";
 import { storeInputValidate } from "../validations/store.validation";
@@ -36,51 +40,22 @@ export const lineAuthController = async (
 			res.status(400).json({ ok: false, message: " faild get user profile" });
 			return;
 		}
+		const line_token = generateJWT({ lineId: userId });
 
-		res.status(200).json({ ok: true, userId, name, pictureUrl });
+		res.status(200).json({ ok: true, userId, name, pictureUrl, line_token });
 	} catch (error) {
 		console.error("Error in getAuthenticatedUserController:", error);
 		res.status(500).json({ ok: false, message: "faild line Authentication" });
 	}
 };
 
-/// ログイン時に　bearer認証　（JWT）
-export const authMeUserController = async (
-	req: Request,
-	res: Response,
-): Promise<void> => {
-	try {
-		const userId = req.userId as string;
-		await verifyUser(userId);
-		const user = await authMe(userId);
-		res.status(200).json({ ok: true, user });
-	} catch (error) {
-		console.error("Error in getAuthenticatedUserController:", error);
-		res
-			.status(401)
-			.json({ ok: false, message: "Not affiliated with any stores" });
-	}
-};
-
-export const reLoginController = async (req: Request, res: Response) => {
-	try {
-		const bodyParesed = reLoginUserIdValidate.parse(req.body);
-		const userId = bodyParesed.userId;
-		setUserLoginCookie(res, userId);
-
-		res.json({ ok: true });
-	} catch (error) {
-		console.error("Error in getAuthenticatedUserController:", error);
-		res.status(401).json({ ok: false, message: " Faild to authentication" });
-	}
-};
-
-/// オーナーの新規登録
+/// オーナー登録
 export const registerOwnerController = async (
 	req: Request,
 	res: Response,
 ): Promise<void> => {
 	try {
+		const lineId = req.lineId as string;
 		const userInputParsed = userInputValidate.safeParse(req.body.userInput);
 		const storeInputParsed = storeInputValidate.safeParse(req.body.storeInput);
 		// const { userInput, storeInput } = req.body;
@@ -96,7 +71,7 @@ export const registerOwnerController = async (
 			return;
 		}
 		const { userInput, storeInput } = {
-			userInput: userInputParsed.data,
+			userInput: { ...userInputParsed.data, lineId },
 			storeInput: storeInputParsed.data,
 		};
 
@@ -105,23 +80,21 @@ export const registerOwnerController = async (
 		const store_token = generateJWT({ storeId: store.id });
 		// setRegisterOwnerCookies(res, user.id, store.id);
 
-		res.json({ ok: true, user, store, token });
+		res.json({ ok: true, user, store, token, store_token });
 	} catch (error) {
 		console.error("Error in registerOwnerController:", error);
 		res.status(500).json({ ok: false, message: "failed to register owner" });
 	}
 };
 
-/// スタッフの新規登録
+/// スタッフ登録
 export const registerStaffController = async (
 	req: Request,
 	res: Response,
 ): Promise<void> => {
 	try {
-		// const { userInput, groupId } = req.body;
-		const groupId = req.groupId as string;
+		const lineId = req.lineId as string;
 		const userInputParsed = userInputValidate.safeParse(req.body.userInput);
-		// const { groupId } = groupIdValidate.parse(req.body);
 		if (!userInputParsed.success) {
 			res.status(400).json({
 				message: "Invalid request",
@@ -131,21 +104,52 @@ export const registerStaffController = async (
 			});
 			return;
 		}
-		const userInput = userInputParsed.data;
+		const storeInputParsed = storeIdandShfitReruestIdValidate.safeParse(
+			req.body.storeInput,
+		);
+		if (!storeInputParsed.success) {
+			res.status(400).json({
+				message: "Invalid request",
+				errors: {
+					user: storeInputParsed.error?.errors,
+				},
+			});
+			return;
+		}
 
-		const { user, store } = await registerStaff(userInput, groupId);
+		const userInput = { ...userInputParsed.data, lineId };
+		const storeInput = storeInputParsed.data;
+
+		const { user, store } = await registerStaff(userInput, storeInput);
 		// const token = generateJWT(user.id);
 		const token = generateJWT({ userId: user.id });
-		// setUserLoginCookie(res, user.id);
+		const store_token = generateJWT({ storeId: store.id });
+		const group_token = generateJWT({ groupId: store.groupId as string });
 
-		res.json({ ok: true, user, store, token });
+		res.json({ ok: true, user, store, token, store_token, group_token });
 	} catch (error) {
 		console.error("Error in registerStaffController:", error);
 		res.status(500).json({ ok: false, message: "failed to register staff" });
 	}
 };
 
-//// 通常ログイン（リッチメニュー）
+///再ログイン
+export const reLoginController = async (req: Request, res: Response) => {
+	try {
+		const lineId = req.lineId as string;
+		const user = await verifyUserByLineId(lineId);
+
+		const user_token = generateJWT({ userId: user.id });
+
+		res.status(200).json({ ok: true, user_token });
+		res.json({ ok: true });
+	} catch (error) {
+		console.error("faild to relogin", error);
+		res.status(401).json({ ok: false, message: "faild to relogin" });
+	}
+};
+
+//// userIdから所属店舗データ取得
 export const loginController = async (
 	req: Request,
 	res: Response,
@@ -154,34 +158,75 @@ export const loginController = async (
 		const userId = req.userId as string;
 
 		const { user, stores } = await login(userId);
-		const token = generateJWT({ userId: user.id });
-		// setUserLoginCookie(res, user.id);
 
-		res.json({ ok: true, user, stores, token });
+		res.json({ ok: true, user, stores });
 	} catch (error) {
 		console.error("Error in loginController:", error);
 		res.status(500).json({ ok: false, message: "failed to login" });
 	}
 };
 
-//// 店舗データに即ログイン　　（lineグループないから）
-export const loginStoreControler = async (
-	req: Request,
-	res: Response,
-): Promise<void> => {
+/// ログイン時にuser,store,shiftRequestを取得
+export const InitController = async (req: Request, res: Response) => {
 	try {
 		const userId = req.userId as string;
-		const groupId = req.groupId as string;
+		const { storeId } = storeIdValidate.parse(req.body);
 
-		// const { groupId } = groupIdValidate.parse(req.body);
+		const { user, store, shiftRequest } = await Init(userId, storeId);
+		const user_token = generateJWT({ userId: user.id });
+		const store_token = generateJWT({ storeId: store.id });
+		const group_token = generateJWT({ groupId: store.groupId as string });
 
-		const { user, store } = await storeLogin(userId, groupId);
-		const token = generateJWT({ userId: user.id });
-		// setUserLoginCookie(res, user.id);
-
-		res.json({ ok: true, user, store, token });
+		res.json({
+			ok: true,
+			user,
+			store,
+			shiftRequest,
+			user_token,
+			store_token,
+			group_token,
+		});
 	} catch (error) {
-		console.error("Error in loginController:", error);
-		res.status(500).json({ ok: false, message: "failed to login to store" });
+		console.error("Error in loginInitController:", error);
+		res.status(500).json({ ok: false, message: "failed to login init" });
 	}
 };
+
+//// 店舗データに即ログイン　　（lineグループないから）
+// export const loginStoreControler = async (
+//   req: Request,
+//   res: Response
+// ): Promise<void> => {
+//   try {
+//     const userId = req.userId as string;
+//     const { storeId } = storeIdValidate.parse(req.body);
+
+//     const { user, store } = await storeLogin(userId, storeId);
+//     const token = generateJWT({ userId: user.id });
+//     const store_token = generateJWT({ storeId: store?.id as string });
+//     const group_token = generateJWT({ groupId: store?.groupId as string });
+
+//     res.json({ ok: true, user, store, token, store_token, group_token });
+//   } catch (error) {
+//     console.error("Error in loginController:", error);
+//     res.status(500).json({ ok: false, message: "failed to login to store" });
+//   }
+// };
+
+/// ログイン時に　bearer認証　（JWT）
+// export const authMeUserController = async (
+//   req: Request,
+//   res: Response
+// ): Promise<void> => {
+//   try {
+//     const userId = req.userId as string;
+//     await verifyUser(userId);
+//     const user = await authMe(userId);
+//     res.status(200).json({ ok: true, user });
+//   } catch (error) {
+//     console.error("Error in getAuthenticatedUserController:", error);
+//     res
+//       .status(401)
+//       .json({ ok: false, message: "Not affiliated with any stores" });
+//   }
+// };

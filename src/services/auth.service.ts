@@ -1,12 +1,14 @@
-import type { Store, User, UserStore } from "@prisma/client";
+import type { ShiftRequest, Store, User, UserStore } from "@prisma/client";
 import {
 	LINE_AUTH_CHANNEL_ID,
 	LINE_AUTH_CHANNEL_SECRET,
 	LINE_AUTH_REDIRECT_URI,
 } from "../lib/env";
+import { getShiftRequestByStoreId } from "../repositories/shiftRequest.repository";
 import {
 	createStore,
 	getStoreByGroupId,
+	getStoreById,
 } from "../repositories/store.repository";
 import { getUserById, upsertUser } from "../repositories/user.repository";
 import {
@@ -17,7 +19,12 @@ import {
 } from "../repositories/userStore.repository";
 import type { lineAuthResponse } from "../types/auth.type";
 import type { UpsertUserInput } from "../types/user.types";
-import { verifyUser, verifyUserStore } from "./common/authorization.service";
+import type { storeIdandShfitReruestIdType } from "../validations/auth.validation";
+import {
+	verifyStoreIdAndShiftRequestId,
+	verifyUser,
+	verifyUserStore,
+} from "./common/authorization.service";
 
 export const lineAuth = async (code: string): Promise<lineAuthResponse> => {
 	const params = new URLSearchParams();
@@ -105,12 +112,15 @@ export const registerOwner = async (
 	return { user, store };
 };
 
+///スタッフ登録
 export const registerStaff = async (
 	userInput: UpsertUserInput,
-	groupId: string,
+	storeInput: storeIdandShfitReruestIdType,
 ): Promise<{ user: User; store: Store }> => {
-	const store = await getStoreByGroupId(groupId);
-	if (!store || !store.storeId) throw new Error("Store not found");
+	const { storeId, shiftRequestId } = storeInput;
+	const store = await verifyStoreIdAndShiftRequestId(storeId, shiftRequestId);
+	if (!store) throw new Error("Failed to get store data");
+
 	const user = await upsertUser(userInput);
 	if (!user) throw new Error("Failed to create user");
 
@@ -136,15 +146,31 @@ export const login = async (
 /// 店舗データに即ログイン　　（シフト提出・確定通知リンクからのログイン）
 export const storeLogin = async (
 	userId: string,
-	groupId: string,
-): Promise<{ user: User; store: Store }> => {
+	storeId: string,
+): Promise<{ userStore: UserStore; user: User; store: Store | null }> => {
+	const userStore = await verifyUserStore(userId, storeId);
+
 	const user = await getUserById(userId);
 	if (!user) throw new Error("User not found");
 
-	const store = await getStoreByGroupId(groupId);
+	const store = await getStoreById(storeId);
 	if (!store) throw new Error("Store not found");
 
-	await verifyUserStore(user.id, store.id);
+	return { userStore, user, store };
+};
 
-	return { user, store };
+export const Init = async (
+	userId: string,
+	storeId: string,
+): Promise<{ user: User; store: Store; shiftRequest: ShiftRequest[] | [] }> => {
+	const [user, store, shiftRequest] = await Promise.all([
+		getUserById(userId),
+		getStoreById(storeId),
+		getShiftRequestByStoreId(storeId),
+	]);
+	if (!user || !store) {
+		throw new Error("data is not found");
+	}
+
+	return { user, store, shiftRequest };
 };
