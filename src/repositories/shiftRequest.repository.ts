@@ -43,7 +43,7 @@ export const deleteShiftRequest = async (
 
 export const getShiftRequestByStoreId = async (
 	storeId: string,
-): Promise<ShiftRequest[] | [] | []> => {
+): Promise<ShiftRequest[] | []> => {
 	return await prisma.shiftRequest.findMany({
 		where: { storeId },
 	});
@@ -60,5 +60,13 @@ export const getShiftRequestSpecific = async (
 				weekStart: new Date(weekStart),
 			},
 		},
+	});
+};
+
+export const getShiftRequestById = async (
+	id: string,
+): Promise<ShiftRequest | null> => {
+	return await prisma.shiftRequest.findUnique({
+		where: { id },
 	});
 };

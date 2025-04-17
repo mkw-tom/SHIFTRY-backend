@@ -18,15 +18,13 @@ export const createStore = async (
 export const getStoreByGroupId = async (
 	groupId: string,
 ): Promise<Store | null> => {
-	return await prisma.store.findFirst({
+	return await prisma.store.findUnique({
 		where: { groupId: groupId },
 	});
 };
 
-export const getStoreById = async (
-	id: string,
-): Promise<Store[] | [] | null> => {
-	return await prisma.store.findMany({
+export const getStoreById = async (id: string): Promise<Store | null> => {
+	return await prisma.store.findUnique({
 		where: { id: id },
 	});
 };
