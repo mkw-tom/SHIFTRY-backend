@@ -6,6 +6,7 @@ declare global {
 			userId?: string;
 			storeId?: string;
 			groupId?: string;
+			lineId?: string;
 		}
 	}
 }

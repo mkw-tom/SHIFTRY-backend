@@ -1,42 +1,142 @@
-import type { RequestStatus, ShiftStatus } from "@prisma/client";
 import apiClient from "../config/axios";
 import type { MessageContens } from "../types/message.type";
-import {
-	sendGroupMessage,
-	sendGroupMessageByTrigger,
-} from "./common/lineEventMessage";
 
-//// BOTがlineグループ参加時に、lineグループとbot連携画面に誘導通知
-export const lineEventMessageFunc = async (
+//☑️ トリガーを受け取ってメッセージ送信する
+export const sendGroupMessageByTrigger = async (
 	replyToken: string,
+	messageContents: MessageContens,
+) => {
+	try {
+		const { text1, text2, text3, label, uri } = messageContents;
+		const message = {
+			type: "flex",
+			altText: "LINEグループ連携のお願い",
+			contents: {
+				type: "bubble",
+				body: {
+					type: "box",
+					layout: "vertical",
+					contents: [
+						{
+							type: "text",
+							text: text1,
+							weight: "bold",
+							size: "md",
+							margin: "md",
+						},
+						{
+							type: "text",
+							text: text2,
+							size: "sm",
+							margin: "sm",
+						},
+						{
+							type: "text",
+							text: text3,
+							size: "sm",
+							margin: "md",
+						},
+					],
+				},
+				footer: {
+					type: "box",
+					layout: "vertical",
+					spacing: "sm",
+					contents: [
+						{
+							type: "button",
+							style: "primary",
+							color: "#1DB446", // LINEっぽい緑
+							action: {
+								type: "uri",
+								label: label,
+								uri: uri,
+							},
+						},
+					],
+					flex: 0,
+				},
+			},
+		};
+
+		await apiClient.post("/", {
+			replyToken: replyToken,
+			messages: [message],
+		});
+
+		console.log("✅ LINEメッセージ送信成功！");
+	} catch (error) {
+		console.error("❌ LINEメッセージ送信エラー:", error);
+	}
+};
+
+//☑️ グループにメッセージ送信する
+export const sendGroupFlexMessage = async (
 	groupId: string,
 	messageContents: MessageContens,
 ) => {
 	try {
-		await sendGroupMessageByTrigger(replyToken, messageContents);
-	} catch (error) {
-		throw new Error("メッセージ送信もしくはデータ作成に失敗しました");
-	}
-};
+		const { text1, text2, text3, label, uri } = messageContents;
 
-//// シフト提出依頼の通知
-export const sendShiftRequestFunc = async (groupId: string) => {
-	try {
-		const requestMessage =
-			"シフト提出をお願いします！\n\n🔹 シフト提出画面\n👉 https://qiita.com";
-		await sendGroupMessage(requestMessage, groupId);
-	} catch (error) {
-		throw new Error("メッセージ送信もしくはデータ作成に失敗しました");
-	}
-};
+		const flexMessage = {
+			type: "flex",
+			altText: "スタッフ登録のご案内",
+			contents: {
+				type: "bubble",
+				body: {
+					type: "box",
+					layout: "vertical",
+					contents: [
+						{
+							type: "text",
+							text: text1,
+							weight: "bold",
+							size: "md",
+							margin: "md",
+						},
+						{
+							type: "text",
+							text: text2,
+							size: "sm",
+							margin: "sm",
+						},
+						{
+							type: "text",
+							text: text3,
+							size: "sm",
+							margin: "md",
+						},
+					],
+				},
+				footer: {
+					type: "box",
+					layout: "vertical",
+					spacing: "sm",
+					contents: [
+						{
+							type: "button",
+							style: "primary",
+							color: "#1DB446",
+							action: {
+								type: "uri",
+								label: label,
+								uri: uri,
+							},
+						},
+					],
+					flex: 0,
+				},
+			},
+		};
 
-/// シフト確定の通知
-export const sendCofirmedShiftFunc = async (groupId: string) => {
-	try {
-		const confirmedMessage =
-			"シフトが出来上がりました！\n\n🔹 シフト確認画面\n👉 https://qiita.com";
-		await sendGroupMessage(confirmedMessage, groupId);
+		await apiClient.post("/v2/bot/message/push", {
+			to: groupId,
+			messages: [flexMessage],
+		});
+
+		console.log("✅ グループにFlexメッセージ送信成功！");
 	} catch (error) {
-		throw new Error("メッセージ送信もしくはデータ作成に失敗しました");
+		console.error("❌ グループへのFlexメッセージ送信失敗:", error);
+		throw new Error("グループ通知に失敗しました");
 	}
 };

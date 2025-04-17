@@ -1,6 +1,8 @@
+import { Store } from "@prisma/client";
 import type { Request, Response } from "express";
 import {
 	createStore,
+	getStoreByGroupId,
 	updateStoreGroupId,
 	updateStoreName,
 } from "../repositories/store.repository";
@@ -8,8 +10,6 @@ import { getUserById } from "../repositories/user.repository";
 import {
 	createUserStore,
 	getStoreFromUser,
-	getUserStoreByUserId,
-	getUserStoreByUserIdAndStoreId,
 } from "../repositories/userStore.repository";
 import {
 	verifyUser,
@@ -17,6 +17,7 @@ import {
 	verifyUserStoreForOwner,
 	verifyUserStoreForOwnerAndManager,
 } from "../services/common/authorization.service";
+import { generateJWT } from "../utils/JWT/jwt";
 import {
 	connectGoupIdValidate,
 	storeInputValidate,
@@ -40,8 +41,9 @@ export const storeConnectLineGroupController = async (
 		if (!user) throw new Error("User not found");
 
 		const response = await updateStoreGroupId(storeId, groupId);
+		const group_token = generateJWT({ groupId: groupId });
 		console.log(response);
-		res.json({ ok: true });
+		res.json({ ok: true, group_token });
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ message: "Internal Server Error" });

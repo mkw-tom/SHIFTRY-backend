@@ -16,6 +16,12 @@ export const getUserById = async (userId: string): Promise<User | null> => {
 	});
 };
 
+export const getUserByLineId = async (lineId: string): Promise<User | null> => {
+	return await prisma.user.findUnique({
+		where: { lineId: lineId },
+	});
+};
+
 /// ユーザーの作成・更新
 export const upsertUser = async (
 	data: UpsertUserInput,
