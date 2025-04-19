@@ -1,4 +1,4 @@
-import { Prisma, ShiftStatus } from "@prisma/client";
+import { type Prisma, ShiftStatus } from "@prisma/client";
 import prisma from "../config/database";
 import type { upsertSubmittedShiftInput } from "../validations/submittedShift.vaidation";
 
