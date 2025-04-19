@@ -114,8 +114,6 @@ model SubmittedShift {
   userId          String
   storeId         String
   shiftRequestId  String
-
-  attendCount     Int
   shifts          Json
   status          ShiftStatus
 

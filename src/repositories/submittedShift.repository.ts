@@ -15,7 +15,6 @@ export const upsertSubmittedShift = async (
 			},
 		},
 		update: {
-			attendCount: data.attendCount,
 			shifts: data.shifts,
 			status: data.status,
 		},
@@ -23,7 +22,6 @@ export const upsertSubmittedShift = async (
 			userId: userId,
 			storeId: storeId,
 			shiftRequestId: data.shiftRequestId,
-			attendCount: data.attendCount,
 			shifts: data.shifts,
 			status: data.status,
 		},
