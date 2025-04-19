@@ -1,4 +1,4 @@
-import { ShiftStatus } from "@prisma/client";
+import { type Prisma, ShiftStatus } from "@prisma/client";
 import prisma from "../config/database";
 import type { upsertSubmittedShiftInput } from "../validations/submittedShift.vaidation";
 
@@ -15,14 +15,14 @@ export const upsertSubmittedShift = async (
 			},
 		},
 		update: {
-			shifts: data.shifts,
+			shifts: data.shifts as Prisma.JsonObject,
 			status: data.status,
 		},
 		create: {
 			userId: userId,
 			storeId: storeId,
 			shiftRequestId: data.shiftRequestId,
-			shifts: data.shifts,
+			shifts: data.shifts as Prisma.JsonObject,
 			status: data.status,
 		},
 	});
