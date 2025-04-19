@@ -25,8 +25,7 @@ export const groupJoinController = async (req: Request, res: Response) => {
 			/// 🔹 グループに招待された時の自動メッセージ
 			if (event.type === "join" && event.source.groupId) {
 				try {
-					const groupId = event.source.groupId;
-					const group_token = generateJWT(groupId);
+					const group_token = generateJWT({ groupId: event.source.groupId });
 					const signedUrl = `${URI_CONNECT_LINE_GROUP}?group_token=${group_token}`;
 
 					const joinMessage = {

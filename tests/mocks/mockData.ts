@@ -1,7 +1,8 @@
 // tests/utils/mockData.ts
 import { faker } from "@faker-js/faker";
 import { UserRole } from "../../src/types/user.types";
-import { $Enums, Prisma, ShiftRequest, Store, User, UserStore } from "@prisma/client";
+import { $Enums, Store, User, UserStore } from "@prisma/client";
+import { shiftsOfSubmittedType } from "../../src/validations/submittedShift.vaidation"
 
 export const createMockUserInput = (role: UserRole) => ({
   lineId: faker.string.uuid(),
@@ -82,14 +83,15 @@ export const mockShiftRequest = (status: $Enums.RequestStatus) => ( {
   deadline: faker.datatype.boolean() ? faker.date.soon() : null,
 });
 
-export const MocksubmittedShift = {
-  off: [
-    { date: "2025-04-15", time: null }, // 終日休み希望
-    { date: "2025-04-17", time: "14:00-18:00" }, // 部分的に休み希望
-    { date: "2025-04-19", time: null },
-  ],
-  details: "この週は学校のテストがあるため、午前は出勤可能です。",
+export const mockShiftsOfSubmitted: shiftsOfSubmittedType  = {
+  name: "たなぴー",
+  weekCount: 4,
+  offWeeks: ["Sunday", "Wednesday", "Thursday"],
+  offDates: ["2025-04-24", "2025-04-26"],
+  details: "水曜は通院があるため休み希望。金曜は16時以降でお願いしたいです。",
+  submittedAt: "2025-04-19T12:34:56Z",
 };
+
 
 export const assignShiftMock = {
   "user-001": [
