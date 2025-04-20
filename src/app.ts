@@ -33,6 +33,7 @@ app.use(
 			"Authorization",
 			"x-group-id",
 			"x-store-id",
+			"x-line-id",
 		],
 	}),
 ); // CORS の許可
