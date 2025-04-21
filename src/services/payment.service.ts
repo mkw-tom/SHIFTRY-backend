@@ -7,24 +7,46 @@ import {
 	getPaymentByStoreId,
 	updatePaymentPlan,
 } from "../repositories/payment.repositroy";
+import type {
+	createPaymentType,
+	productIdType,
+} from "../validations/payment.validation";
 import { verifyUserStoreForOwner } from "./common/authorization.service";
 
 export const createPaymentService = async ({
 	userId,
 	storeId,
-	priceId,
+	paymentInfos,
 }: {
 	userId: string;
 	storeId: string;
-	priceId: string;
+	paymentInfos: createPaymentType;
 }) => {
+	const { name, email, productId, paymentMethodId } = paymentInfos;
 	const customer = await stripe.customers.create({
+		email,
+		name,
 		metadata: { userId, storeId },
 	});
 
+	await stripe.paymentMethods.attach(paymentMethodId, {
+		customer: customer.id,
+	});
+
+	// 顧客の支払い方法をデフォルト設定
+	await stripe.customers.update(customer.id, {
+		invoice_settings: {
+			default_payment_method: paymentMethodId,
+		},
+	});
+
+	const product = await stripe.products.retrieve(productId);
+	const prices = await stripe.prices.list({ product: productId });
+	const price = prices.data[0];
+
 	const subscription = await stripe.subscriptions.create({
 		customer: customer.id,
-		items: [{ price: priceId }],
+		items: [{ price: price.id }],
 		trial_period_days: 14,
 		metadata: { storeId },
 	});
@@ -39,12 +61,15 @@ export const createPaymentService = async ({
 		userId,
 		customerId: customer.id,
 		subscriptionId: subscription.id,
-		priceId,
+		productId,
+		priceId: price.id,
+		price_amount: price.unit_amount,
+		price_interval: price.recurring?.interval,
 		subscription_status: subscription.status,
 		isTrial: true,
 		trial_end_date: trialEnd,
 		next_billing_date: nextBilling,
-		current_plan: "basic", // or 判定式でもOK
+		current_plan: product.name, // or 判定式でもOK
 	};
 	const payment = await createPayment(data);
 	return payment;
@@ -54,28 +79,43 @@ export const createPaymentService = async ({
 export const changePlanService = async ({
 	userId,
 	storeId,
-	priceId,
-	plan,
+	productId,
 }: {
 	userId: string;
 	storeId: string;
-	priceId: string;
-	plan: string;
+	productId: productIdType["productId"];
 }) => {
 	await verifyUserStoreForOwner(userId, storeId);
 
 	const payment = await getPaymentByStoreId(storeId);
 	if (!payment) throw new Error("Payment info not found");
 
-	// Stripeのプラン変更
+	const prices = await stripe.prices.list({ product: productId });
+	const price = prices.data[0]; // ※月額1つならOK（将来複数あればフィルタ追加）
+
+	const product = await stripe.products.retrieve(productId);
+	const planName = product.metadata.plan_type || product.name;
+
+	const subscription = await stripe.subscriptions.retrieve(
+		payment.subscriptionId,
+	);
+	const itemId = subscription.items.data[0].id;
+
 	await stripe.subscriptions.update(payment.subscriptionId, {
-		items: [{ price: priceId }],
+		items: [
+			{
+				id: itemId,
+				price: price.id,
+			},
+		],
 	});
 
-	// DB更新
 	await updatePaymentPlan(storeId, {
-		priceId,
-		current_plan: plan,
+		productId,
+		priceId: price.id,
+		price_amount: price.unit_amount ?? 0,
+		price_interval: price.recurring?.interval ?? "month",
+		current_plan: planName,
 	});
 
 	return { ok: true };
