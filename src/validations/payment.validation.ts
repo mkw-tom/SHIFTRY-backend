@@ -1,12 +1,15 @@
 import { z } from "zod";
 
-export const priceIdValidate = z.object({
-	priceId: z.string().min(1, "priceId is required").max(100),
+// validations/payment.validation.ts
+export const createPaymentValidate = z.object({
+	productId: z.string().min(1, "productId is required").max(100),
+	email: z.string().email().max(100),
+	name: z.string().min(1).max(9),
+	paymentMethodId: z.string().min(1),
 });
+export type createPaymentType = z.infer<typeof createPaymentValidate>;
 
-export const changePlanValidate = z.object({
-	priceId: z.string().min(1, "priceId is required").max(100),
-	plan: z.string().min(1, "plan name is required").max(100),
+export const productIdValidate = z.object({
+	productId: z.string().min(1, "productId is required").max(100),
 });
-
-export type ChangePlanInput = z.infer<typeof changePlanValidate>;
+export type productIdType = z.infer<typeof productIdValidate>;

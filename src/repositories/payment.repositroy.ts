@@ -21,7 +21,13 @@ export const getPaymentByStoreId = async (storeId: string) => {
 
 export const updatePaymentPlan = async (
 	storeId: string,
-	data: { priceId: string; current_plan: string },
+	data: {
+		productId: string;
+		priceId: string;
+		current_plan: string;
+		price_amount: number;
+		price_interval: string;
+	},
 ) => {
 	return await prisma.payment.update({
 		where: { storeId },
