@@ -1,5 +1,6 @@
 import prisma from "../config/database";
 import { stripe } from "../config/stripe";
+import { STRIPE_TRIAL_DAYS } from "../lib/env";
 import {
 	cancelRevert,
 	cancelSubscription,
@@ -47,7 +48,7 @@ export const createPaymentService = async ({
 	const subscription = await stripe.subscriptions.create({
 		customer: customer.id,
 		items: [{ price: price.id }],
-		trial_period_days: 14,
+		trial_period_days: Number(STRIPE_TRIAL_DAYS) || 60,
 		metadata: { storeId },
 	});
 
