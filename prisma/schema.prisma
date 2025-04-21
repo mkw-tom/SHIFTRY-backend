@@ -135,7 +135,10 @@ model Payment {
   userId                      String
   customerId                  String
   subscriptionId              String
+  productId                   String?   // Stript 商品ID
   priceId                     String   // Stripe Price ID
+  price_amount                Int?      // 単位: 円
+  price_interval              String?   // "month" | "year"
   subscription_status         String   // active, trialing, canceled, etc.
 
   isTrial                     Boolean  @default(false) // 無料トライアル中かどうか

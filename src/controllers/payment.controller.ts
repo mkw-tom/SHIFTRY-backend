@@ -11,8 +11,8 @@ import {
 	createPaymentService,
 } from "../services/payment.service";
 import {
-	changePlanValidate,
-	priceIdValidate,
+	createPaymentValidate,
+	productIdValidate,
 } from "../validations/payment.validation";
 
 export const getPaymentController = async (req: Request, res: Response) => {
@@ -37,7 +37,7 @@ export const createPaymentController = async (req: Request, res: Response) => {
 		const storeId = req.storeId as string;
 		await verifyUserStoreForOwner(userId, storeId);
 
-		const bodyParsed = priceIdValidate.safeParse(req.body);
+		const bodyParsed = createPaymentValidate.safeParse(req.body);
 		if (!bodyParsed.success) {
 			res.status(400).json({
 				message: "invalid priceId",
@@ -45,11 +45,12 @@ export const createPaymentController = async (req: Request, res: Response) => {
 			});
 			return;
 		}
+		const paymentInfos = bodyParsed.data;
 
 		const input = {
 			userId,
 			storeId,
-			priceId: bodyParsed.data.priceId,
+			paymentInfos,
 		};
 
 		const payment = await createPaymentService(input);
@@ -67,7 +68,7 @@ export const changePlanController = async (req: Request, res: Response) => {
 		const userId = req.userId as string;
 		const storeId = req.storeId as string;
 		await verifyUserStoreForOwner(userId, storeId);
-		const parsed = changePlanValidate.safeParse(req.body);
+		const parsed = productIdValidate.safeParse(req.body);
 
 		if (!parsed.success) {
 			res.status(400).json({
@@ -77,8 +78,8 @@ export const changePlanController = async (req: Request, res: Response) => {
 			return;
 		}
 
-		const { priceId, plan } = parsed.data;
-		const result = await changePlanService({ userId, storeId, priceId, plan });
+		const productId = parsed.data.productId;
+		const result = await changePlanService({ userId, storeId, productId });
 
 		res.status(200).json(result);
 	} catch (error) {
