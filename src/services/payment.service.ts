@@ -8,6 +8,7 @@ import {
 	getPaymentByStoreId,
 	updatePaymentPlan,
 } from "../repositories/payment.repositroy";
+import { getStoreById } from "../repositories/store.repository";
 import type {
 	createPaymentType,
 	productIdType,
@@ -23,10 +24,12 @@ export const createPaymentService = async ({
 	storeId: string;
 	paymentInfos: createPaymentType;
 }) => {
-	const { name, email, productId, paymentMethodId } = paymentInfos;
+	const store = await getStoreById(storeId);
+	const { email, productId, paymentMethodId } = paymentInfos;
+
 	const customer = await stripe.customers.create({
 		email,
-		name,
+		name: store?.name,
 		metadata: { userId, storeId },
 	});
 
