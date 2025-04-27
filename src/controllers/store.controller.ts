@@ -83,9 +83,9 @@ export const addManageStoreController = async (req: Request, res: Response) => {
 		if (!storeInputParsed.success || !storeInputParsed.data) {
 			throw new Error("Invalid store input");
 		}
-		const { name, groupId } = storeInputParsed.data;
+		const { name } = storeInputParsed.data;
 
-		const store = await createStore(name, groupId);
+		const store = await createStore(name);
 		const userStore = await createUserStore(userId, store.id, user.role);
 
 		res.json({ ok: true, user, store });

@@ -2,7 +2,10 @@ import type { Request, Response } from "express";
 import { generateJWT } from "../../../utils/JWT/jwt";
 import type { ErrorResponse } from "../../common/type";
 import { registerStaff } from "./service";
-import type { BodyErrorResponse, RegisterStaffResponse } from "./type";
+import type {
+	RegisterStaffResponse,
+	RegisterStaffValidationErrorResponse,
+} from "./type";
 import {
 	storeIdandShfitReruestIdValidate,
 	userInputValidate,
@@ -10,7 +13,9 @@ import {
 
 const registerStaffController = async (
 	req: Request,
-	res: Response<RegisterStaffResponse | ErrorResponse | BodyErrorResponse>,
+	res: Response<
+		RegisterStaffResponse | ErrorResponse | RegisterStaffValidationErrorResponse
+	>,
 ): Promise<void> => {
 	try {
 		const lineId = req.lineId as string;

@@ -1,16 +1,10 @@
 import type { Store } from "@prisma/client";
-import { string } from "zod";
 import prisma from "../config/database";
-import { updateStoreNameInput } from "../validations/store.validation";
 
-export const createStore = async (
-	name: string,
-	groupId: string,
-): Promise<Store> => {
+export const createStore = async (name: string): Promise<Store> => {
 	return await prisma.store.create({
 		data: {
 			name: name,
-			groupId: groupId,
 		},
 	});
 };
