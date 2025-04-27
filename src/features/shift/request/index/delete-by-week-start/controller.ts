@@ -20,6 +20,7 @@ const deleteShiftRequestController = async (
 			res
 				.status(404)
 				.json({ ok: false, message: "deleted shiftRequest is not found" });
+			return;
 		}
 
 		res.json({ ok: true, shiftRequest });

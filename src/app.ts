@@ -7,6 +7,7 @@ import authRoutes from "./features/auth/route";
 import assignShiftRoutes from "./features/shift/assign/route";
 import shiftRequestRoutes from "./features/shift/request/route";
 import submittedShiftRoutes from "./features/shift/submit/route";
+import userRoutes from "./features/user/route";
 import {
 	CROSS_ORIGIN_DEV,
 	CROSS_ORIGIN_LIFF,
@@ -16,7 +17,6 @@ import messageRoutes from "./routes/message.route";
 import paymentRoutes from "./routes/payment.route";
 import storeRoutes from "./routes/store.route";
 import stripeRoutes from "./routes/stripe.route";
-import userRoutes from "./routes/user.route";
 
 dotenv.config();
 
