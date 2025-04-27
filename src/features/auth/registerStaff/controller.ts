@@ -1,6 +1,8 @@
 import type { Request, Response } from "express";
 import { generateJWT } from "../../../utils/JWT/jwt";
+import type { ErrorResponse } from "../../common/type";
 import { registerStaff } from "./service";
+import type { BodyErrorResponse, RegisterStaffResponse } from "./type";
 import {
 	storeIdandShfitReruestIdValidate,
 	userInputValidate,
@@ -8,13 +10,14 @@ import {
 
 const registerStaffController = async (
 	req: Request,
-	res: Response,
+	res: Response<RegisterStaffResponse | ErrorResponse | BodyErrorResponse>,
 ): Promise<void> => {
 	try {
 		const lineId = req.lineId as string;
 		const userInputParsed = userInputValidate.safeParse(req.body.userInput);
 		if (!userInputParsed.success) {
 			res.status(400).json({
+				ok: false,
 				message: "Invalid request",
 				errors: {
 					user: userInputParsed.error?.errors,
@@ -27,6 +30,7 @@ const registerStaffController = async (
 		);
 		if (!storeInputParsed.success) {
 			res.status(400).json({
+				ok: false,
 				message: "Invalid request",
 				errors: {
 					user: storeInputParsed.error?.errors,
