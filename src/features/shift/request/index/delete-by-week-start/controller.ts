@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
-import { deleteShiftRequest } from "../../../repositories/shiftRequest.repository";
-import { verifyUserStoreForOwnerAndManager } from "../../common/authorization.service";
-import type { ErrorResponse } from "../../common/type";
+import { deleteShiftRequest } from "../../../../../repositories/shiftRequest.repository";
+import { verifyUserStoreForOwnerAndManager } from "../../../../common/authorization.service";
+import type { ErrorResponse } from "../../../../common/type";
 import type { DeleteShiftRequestResponse } from "./type";
 
 const deleteShiftRequestController = async (

@@ -5,8 +5,8 @@ import express from "express";
 import helmet from "helmet";
 import authRoutes from "./features/auth/route";
 import assignShiftRoutes from "./features/shift/assign/route";
-import shiftRequestRoutes from "./features/shiftRequest/route";
-import submittedShiftRoutes from "./features/submittedShift/route";
+import shiftRequestRoutes from "./features/shift/request/route";
+import submittedShiftRoutes from "./features/shift/submit/route";
 import {
 	CROSS_ORIGIN_DEV,
 	CROSS_ORIGIN_LIFF,

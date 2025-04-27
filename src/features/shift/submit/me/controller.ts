@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
-import { getSubmittedShiftUser } from "../../../repositories/submittedShift.repository";
-import { verifyUserStore } from "../../common/authorization.service";
-import type { ErrorResponse } from "../../common/type";
+import { getSubmittedShiftUser } from "../../../../repositories/submittedShift.repository";
+import { verifyUserStore } from "../../../common/authorization.service";
+import type { ErrorResponse } from "../../../common/type";
 import type { GetSubmittedShiftUserResponse } from "./type";
 
 const getSubmittedShiftUserController = async (

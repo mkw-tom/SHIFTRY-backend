@@ -1,7 +1,7 @@
 import type { AssignShift } from "@prisma/client";
 import type { ZodIssue } from "zod";
 
-export interface AssigShiftResponse {
+export interface UpsertAssigShiftResponse {
 	ok: true;
 	assignShift: AssignShift;
 }
