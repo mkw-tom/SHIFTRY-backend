@@ -4,7 +4,8 @@ import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
 import authRoutes from "./features/auth/route";
-import shiftRequestRoutes from "./features/shiftRequest/shiftRerquest.route";
+import shiftRequestRoutes from "./features/shiftRequest/route";
+import submittedShiftRoutes from "./features/submittedShift/route";
 import {
 	CROSS_ORIGIN_DEV,
 	CROSS_ORIGIN_LIFF,
@@ -15,7 +16,6 @@ import messageRoutes from "./routes/message.route";
 import paymentRoutes from "./routes/payment.route";
 import storeRoutes from "./routes/store.route";
 import stripeRoutes from "./routes/stripe.route";
-import submittedShiftRoutes from "./routes/submittedShift.route";
 import userRoutes from "./routes/user.route";
 
 dotenv.config();

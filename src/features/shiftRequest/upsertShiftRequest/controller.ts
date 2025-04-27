@@ -3,15 +3,17 @@ import { upsertShiftRequest } from "../../../repositories/shiftRequest.repositor
 import { verifyUserStoreForOwnerAndManager } from "../../common/authorization.service";
 import type { ErrorResponse } from "../../common/type";
 import type {
-	UpsertShiftRequetResponse,
 	UpsertShiftRepuestValidationErrorResponse,
+	UpsertShiftRequetResponse,
 } from "./type";
 import { upsertShfitRequestValidate } from "./validation";
 
 const upsertShiftRequestController = async (
 	req: Request,
 	res: Response<
-		UpsertShiftRequetResponse | UpsertShiftRepuestValidationErrorResponse | ErrorResponse
+		| UpsertShiftRequetResponse
+		| UpsertShiftRepuestValidationErrorResponse
+		| ErrorResponse
 	>,
 ): Promise<void> => {
 	try {
