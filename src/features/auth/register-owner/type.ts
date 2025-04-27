@@ -14,7 +14,7 @@ export interface RegisterOwnerServiceResponse {
 	store: Store;
 }
 
-export interface BodyErrorResponse {
+export interface RegisterOwnerValidationErrorResponse {
 	ok: false;
 	message: string;
 	errors: {

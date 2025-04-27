@@ -9,7 +9,7 @@ jest.mock("@prisma/client", () => {
 });
 
 import { mockStore } from "../../../common/mocks/datas/store";
-import { mockOwnerUser } from "../mocks/mocks";
+import { mockOwnerUser } from "../../../common/mocks/datas/user";
 import registerOwner from "../service";
 
 describe("registerStaff (mocked)", () => {

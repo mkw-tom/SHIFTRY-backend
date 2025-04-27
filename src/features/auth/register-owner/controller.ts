@@ -3,7 +3,7 @@ import { generateJWT } from "../../../utils/JWT/jwt";
 import type { ErrorResponse } from "../../common/type";
 import registerOwner from "./service";
 import type { BodyErrorResponse, RegisterOwnerResponse } from "./type";
-import { storeInputValidate, userInputValidate } from "./validation";
+import { storeNameValidate, userInputValidate } from "./validation";
 
 const registerOwnerController = async (
 	req: Request,
@@ -13,7 +13,7 @@ const registerOwnerController = async (
 		const lineId = req.lineId as string;
 
 		const userInputParsed = userInputValidate.safeParse(req.body.userInput);
-		const storeInputParsed = storeInputValidate.safeParse(req.body.storeInput);
+		const storeInputParsed = storeNameValidate.safeParse(req.body.storeInput);
 
 		// バリデーションエラー処理
 		if (!userInputParsed.success || !storeInputParsed.success) {

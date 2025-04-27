@@ -16,7 +16,7 @@ export interface RegisterStaffServiceResponse {
 	store: Store;
 }
 
-export interface BodyErrorResponse {
+export interface RegisterStaffValidationErrorResponse {
 	ok: false;
 	message: string;
 	errors: {
