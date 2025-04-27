@@ -1,5 +1,6 @@
 import prisma from "../config/database";
 import { stripe } from "../config/stripe";
+import { verifyUserStoreForOwner } from "../features/common/authorization.service";
 import { STRIPE_TRIAL_DAYS } from "../lib/env";
 import {
 	cancelRevert,
@@ -13,7 +14,6 @@ import type {
 	createPaymentType,
 	productIdType,
 } from "../validations/payment.validation";
-import { verifyUserStoreForOwner } from "./common/authorization.service";
 
 export const createPaymentService = async ({
 	userId,
