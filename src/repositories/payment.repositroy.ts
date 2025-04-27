@@ -1,3 +1,4 @@
+import type { Payment } from "@prisma/client";
 import Stripe from "stripe";
 import prisma from "../config/database";
 import type { CreatePaymentInput } from "../types/payment.type";
@@ -6,7 +7,9 @@ export const createPayment = async (data: CreatePaymentInput) => {
 	return await prisma.payment.create({ data });
 };
 
-export const getPaymentByStoreId = async (storeId: string) => {
+export const getPaymentByStoreId = async (
+	storeId: string,
+): Promise<Payment | null> => {
 	return await prisma.payment.findUnique({ where: { storeId } });
 };
 
@@ -19,14 +22,17 @@ export const updatePaymentPlan = async (
 		price_amount: number;
 		price_interval: string;
 	},
-) => {
+): Promise<Payment | null> => {
 	return await prisma.payment.update({
 		where: { storeId },
 		data,
 	});
 };
 
-export const cancelSubscription = async (storeId: string, cancelDate: Date) => {
+export const cancelSubscription = async (
+	storeId: string,
+	cancelDate: Date,
+): Promise<Payment | null> => {
 	return await prisma.payment.update({
 		where: { storeId },
 		data: {
@@ -37,7 +43,9 @@ export const cancelSubscription = async (storeId: string, cancelDate: Date) => {
 	});
 };
 
-export const cancelRevert = async (storeId: string) => {
+export const cancelRevert = async (
+	storeId: string,
+): Promise<Payment | null> => {
 	return await prisma.payment.update({
 		where: { storeId },
 		data: {

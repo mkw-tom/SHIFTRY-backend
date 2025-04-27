@@ -1,7 +1,7 @@
 import type { Store } from "@prisma/client";
 import prisma from "../config/database";
 
-export const createStore = async (name: string): Promise<Store> => {
+export const createStore = async (name: string): Promise<Store | null> => {
 	return await prisma.store.create({
 		data: {
 			name: name,
@@ -36,7 +36,7 @@ export const updateStoreGroupId = async (
 export const updateStoreName = async (
 	storeId: string,
 	name: string,
-): Promise<Store> => {
+): Promise<Store | null> => {
 	return await prisma.store.update({
 		where: { id: storeId },
 		data: {
@@ -46,7 +46,7 @@ export const updateStoreName = async (
 };
 
 // 店舗削除
-export const deleteStore = async (id: string) => {
+export const deleteStore = async (id: string): Promise<Store | null> => {
 	return await prisma.store.delete({
 		where: { id },
 	});
