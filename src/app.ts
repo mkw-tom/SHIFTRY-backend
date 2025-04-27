@@ -3,13 +3,13 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
+import authRoutes from "./features/auth/route";
 import {
 	CROSS_ORIGIN_DEV,
 	CROSS_ORIGIN_LIFF,
 	CROSS_ORIGIN_PROD,
 } from "./lib/env";
 import assignShiftRoutes from "./routes/assignShift.route";
-import authRoutes from "./routes/auth.route";
 import messageRoutes from "./routes/message.route";
 import paymentRoutes from "./routes/payment.route";
 import shiftRequestRoutes from "./routes/shiftRerquest.route";
