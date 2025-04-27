@@ -1,17 +1,8 @@
+import Stripe from "stripe";
 import prisma from "../config/database";
+import type { CreatePaymentInput } from "../types/payment.type";
 
-export const createPayment = async (data: {
-	storeId: string;
-	userId: string;
-	customerId: string;
-	subscriptionId: string;
-	priceId: string;
-	subscription_status: string;
-	isTrial: boolean;
-	trial_end_date: Date;
-	next_billing_date: Date;
-	current_plan: string;
-}) => {
+export const createPayment = async (data: CreatePaymentInput) => {
 	return await prisma.payment.create({ data });
 };
 

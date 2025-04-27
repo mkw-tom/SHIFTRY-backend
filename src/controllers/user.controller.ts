@@ -1,5 +1,10 @@
 import type { Request, Response } from "express";
 import {
+	verifyUser,
+	verifyUserStore,
+	verifyUserStoreForOwnerAndManager,
+} from "../features/common/authorization.service";
+import {
 	deleteUser,
 	getStoreUser,
 	getUserById,
@@ -11,11 +16,6 @@ import {
 	getUserFromStore,
 	getUserStoreByUserIdAndStoreId,
 } from "../repositories/userStore.repository";
-import {
-	verifyUser,
-	verifyUserStore,
-	verifyUserStoreForOwnerAndManager,
-} from "../services/common/authorization.service";
 import { changeUserRoleService } from "../services/user.service";
 import type {
 	UpdateUserInput,

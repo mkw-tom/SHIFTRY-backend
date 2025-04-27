@@ -1,5 +1,6 @@
 import prisma from "../config/database";
 import { stripe } from "../config/stripe";
+import { verifyUserStoreForOwner } from "../features/common/authorization.service";
 import { STRIPE_TRIAL_DAYS } from "../lib/env";
 import {
 	cancelRevert,
@@ -8,11 +9,11 @@ import {
 	getPaymentByStoreId,
 	updatePaymentPlan,
 } from "../repositories/payment.repositroy";
+import { getStoreById } from "../repositories/store.repository";
 import type {
 	createPaymentType,
 	productIdType,
 } from "../validations/payment.validation";
-import { verifyUserStoreForOwner } from "./common/authorization.service";
 
 export const createPaymentService = async ({
 	userId,
@@ -23,10 +24,12 @@ export const createPaymentService = async ({
 	storeId: string;
 	paymentInfos: createPaymentType;
 }) => {
-	const { name, email, productId, paymentMethodId } = paymentInfos;
+	const store = await getStoreById(storeId);
+	const { email, productId, paymentMethodId } = paymentInfos;
+
 	const customer = await stripe.customers.create({
 		email,
-		name,
+		name: store?.name,
 		metadata: { userId, storeId },
 	});
 
