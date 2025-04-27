@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
 import authRoutes from "./features/auth/route";
+import assignShiftRoutes from "./features/shift/assign/route";
 import shiftRequestRoutes from "./features/shiftRequest/route";
 import submittedShiftRoutes from "./features/submittedShift/route";
 import {
@@ -11,7 +12,6 @@ import {
 	CROSS_ORIGIN_LIFF,
 	CROSS_ORIGIN_PROD,
 } from "./lib/env";
-import assignShiftRoutes from "./routes/assignShift.route";
 import messageRoutes from "./routes/message.route";
 import paymentRoutes from "./routes/payment.route";
 import storeRoutes from "./routes/store.route";
