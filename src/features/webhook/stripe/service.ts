@@ -1,7 +1,7 @@
 import type { Stripe } from "stripe";
-import { deleteStore } from "../repositories/store.repository";
+import { deleteStore } from "../../../repositories/store.repository";
 
-export const handleStripeEvent = async (event: Stripe.Event) => {
+const stripeWebhookService = async (event: Stripe.Event) => {
 	switch (event.type) {
 		case "customer.subscription.deleted": {
 			const subscription = event.data.object as Stripe.Subscription;
@@ -20,3 +20,5 @@ export const handleStripeEvent = async (event: Stripe.Event) => {
 			console.log(`Unhandled event type: ${event.type}`);
 	}
 };
+
+export default stripeWebhookService;

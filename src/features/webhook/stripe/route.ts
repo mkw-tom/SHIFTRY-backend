@@ -1,7 +1,6 @@
-import express from "express";
-
 import bodyParser from "body-parser";
-import { stripeWebhookController } from "../controllers/stripe.controller";
+import express from "express";
+import stripeWebhookController from "./controller";
 
 const router = express.Router();
 

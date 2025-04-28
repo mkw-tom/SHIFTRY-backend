@@ -11,12 +11,12 @@ import submittedShiftRoutes from "./features/shift/submit/route";
 import storeRoutes from "./features/store/route";
 import userRoutes from "./features/user/route";
 import lineRoutes from "./features/webhook/line/route";
+import stripeRoutes from "./features/webhook/stripe/route";
 import {
 	CROSS_ORIGIN_DEV,
 	CROSS_ORIGIN_LIFF,
 	CROSS_ORIGIN_PROD,
 } from "./lib/env";
-import stripeRoutes from "./routes/stripe.route";
 
 dotenv.config();
 
