@@ -10,7 +10,7 @@ export type shiftRequestIdParamValidate = z.infer<
 	typeof shiftRequestIdParamValidate
 >;
 
-interface shiftRequestIdRequest extends Request {
+interface ShiftRequestIdRequest extends Request {
 	shiftRequestId: string;
 }
 
@@ -19,15 +19,15 @@ export const validateshiftRequestId = async (
 	res: Response,
 	next: NextFunction,
 ) => {
-	const parsed = shiftRequestIdParamValidate.parse(req.params);
-	if (!parsed.shiftRequestId) {
-		res.status(400).json({
-			message: "Invalid parameter shiftRequestId",
-		});
-		return;
-	}
+	try {
+		const parsed = shiftRequestIdParamValidate.parse(req.params);
 
-	const shiftRequestId = parsed.shiftRequestId;
-	(req as shiftRequestIdRequest).shiftRequestId = shiftRequestId;
-	next();
+		const shiftRequestId = parsed.shiftRequestId;
+		(req as ShiftRequestIdRequest).shiftRequestId = shiftRequestId;
+		next();
+	} catch (error) {
+		res
+			.status(400)
+			.json({ ok: false, message: "Invalid parameter shiftRequestId" });
+	}
 };

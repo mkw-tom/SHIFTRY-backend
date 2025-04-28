@@ -1,4 +1,4 @@
-import type { UserStore } from "@prisma/client";
+import type { Store, User, UserStore } from "@prisma/client";
 import prisma from "../config/database";
 import type { UserRole } from "../types/user.types";
 
@@ -37,7 +37,9 @@ export const getUserStoreByUserIdAndStoreId = async (
 };
 
 ///ユーザーが所属する全ての店舗データを取得
-export const getStoreFromUser = async (userId: string) => {
+export const getStoreFromUser = async (
+	userId: string,
+): Promise<{ store: Store }[]> => {
 	return await prisma.userStore.findMany({
 		where: { userId },
 		select: { store: true },
@@ -45,7 +47,9 @@ export const getStoreFromUser = async (userId: string) => {
 };
 
 ///店舗に所属するすべてのユーザーデータを取得
-export const getUserFromStore = async (storeId: string) => {
+export const getUsersFromStore = async (
+	storeId: string,
+): Promise<{ user: User }[]> => {
 	return await prisma.userStore.findMany({
 		where: { storeId },
 		select: { user: true },
@@ -56,7 +60,7 @@ export const changeUserRoleToUserStore = async (
 	userId: string,
 	storeId: string,
 	role: UserRole,
-) => {
+): Promise<UserStore> => {
 	return await prisma.userStore.update({
 		where: {
 			userId_storeId: {

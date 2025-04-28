@@ -8,7 +8,7 @@ const WeekStartParamValidate = z.object({
 });
 export type WeekStartParamValidate = z.infer<typeof WeekStartParamValidate>;
 
-interface weekStartRequest extends Request {
+interface WeekStartRequest extends Request {
 	weekStart: Date;
 }
 
@@ -17,15 +17,12 @@ export const validateWeekStart = async (
 	res: Response,
 	next: NextFunction,
 ) => {
-	const parsed = WeekStartParamValidate.parse(req.params);
-	if (!parsed.weekStart) {
-		res.status(400).json({
-			message: "Invalid parameter weekStart",
-		});
-		return;
+	try {
+		const parsed = WeekStartParamValidate.parse(req.params);
+		const weekStart = parsed.weekStart;
+		(req as WeekStartRequest).weekStart = new Date(weekStart);
+		next();
+	} catch (error) {
+		res.status(400).json({ ok: false, message: "Invalid parameter weekStart" });
 	}
-
-	const weekStart = parsed.weekStart;
-	(req as weekStartRequest).weekStart = new Date(weekStart);
-	next();
 };

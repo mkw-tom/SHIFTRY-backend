@@ -1,12 +1,12 @@
-import { type Prisma, ShiftStatus } from "@prisma/client";
+import { type Prisma, ShiftStatus, type SubmittedShift } from "@prisma/client";
 import prisma from "../config/database";
-import type { upsertSubmittedShiftInput } from "../validations/submittedShift.vaidation";
+import type { upsertSubmittedShiftInput } from "../features/shift/submit/post/validation";
 
 export const upsertSubmittedShift = async (
 	userId: string,
 	storeId: string,
 	data: upsertSubmittedShiftInput,
-) => {
+): Promise<SubmittedShift> => {
 	return await prisma.submittedShift.upsert({
 		where: {
 			userId_shiftRequestId: {
@@ -31,13 +31,15 @@ export const upsertSubmittedShift = async (
 export const getSubmittedShiftUser = async (
 	userId: string,
 	storeId: string,
-) => {
+): Promise<SubmittedShift[]> => {
 	return await prisma.submittedShift.findMany({
 		where: { userId, storeId },
 	});
 };
 
-export const getSubmittedShiftsSpecific = async (shiftRequestId: string) => {
+export const getSubmittedShiftsSpecific = async (
+	shiftRequestId: string,
+): Promise<SubmittedShift[]> => {
 	return await prisma.submittedShift.findMany({
 		where: { shiftRequestId },
 	});
