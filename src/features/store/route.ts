@@ -10,6 +10,7 @@ import updateStoreNameControler from "./update-store-nam/controller";
 const router = express.Router();
 router.use(attachUserId);
 
+router.post("/add-store", addManageStoreController);
 router.put(
 	"/connect-line-group",
 	attachStoreId,
@@ -17,7 +18,6 @@ router.put(
 	storeConnectLineGroupController,
 );
 router.get("/me", getStoresFromUserController);
-router.post("/add-store", addManageStoreController);
 router.put("/update-store-name", attachStoreId, updateStoreNameControler);
 
 export default router;

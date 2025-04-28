@@ -1,11 +1,11 @@
 import type { Request, Response } from "express";
 
-import { upsertShiftRequest } from "../../../../../repositories/shiftRequest.repository";
-import { verifyUserStoreForOwnerAndManager } from "../../../../common/authorization.service";
+import { upsertShiftRequest } from "../../../../repositories/shiftRequest.repository";
+import { verifyUserStoreForOwnerAndManager } from "../../../common/authorization.service";
 import type {
 	ErrorResponse,
 	ValidationErrorResponse,
-} from "../../../../common/type";
+} from "../../../common/type";
 import type { UpsertShiftRequetResponse } from "./type";
 import { upsertShfitRequestValidate } from "./validation";
 

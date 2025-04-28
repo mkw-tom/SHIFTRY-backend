@@ -1,14 +1,11 @@
 import type { Request, Response } from "express";
-import { updateUser } from "../../../../repositories/user.repository";
-import { verifyUser } from "../../../common/authorization.service";
-import type {
-	ErrorResponse,
-	ValidationErrorResponse,
-} from "../../../common/type";
+import { updateUser } from "../../../repositories/user.repository";
+import { verifyUser } from "../../common/authorization.service";
+import type { ErrorResponse, ValidationErrorResponse } from "../../common/type";
 import type { UpdateUserProfileResponse } from "./type";
 import { updateUserProlfileValidate } from "./validation";
 
-export const updateUserProfileController = async (
+const updateUserProfileController = async (
 	req: Request,
 	res: Response<
 		UpdateUserProfileResponse | ValidationErrorResponse | ErrorResponse
@@ -36,3 +33,5 @@ export const updateUserProfileController = async (
 		res.status(500).json({ ok: false, message: "Failed to update user" });
 	}
 };
+
+export default updateUserProfileController;

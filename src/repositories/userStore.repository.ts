@@ -47,7 +47,7 @@ export const getStoreFromUser = async (
 };
 
 ///店舗に所属するすべてのユーザーデータを取得
-export const getUserFromStore = async (
+export const getUsersFromStore = async (
 	storeId: string,
 ): Promise<{ user: User }[]> => {
 	return await prisma.userStore.findMany({

@@ -1,7 +1,7 @@
 import type { User, UserRole } from "@prisma/client";
 import prisma from "../config/database";
 
-import type { updateUserProlfileType } from "../features/user/index/put/validation";
+import type { updateUserProlfileType } from "../features/user/put/validation";
 import type { UpsertUserInput } from "../types/user.types";
 
 /// ✅ ユーザーの全取得

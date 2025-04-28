@@ -1,10 +1,10 @@
 import type { Request, Response } from "express";
-import { deleteUser } from "../../../../repositories/user.repository";
+import { deleteUser } from "../../../repositories/user.repository";
 import {
 	verifyUser,
 	verifyUserForOwner,
-} from "../../../common/authorization.service";
-import type { ErrorResponse } from "../../../common/type";
+} from "../../common/authorization.service";
+import type { ErrorResponse } from "../../common/type";
 import type { DeleteUserResponse } from "./type";
 
 const deleteUserByOwnerController = async (

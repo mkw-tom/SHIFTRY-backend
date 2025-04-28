@@ -1,6 +1,6 @@
 import { type Prisma, ShiftStatus, type SubmittedShift } from "@prisma/client";
 import prisma from "../config/database";
-import type { upsertSubmittedShiftInput } from "../features/shift/submit/index/post/validation";
+import type { upsertSubmittedShiftInput } from "../features/shift/submit/post/validation";
 
 export const upsertSubmittedShift = async (
 	userId: string,

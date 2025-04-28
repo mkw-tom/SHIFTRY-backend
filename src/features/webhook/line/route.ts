@@ -7,13 +7,13 @@ import eventController from "./event/controller";
 import sendShiftRequestFuncController from "./request-shift/controller";
 const router = express.Router();
 
-router.post("/event", eventController);
 router.post(
 	"/request-shift",
 	attachUserId,
 	attachStoreId,
 	sendShiftRequestFuncController,
 );
+router.post("/event", eventController);
 router.post(
 	"/confirm-shift",
 	attachUserId,

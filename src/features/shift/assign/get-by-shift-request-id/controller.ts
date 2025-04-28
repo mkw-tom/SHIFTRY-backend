@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
-import { getAssignShift } from "../../../../../repositories/assingShift.repostory";
-import { verifyUserStore } from "../../../../common/authorization.service";
-import type { ErrorResponse } from "../../../../common/type";
+import { getAssignShift } from "../../../../repositories/assingShift.repostory";
+import { verifyUserStore } from "../../../common/authorization.service";
+import type { ErrorResponse } from "../../../common/type";
 import type { GetAssigShiftResponse } from "./type";
 
 const getAssignShiftController = async (

@@ -1,6 +1,6 @@
 import type { User } from "@prisma/client";
 
-export interface GetUserFromStoreResponse {
+export interface GetUsersFromStoreResponse {
 	ok: true;
 	storeUsers: User[];
 }

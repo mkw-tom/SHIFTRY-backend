@@ -1,10 +1,10 @@
 import type { Request, Response } from "express";
-import { upsertAssignShfit } from "../../../../../repositories/assingShift.repostory";
-import { verifyUserStoreForOwnerAndManager } from "../../../../common/authorization.service";
+import { upsertAssignShfit } from "../../../../repositories/assingShift.repostory";
+import { verifyUserStoreForOwnerAndManager } from "../../../common/authorization.service";
 import type {
 	ErrorResponse,
 	ValidationErrorResponse,
-} from "../../../../common/type";
+} from "../../../common/type";
 import type { UpsertAssigShiftResponse } from "./type";
 import { upsertAssignShfitValidate } from "./validation";
 

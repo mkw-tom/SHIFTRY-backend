@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
-import { deleteUser } from "../../../../repositories/user.repository";
-import { verifyUser } from "../../../common/authorization.service";
-import type { ErrorResponse } from "../../../common/type";
+import { deleteUser } from "../../../repositories/user.repository";
+import { verifyUser } from "../../common/authorization.service";
+import type { ErrorResponse } from "../../common/type";
 import type { DeleteUserResponse } from "./type";
 
 const deleteUserController = async (
