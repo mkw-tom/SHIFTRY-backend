@@ -5,3 +5,8 @@ export interface MessageContens {
 	label: string;
 	uri: string;
 }
+
+export interface LineMessageAPIResponse {
+	ok: true;
+	message: string;
+}

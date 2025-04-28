@@ -4,18 +4,18 @@ import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
 import authRoutes from "./features/auth/route";
+import paymentRoutes from "./features/payment/route";
 import assignShiftRoutes from "./features/shift/assign/route";
 import shiftRequestRoutes from "./features/shift/request/route";
 import submittedShiftRoutes from "./features/shift/submit/route";
 import storeRoutes from "./features/store/route";
 import userRoutes from "./features/user/route";
+import lineRoutes from "./features/webhook/line/route";
 import {
 	CROSS_ORIGIN_DEV,
 	CROSS_ORIGIN_LIFF,
 	CROSS_ORIGIN_PROD,
 } from "./lib/env";
-import messageRoutes from "./routes/message.route";
-import paymentRoutes from "./routes/payment.route";
 import stripeRoutes from "./routes/stripe.route";
 
 dotenv.config();
@@ -44,7 +44,7 @@ app.use(express.urlencoded({ extended: true })); // URL エンコードのサポ
 
 // 🔹 ルーティング設定
 app.use("/api/user", userRoutes);
-app.use("/webhook", messageRoutes);
+app.use("/webhook/line", lineRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/store", storeRoutes);
 app.use("/api/shift/request", shiftRequestRoutes);

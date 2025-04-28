@@ -1,11 +1,11 @@
-import apiClient from "../config/axios";
-import type { MessageContens } from "../types/message.type";
+import apiClient from "../../../config/axios";
+import type { MessageContens } from "./type";
 
 //☑️ トリガーを受け取ってメッセージ送信する
 export const sendGroupMessageByTrigger = async (
 	replyToken: string,
 	messageContents: MessageContens,
-) => {
+): Promise<void> => {
 	try {
 		const { text1, text2, text3, label, uri } = messageContents;
 		const message = {
@@ -74,7 +74,7 @@ export const sendGroupMessageByTrigger = async (
 export const sendGroupFlexMessage = async (
 	groupId: string,
 	messageContents: MessageContens,
-) => {
+): Promise<void> => {
 	try {
 		const { text1, text2, text3, label, uri } = messageContents;
 
