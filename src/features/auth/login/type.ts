@@ -1,7 +1,7 @@
 import type { Store, User } from "@prisma/client";
 
 export interface LoginServiceResponse {
-	user: User;
+	user: User | null;
 	stores: Store[];
 }
 

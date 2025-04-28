@@ -9,16 +9,10 @@ const registerOwner = async (
 	storeInput: StoreNameType,
 ): Promise<RegisterOwnerServiceResponse> => {
 	const user = await upsertUser(userInput);
-	if (!user) throw new Error("Failed to create user");
-
-	// store作成
 	const store = await createStore(storeInput.name);
-	if (!store) throw new Error("Failed to create store");
+	const userStore = await createUserStore(user.id, store.id, "OWNER");
 
-	// userStoreにオーナー登録
-	await createUserStore(user.id, store.id, "OWNER");
-
-	return { user, store };
+	return { user, store, userStore };
 };
 
 export default registerOwner;

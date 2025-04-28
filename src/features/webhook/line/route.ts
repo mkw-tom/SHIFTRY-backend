@@ -9,16 +9,16 @@ const router = express.Router();
 
 router.post("/event", eventController);
 router.post(
-  "/request-shift",
-  attachUserId,
-  attachStoreId,
-  sendShiftRequestFuncController
+	"/request-shift",
+	attachUserId,
+	attachStoreId,
+	sendShiftRequestFuncController,
 );
 router.post(
-  "/confirm-shift",
-  attachUserId,
-  attachStoreId,
-  sendConfirmShiftFuncController
+	"/confirm-shift",
+	attachUserId,
+	attachStoreId,
+	sendConfirmShiftFuncController,
 );
 
 export default router;

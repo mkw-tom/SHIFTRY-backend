@@ -16,7 +16,6 @@ const getShiftRequestSpecificController = async (
 
 		const weekStart = req.params.weekStart;
 		const shiftRerquest = await getShiftRequestSpecific(storeId, weekStart);
-
 		if (!shiftRerquest) {
 			res.status(404).json({ ok: false, message: "Shift request not found" });
 			return;

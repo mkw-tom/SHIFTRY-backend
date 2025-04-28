@@ -17,10 +17,6 @@ const deleteUserByOwnerController = async (
 		const deleteStaffId = req.params.userId;
 
 		const deleteStaff = await deleteUser(deleteStaffId);
-		if (!deleteStaff) {
-			res.status(404).json({ ok: false, message: "deleted user is not found" });
-			return;
-		}
 
 		res.status(200).json({ ok: true, deleteStaff });
 	} catch (error) {

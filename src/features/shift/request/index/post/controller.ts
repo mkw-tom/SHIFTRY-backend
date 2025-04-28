@@ -2,19 +2,17 @@ import type { Request, Response } from "express";
 
 import { upsertShiftRequest } from "../../../../../repositories/shiftRequest.repository";
 import { verifyUserStoreForOwnerAndManager } from "../../../../common/authorization.service";
-import type { ErrorResponse } from "../../../../common/type";
 import type {
-	UpsertShiftRepuestValidationErrorResponse,
-	UpsertShiftRequetResponse,
-} from "./type";
+	ErrorResponse,
+	ValidationErrorResponse,
+} from "../../../../common/type";
+import type { UpsertShiftRequetResponse } from "./type";
 import { upsertShfitRequestValidate } from "./validation";
 
 const upsertShiftRequestController = async (
 	req: Request,
 	res: Response<
-		| UpsertShiftRequetResponse
-		| UpsertShiftRepuestValidationErrorResponse
-		| ErrorResponse
+		UpsertShiftRequetResponse | ValidationErrorResponse | ErrorResponse
 	>,
 ): Promise<void> => {
 	try {
@@ -44,9 +42,6 @@ const upsertShiftRequestController = async (
 		};
 
 		const shiftRequest = await upsertShiftRequest(storeId, upsertData);
-		if (!shiftRequest) {
-			res.status(404).json({ ok: false, message: "shiftRequest is not found" });
-		}
 
 		res.status(200).json({ ok: true, shiftRequest });
 	} catch (error) {

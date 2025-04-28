@@ -14,12 +14,13 @@ const getShiftRequestController = async (
 		const storeId = req.storeId as string;
 		await verifyUserStore(userId, storeId);
 
-		if (!storeId) {
-			res.status(400).json({ ok: false, message: "storId is not found" });
+		const shiftRequests = await getShiftRequestByStoreId(storeId);
+		if (shiftRequests.length === 0) {
+			res
+				.status(404)
+				.json({ ok: false, message: "shift requests is not found" });
 			return;
 		}
-
-		const shiftRequests = await getShiftRequestByStoreId(storeId);
 
 		res.status(200).json({ ok: true, shiftRequests });
 	} catch (error) {

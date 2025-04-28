@@ -17,6 +17,12 @@ const getSubmittedShiftsSpesificController = async (
 		const { shiftRequestId } = req.params;
 
 		const submittedShifts = await getSubmittedShiftsSpecific(shiftRequestId);
+		if (submittedShifts.length === 0) {
+			res
+				.status(404)
+				.json({ ok: false, message: "submittedShifts is not found" });
+			return;
+		}
 
 		res.status(200).json({ ok: true, submittedShifts });
 	} catch (error) {

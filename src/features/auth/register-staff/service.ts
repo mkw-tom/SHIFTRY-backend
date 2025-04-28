@@ -11,11 +11,8 @@ export const registerStaff = async (
 	const { storeId, shiftRequestId } = storeInput;
 	const store = await verifyStoreIdAndShiftRequestId(storeId, shiftRequestId);
 	if (!store) throw new Error("Failed to get store data");
-
 	const user = await upsertUser(userInput);
-	if (!user) throw new Error("Failed to create user");
+	const userStore = await createUserStore(user.id, store.id, "STAFF");
 
-	await createUserStore(user.id, store.id, "STAFF");
-
-	return { user, store };
+	return { user, store, userStore };
 };

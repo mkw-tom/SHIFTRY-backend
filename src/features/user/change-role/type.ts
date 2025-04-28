@@ -8,12 +8,6 @@ export interface ChangeUserRoleResponse {
 }
 
 export interface ChangeUserRoleServiceResponse {
-	user: User | null;
-	userStore: UserStore | null;
-}
-
-export interface ChangeUserRoleValidationErrorResponse {
-	ok: false;
-	message: string;
-	errors: ZodIssue[];
+	user: User;
+	userStore: UserStore;
 }

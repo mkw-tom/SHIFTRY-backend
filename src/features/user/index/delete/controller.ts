@@ -13,10 +13,6 @@ const deleteUserController = async (
 		await verifyUser(userId);
 
 		const deletedUser = await deleteUser(userId);
-		if (!deletedUser) {
-			res.status(404).json({ ok: false, message: "deleted user is not found" });
-			return;
-		}
 
 		res.status(200).json({ ok: true, deletedUser });
 	} catch (error) {

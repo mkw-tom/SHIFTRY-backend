@@ -16,12 +16,6 @@ const deleteShiftRequestController = async (
 		const weekStart = req.params.weekStart;
 
 		const shiftRequest = await deleteShiftRequest(storeId, weekStart);
-		if (!shiftRequest) {
-			res
-				.status(404)
-				.json({ ok: false, message: "deleted shiftRequest is not found" });
-			return;
-		}
 
 		res.json({ ok: true, shiftRequest });
 	} catch (error) {

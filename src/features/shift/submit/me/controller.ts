@@ -14,6 +14,12 @@ const getSubmittedShiftUserController = async (
 		await verifyUserStore(userId, storeId);
 
 		const submittedShifts = await getSubmittedShiftUser(userId, storeId);
+		if (submittedShifts.length === 0) {
+			res
+				.status(404)
+				.json({ ok: false, message: "submittedShifts is not found" });
+			return;
+		}
 
 		res.status(200).json({ ok: true, submittedShifts });
 	} catch (error) {

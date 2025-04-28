@@ -2,19 +2,17 @@ import type { Request, Response } from "express";
 
 import { upsertSubmittedShift } from "../../../../../repositories/submittedShift.repository";
 import { verifyUserStore } from "../../../../common/authorization.service";
-import type { ErrorResponse } from "../../../../common/type";
 import type {
-	UpsertSubmittedShfitResponse,
-	UpsertSubmittedShfitValidationErrorResponse,
-} from "./type";
+	ErrorResponse,
+	ValidationErrorResponse,
+} from "../../../../common/type";
+import type { UpsertSubmittedShfitResponse } from "./type";
 import { upsertSubmittedShifttValidate } from "./validation";
 
 const upsertSubmittedShiftController = async (
 	req: Request,
 	res: Response<
-		| UpsertSubmittedShfitResponse
-		| UpsertSubmittedShfitValidationErrorResponse
-		| ErrorResponse
+		UpsertSubmittedShfitResponse | ValidationErrorResponse | ErrorResponse
 	>,
 ): Promise<void> => {
 	try {
@@ -22,12 +20,12 @@ const upsertSubmittedShiftController = async (
 		const storeId = req.storeId as string;
 		await verifyUserStore(userId, storeId);
 
-		const parsedBody = upsertSubmittedShifttValidate.safeParse(req.body);
-		if (!parsedBody.success) {
+		const parsed = upsertSubmittedShifttValidate.safeParse(req.body);
+		if (!parsed.success) {
 			res.status(400).json({
 				ok: false,
 				message: "Invalid request value",
-				errors: parsedBody.error.errors,
+				errors: parsed.error.errors,
 			});
 			return;
 		}
@@ -35,7 +33,7 @@ const upsertSubmittedShiftController = async (
 		const submittedShift = await upsertSubmittedShift(
 			userId,
 			storeId,
-			parsedBody.data,
+			parsed.data,
 		);
 
 		res.json({ ok: true, submittedShift });

@@ -4,10 +4,8 @@ import type { LoginServiceResponse } from "./type";
 
 const login = async (userId: string): Promise<LoginServiceResponse> => {
 	const user = await verifyUser(userId);
-	const stores = (await getStoreFromUser(userId)).map((s) => s.store);
-
-	// const store = await getStoreById(userStore.storeId);
-	if (!stores) throw new Error("Store not found");
+	const userStoreWithStore = await getStoreFromUser(userId);
+	const stores = userStoreWithStore.map((userStore) => userStore.store);
 
 	return { user, stores };
 };

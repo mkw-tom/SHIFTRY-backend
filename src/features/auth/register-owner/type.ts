@@ -1,10 +1,11 @@
-import type { Store, User, UserRole } from "@prisma/client";
+import type { Store, User, UserRole, UserStore } from "@prisma/client";
 import type { ZodIssue } from "zod";
 
 export interface RegisterOwnerResponse {
 	ok: true;
 	user: User;
 	store: Store;
+	userStore: UserStore;
 	user_token: string;
 	store_token: string;
 }
@@ -12,15 +13,7 @@ export interface RegisterOwnerResponse {
 export interface RegisterOwnerServiceResponse {
 	user: User;
 	store: Store;
-}
-
-export interface RegisterOwnerValidationErrorResponse {
-	ok: false;
-	message: string;
-	errors: {
-		user?: ZodIssue[];
-		store?: ZodIssue[];
-	};
+	userStore: UserStore;
 }
 
 export interface UpsertUserInput {

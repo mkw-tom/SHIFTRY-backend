@@ -1,19 +1,17 @@
 import type { Request, Response } from "express";
 import { upsertAssignShfit } from "../../../../../repositories/assingShift.repostory";
 import { verifyUserStoreForOwnerAndManager } from "../../../../common/authorization.service";
-import type { ErrorResponse } from "../../../../common/type";
 import type {
-	UpsertAssigShiftResponse,
-	UpsertAssignShiftValidationErrorResponse,
-} from "./type";
+	ErrorResponse,
+	ValidationErrorResponse,
+} from "../../../../common/type";
+import type { UpsertAssigShiftResponse } from "./type";
 import { upsertAssignShfitValidate } from "./validation";
 
 const upsertAssignShfitController = async (
 	req: Request,
 	res: Response<
-		| UpsertAssigShiftResponse
-		| UpsertAssignShiftValidationErrorResponse
-		| ErrorResponse
+		UpsertAssigShiftResponse | ValidationErrorResponse | ErrorResponse
 	>,
 ): Promise<void> => {
 	try {
@@ -21,17 +19,21 @@ const upsertAssignShfitController = async (
 		const storeId = req.storeId as string;
 		await verifyUserStoreForOwnerAndManager(userId, storeId);
 
-		const parsedBody = upsertAssignShfitValidate.safeParse(req.body);
-		if (!parsedBody.success) {
+		const parsed = upsertAssignShfitValidate.safeParse(req.body);
+		if (!parsed.success) {
 			res.status(400).json({
 				ok: false,
 				message: "Invalid request value",
-				errors: parsedBody.error.errors,
+				errors: parsed.error.errors,
 			});
 			return;
 		}
 
-		const assignShift = await upsertAssignShfit(storeId, parsedBody.data);
+		const assignShift = await upsertAssignShfit(storeId, parsed.data);
+		if (!assignShift) {
+			res.status(404).json({ ok: false, message: "assignShfit is not found" });
+			return;
+		}
 		res.json({ ok: true, assignShift });
 	} catch (error) {
 		console.error("Failed to upsert assign shift:", error);

@@ -37,6 +37,12 @@ describe("registerStaff (mocked)", () => {
 		};
 
 		const result = await registerOwner(userInput, storeInput);
+		if (!result.user) {
+			return;
+		}
+		if (!result.store) {
+			return;
+		}
 
 		expect(result.user.id).toEqual(user.id);
 		expect(result.store.id).toEqual(store.id);

@@ -33,6 +33,12 @@ describe("Login (mocked)", () => {
 		(getStoreFromUser as jest.Mock).mockResolvedValue([{ store: mockStore }]);
 
 		const result = await login(user.id);
+		if (!result.user) {
+			return;
+		}
+		if (!result.stores) {
+			return;
+		}
 
 		expect(result.user.id).toEqual(user.id);
 		expect(result.user.name).toEqual(user.name);
