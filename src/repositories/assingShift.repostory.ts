@@ -5,7 +5,7 @@ import type { upsertAssignShfitInput } from "../features/shift/assign/index/post
 export const upsertAssignShfit = async (
 	storeId: string,
 	data: upsertAssignShfitInput,
-): Promise<AssignShift | null> => {
+): Promise<AssignShift> => {
 	return await prisma.assignShift.upsert({
 		where: { shiftRequestId: data.shiftRequestId },
 		update: {

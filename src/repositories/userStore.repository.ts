@@ -6,7 +6,7 @@ export const createUserStore = async (
 	userId: string,
 	storeId: string,
 	role: UserRole,
-): Promise<UserStore | null> => {
+): Promise<UserStore> => {
 	return await prisma.userStore.create({
 		data: {
 			userId,
@@ -60,7 +60,7 @@ export const changeUserRoleToUserStore = async (
 	userId: string,
 	storeId: string,
 	role: UserRole,
-): Promise<UserStore | null> => {
+): Promise<UserStore> => {
 	return await prisma.userStore.update({
 		where: {
 			userId_storeId: {

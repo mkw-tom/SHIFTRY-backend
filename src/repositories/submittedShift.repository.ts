@@ -6,7 +6,7 @@ export const upsertSubmittedShift = async (
 	userId: string,
 	storeId: string,
 	data: upsertSubmittedShiftInput,
-): Promise<SubmittedShift | null> => {
+): Promise<SubmittedShift> => {
 	return await prisma.submittedShift.upsert({
 		where: {
 			userId_shiftRequestId: {
@@ -31,7 +31,7 @@ export const upsertSubmittedShift = async (
 export const getSubmittedShiftUser = async (
 	userId: string,
 	storeId: string,
-): Promise<SubmittedShift[] | null> => {
+): Promise<SubmittedShift[]> => {
 	return await prisma.submittedShift.findMany({
 		where: { userId, storeId },
 	});
@@ -39,7 +39,7 @@ export const getSubmittedShiftUser = async (
 
 export const getSubmittedShiftsSpecific = async (
 	shiftRequestId: string,
-): Promise<SubmittedShift[] | null> => {
+): Promise<SubmittedShift[]> => {
 	return await prisma.submittedShift.findMany({
 		where: { shiftRequestId },
 	});

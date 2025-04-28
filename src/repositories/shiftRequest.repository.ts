@@ -5,7 +5,7 @@ import type { UpsertShiftRequetBody } from "../features/shift/request/index/post
 export const upsertShiftRequest = async (
 	storeId: string,
 	data: UpsertShiftRequetBody,
-): Promise<ShiftRequest | null> => {
+): Promise<ShiftRequest> => {
 	return await prisma.shiftRequest.upsert({
 		where: {
 			storeId_weekStart: {
@@ -35,7 +35,7 @@ export const upsertShiftRequest = async (
 export const deleteShiftRequest = async (
 	storeId: string,
 	weekStart: string,
-): Promise<ShiftRequest | null> => {
+): Promise<ShiftRequest> => {
 	return await prisma.shiftRequest.delete({
 		where: { storeId_weekStart: { storeId, weekStart: new Date(weekStart) } },
 	});
@@ -43,7 +43,7 @@ export const deleteShiftRequest = async (
 
 export const getShiftRequestByStoreId = async (
 	storeId: string,
-): Promise<ShiftRequest[] | []> => {
+): Promise<ShiftRequest[]> => {
 	return await prisma.shiftRequest.findMany({
 		where: { storeId },
 	});

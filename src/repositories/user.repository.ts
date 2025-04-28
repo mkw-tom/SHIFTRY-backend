@@ -2,10 +2,10 @@ import type { User, UserRole } from "@prisma/client";
 import prisma from "../config/database";
 
 import type { updateUserProlfileType } from "../features/user/index/put/validation";
-import type { UpdateUserInput, UpsertUserInput } from "../types/user.types";
+import type { UpsertUserInput } from "../types/user.types";
 
 /// ✅ ユーザーの全取得
-export const getUsers = async (): Promise<User[] | [] | null> => {
+export const getUsers = async (): Promise<User[]> => {
 	return await prisma.user.findMany();
 };
 
@@ -23,9 +23,7 @@ export const getUserByLineId = async (lineId: string): Promise<User | null> => {
 };
 
 /// ユーザーの作成・更新
-export const upsertUser = async (
-	data: UpsertUserInput,
-): Promise<User | null> => {
+export const upsertUser = async (data: UpsertUserInput): Promise<User> => {
 	return await prisma.user.upsert({
 		where: { lineId: data.lineId },
 		create: data,
@@ -36,7 +34,7 @@ export const upsertUser = async (
 export const updateUser = async (
 	userId: string,
 	data: updateUserProlfileType,
-): Promise<User | null> => {
+): Promise<User> => {
 	return prisma.user.update({
 		where: { id: userId },
 		data,
@@ -46,7 +44,7 @@ export const updateUser = async (
 export const changeUserRole = async (
 	userId: string,
 	role: UserRole,
-): Promise<User | null> => {
+): Promise<User> => {
 	return await prisma.user.update({
 		where: { id: userId },
 		data: {
@@ -56,7 +54,7 @@ export const changeUserRole = async (
 };
 
 ///✅ ユーザーの削除
-export const deleteUser = async (userId: string): Promise<User | null> => {
+export const deleteUser = async (userId: string): Promise<User> => {
 	return prisma.user.delete({
 		where: { id: userId },
 	});

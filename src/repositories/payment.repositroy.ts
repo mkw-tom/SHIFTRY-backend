@@ -3,7 +3,9 @@ import Stripe from "stripe";
 import prisma from "../config/database";
 import type { CreatePaymentInput } from "../types/payment.type";
 
-export const createPayment = async (data: CreatePaymentInput) => {
+export const createPayment = async (
+	data: CreatePaymentInput,
+): Promise<Payment> => {
 	return await prisma.payment.create({ data });
 };
 
@@ -22,7 +24,7 @@ export const updatePaymentPlan = async (
 		price_amount: number;
 		price_interval: string;
 	},
-): Promise<Payment | null> => {
+): Promise<Payment> => {
 	return await prisma.payment.update({
 		where: { storeId },
 		data,
@@ -32,7 +34,7 @@ export const updatePaymentPlan = async (
 export const cancelSubscription = async (
 	storeId: string,
 	cancelDate: Date,
-): Promise<Payment | null> => {
+): Promise<Payment> => {
 	return await prisma.payment.update({
 		where: { storeId },
 		data: {
@@ -43,9 +45,7 @@ export const cancelSubscription = async (
 	});
 };
 
-export const cancelRevert = async (
-	storeId: string,
-): Promise<Payment | null> => {
+export const cancelRevert = async (storeId: string): Promise<Payment> => {
 	return await prisma.payment.update({
 		where: { storeId },
 		data: {
