@@ -1,10 +1,10 @@
 import type { ShiftRequest } from "@prisma/client";
 import prisma from "../config/database";
-import type { UpsertShiftRequetInput } from "../types/shiftRequest.type";
+import type { UpsertShiftRequetBody } from "../features/shift/request/post/validation";
 
 export const upsertShiftRequest = async (
 	storeId: string,
-	data: UpsertShiftRequetInput,
+	data: UpsertShiftRequetBody,
 ): Promise<ShiftRequest> => {
 	return await prisma.shiftRequest.upsert({
 		where: {
@@ -43,7 +43,7 @@ export const deleteShiftRequest = async (
 
 export const getShiftRequestByStoreId = async (
 	storeId: string,
-): Promise<ShiftRequest[] | []> => {
+): Promise<ShiftRequest[]> => {
 	return await prisma.shiftRequest.findMany({
 		where: { storeId },
 	});

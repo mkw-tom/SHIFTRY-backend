@@ -11,6 +11,14 @@ export const loginController = async (
 		const userId = req.userId as string;
 
 		const { user, stores } = await login(userId);
+		if (!user) {
+			res.status(404).json({ ok: false, message: "login user is not found" });
+			return;
+		}
+		if (stores.length === 0) {
+			res.status(404).json({ ok: false, message: "stores data is not found" });
+			return;
+		}
 
 		res.json({ ok: true, user, stores });
 	} catch (error) {

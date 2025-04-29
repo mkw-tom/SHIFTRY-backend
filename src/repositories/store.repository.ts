@@ -1,16 +1,10 @@
 import type { Store } from "@prisma/client";
-import { string } from "zod";
 import prisma from "../config/database";
-import { updateStoreNameInput } from "../validations/store.validation";
 
-export const createStore = async (
-	name: string,
-	groupId: string,
-): Promise<Store> => {
+export const createStore = async (name: string): Promise<Store> => {
 	return await prisma.store.create({
 		data: {
 			name: name,
-			groupId: groupId,
 		},
 	});
 };
@@ -32,7 +26,7 @@ export const getStoreById = async (id: string): Promise<Store | null> => {
 export const updateStoreGroupId = async (
 	storeId: string,
 	groupId: string,
-): Promise<Store | null> => {
+): Promise<Store> => {
 	return await prisma.store.update({
 		where: { id: storeId },
 		data: { groupId: groupId },
@@ -52,7 +46,7 @@ export const updateStoreName = async (
 };
 
 // 店舗削除
-export const deleteStore = async (id: string) => {
+export const deleteStore = async (id: string): Promise<Store> => {
 	return await prisma.store.delete({
 		where: { id },
 	});

@@ -1,4 +1,4 @@
-import type { shiftsOfSubmittedType } from "../../../../validations/submittedShift.vaidation";
+import type { shiftsOfSubmittedType } from "../../../shift/submit/post/validation";
 
 export const mockShiftsOfSubmitted: shiftsOfSubmittedType = {
 	name: "たなぴー",
