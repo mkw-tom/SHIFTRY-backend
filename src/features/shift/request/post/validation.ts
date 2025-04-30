@@ -23,6 +23,7 @@ export const ShiftsOfRequestsValidate = z.object({
 	defaultTimePositions: DefaultTimePositionsSchema,
 	overrideDates: OverrideDatesSchema,
 });
+export type ShiftsOfRequestsType = z.infer<typeof ShiftsOfRequestsValidate>;
 
 export const upsertShfitRequestValidate = z.object({
 	weekStart: z.string().refine((val) => !Number.isNaN(Date.parse(val)), {

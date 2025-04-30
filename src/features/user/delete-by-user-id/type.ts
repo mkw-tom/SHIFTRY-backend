@@ -1,6 +1,6 @@
 import type { User } from "@prisma/client";
 
-export interface DeleteUserResponse {
+export interface DeleteUserByOwnerResponse {
 	ok: true;
 	deleteStaff: User;
 }
