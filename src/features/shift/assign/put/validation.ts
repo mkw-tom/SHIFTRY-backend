@@ -19,4 +19,6 @@ export const upsertAssignShfitValidate = z.object({
 		errorMap: () => ({ message: "Invalid status" }),
 	}),
 });
-export type upsertAssignShfitInput = z.infer<typeof upsertAssignShfitValidate>;
+export type upsertAssignShfitInputType = z.infer<
+	typeof upsertAssignShfitValidate
+>;

@@ -1,6 +1,6 @@
 import {
   changeUserRoleValidate,
-  changeUserRoleInput,
+  changeUserRoleInputType,
 } from "../../src/features/user/change-role/validation";
 import {
   updateUserProlfileValidate,
@@ -9,7 +9,7 @@ import {
 
 export {
   changeUserRoleValidate,
-  changeUserRoleInput,
+  changeUserRoleInputType,
   updateUserProlfileValidate,
   updateUserProlfileType,
 };

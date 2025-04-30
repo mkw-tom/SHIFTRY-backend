@@ -44,6 +44,6 @@ export const upsertSubmittedShifttValidate = z.object({
 		errorMap: () => ({ message: "Invalid status" }),
 	}),
 });
-export type upsertSubmittedShiftInput = z.infer<
+export type upsertSubmittedShiftInputType = z.infer<
 	typeof upsertSubmittedShifttValidate
 >;

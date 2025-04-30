@@ -1,13 +1,13 @@
 import {
   shiftsOfAssignValidate,
   ShiftsOfAssignType,
-  upsertAssignShfitInput,
+  upsertAssignShfitInputType,
   upsertAssignShfitValidate,
 } from "../../../src/features/shift/assign/put/validation";
 
 export {
   shiftsOfAssignValidate,
   ShiftsOfAssignType,
-  upsertAssignShfitInput,
+  upsertAssignShfitInputType,
   upsertAssignShfitValidate,
 };
