@@ -5,11 +5,11 @@ import {
 	verifyUserForOwner,
 } from "../../common/authorization.service";
 import type { ErrorResponse } from "../../common/type";
-import type { DeleteUserResponse } from "./type";
+import type { DeleteUserByOwnerResponse } from "./type";
 
 const deleteUserByOwnerController = async (
 	req: Request,
-	res: Response<DeleteUserResponse | ErrorResponse>,
+	res: Response<DeleteUserByOwnerResponse | ErrorResponse>,
 ): Promise<void> => {
 	try {
 		const userId = req.userId as string;

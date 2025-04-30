@@ -5,7 +5,7 @@ import { attachUserId } from "../../middlewares/request/attachUserId";
 import addManageStoreController from "./add-store/controller";
 import storeConnectLineGroupController from "./connect-line-group/controller";
 import getStoresFromUserController from "./me/controller";
-import updateStoreNameControler from "./update-store-nam/controller";
+import updateStoreNameControler from "./update-store-name/controller";
 
 const router = express.Router();
 router.use(attachUserId);
