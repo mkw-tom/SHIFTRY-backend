@@ -1,10 +1,10 @@
 import type { AssignShift } from "@prisma/client";
 import prisma from "../config/database";
-import type { upsertAssignShfitInput } from "../features/shift/assign/put/validation";
+import type { upsertAssignShfitInputType } from "../features/shift/assign/put/validation";
 
 export const upsertAssignShfit = async (
 	storeId: string,
-	data: upsertAssignShfitInput,
+	data: upsertAssignShfitInputType,
 ): Promise<AssignShift> => {
 	return await prisma.assignShift.upsert({
 		where: { shiftRequestId: data.shiftRequestId },

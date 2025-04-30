@@ -5,4 +5,4 @@ export const changeUserRoleValidate = z.object({
 	role: z.enum(["STAFF", "MANAGER"]), // ← OWNERは除外！
 });
 
-export type changeUserRoleInput = z.infer<typeof changeUserRoleValidate>;
+export type changeUserRoleInputType = z.infer<typeof changeUserRoleValidate>;

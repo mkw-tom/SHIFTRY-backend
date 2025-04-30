@@ -1,5 +1,4 @@
 import type { Store, User, UserRole, UserStore } from "@prisma/client";
-import type { ZodIssue } from "zod";
 
 export interface RegisterOwnerResponse {
 	ok: true;
