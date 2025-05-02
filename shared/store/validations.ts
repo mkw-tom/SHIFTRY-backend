@@ -3,7 +3,7 @@ import { storeNameValidate, StoreNameType } from "../../src/features/store/add-s
 
 export {
   updateStoreNameValidate,
-  updateStoreNameInputType,
+  type updateStoreNameInputType,
   storeNameValidate,
-  StoreNameType
+  type StoreNameType
 }

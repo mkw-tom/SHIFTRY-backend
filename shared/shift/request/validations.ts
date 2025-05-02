@@ -1,13 +1,13 @@
 import {
   upsertShfitRequestValidate,
   ShiftsOfRequestsValidate,
-  UpsertShiftRequetBody,
+  UpsertShiftRequetType,
   ShiftsOfRequestsType,
 } from "../../../src/features/shift/request/post/validation";
 
 export {
   upsertShfitRequestValidate,
+  type UpsertShiftRequetType,
   ShiftsOfRequestsValidate,
-  UpsertShiftRequetBody,
-  ShiftsOfRequestsType,
+  type ShiftsOfRequestsType,
 };

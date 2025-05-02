@@ -45,4 +45,4 @@ export const upsertShfitRequestValidate = z.object({
 	}),
 });
 
-export type UpsertShiftRequetBody = z.infer<typeof upsertShfitRequestValidate>;
+export type UpsertShiftRequetType = z.infer<typeof upsertShfitRequestValidate>;

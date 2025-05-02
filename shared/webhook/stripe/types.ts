@@ -1,3 +1,3 @@
 import { StripeWebhookResponse } from "../../../src/features/webhook/stripe/type";
 
-export { StripeWebhookResponse };
+export type { StripeWebhookResponse };

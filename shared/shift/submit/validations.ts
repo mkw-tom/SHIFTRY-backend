@@ -7,7 +7,7 @@ import {
 
 export {
   shiftsOfSubmittedValidate,
-  shiftsOfSubmittedType,
+  type shiftsOfSubmittedType,
   upsertSubmittedShifttValidate,
-  upsertSubmittedShiftInputType,
+  type upsertSubmittedShiftInputType,
 };

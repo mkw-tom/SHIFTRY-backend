@@ -1,10 +1,10 @@
 import type { ShiftRequest } from "@prisma/client";
 import prisma from "../config/database";
-import type { UpsertShiftRequetBody } from "../features/shift/request/post/validation";
+import type { UpsertShiftRequetType } from "../features/shift/request/post/validation";
 
 export const upsertShiftRequest = async (
 	storeId: string,
-	data: UpsertShiftRequetBody,
+	data: UpsertShiftRequetType,
 ): Promise<ShiftRequest> => {
 	return await prisma.shiftRequest.upsert({
 		where: {

@@ -2,4 +2,4 @@ import { ShiftRequestIdParamType } from "../../src/middlewares/validations/shift
 import { UserIdParamType } from "../../src/middlewares/validations/userId.validate";
 import { WeekStartParamType } from "../../src/middlewares/validations/weekStart.validate";
 
-export { ShiftRequestIdParamType, UserIdParamType, WeekStartParamType };
+export type { ShiftRequestIdParamType, UserIdParamType, WeekStartParamType };

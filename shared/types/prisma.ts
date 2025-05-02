@@ -11,7 +11,7 @@ import {
   Payment,
 } from "@prisma/client";
 
-export {
+export type {
   User,
   UserRole,
   Store,

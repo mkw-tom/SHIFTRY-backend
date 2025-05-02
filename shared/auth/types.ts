@@ -8,7 +8,7 @@ import { RegisterStaffResponse } from "../../src/features/auth/register-staff/ty
 import { LineAuthResponse } from "../../src/features/auth/line-auth/type";
 
 
-export {
+export type {
   LoginResponse,
   ReLoginResponse,
   RegisterOwnerResponse,

@@ -9,7 +9,7 @@ import {
 
 export {
   productIdValidate,
-  productIdType,
+  type productIdType,
   createPaymentValidate,
-  createPaymentType,
+  type createPaymentType,
 };

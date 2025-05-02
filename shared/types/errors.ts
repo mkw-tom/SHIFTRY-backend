@@ -3,4 +3,4 @@ import {
   ValidationErrorResponse,
 } from "../../src/features/common/types/errors";
 
-export { ErrorResponse, ValidationErrorResponse };
+export type { ErrorResponse, ValidationErrorResponse };

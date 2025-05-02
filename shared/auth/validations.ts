@@ -3,9 +3,9 @@ import { storeIdandShfitReruestIdType, storeIdandShfitReruestIdValidate } from "
 
 export {
   storeNameValidate,
-  StoreNameType,
-  userInputType,
+  type StoreNameType,
+  type userInputType,
   userInputValidate,
-  storeIdandShfitReruestIdType,
+  type storeIdandShfitReruestIdType,
   storeIdandShfitReruestIdValidate
 }
