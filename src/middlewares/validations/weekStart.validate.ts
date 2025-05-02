@@ -6,7 +6,7 @@ const WeekStartParamValidate = z.object({
 		message: "Invalid date format",
 	}),
 });
-export type WeekStartParamValidate = z.infer<typeof WeekStartParamValidate>;
+export type WeekStartParamType = z.infer<typeof WeekStartParamValidate>;
 
 interface WeekStartRequest extends Request {
 	weekStart: Date;

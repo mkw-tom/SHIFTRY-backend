@@ -1,7 +1,10 @@
 import type { Request, Response } from "express";
 
 import { verifyUserStoreForOwner } from "../../common/authorization.service";
-import type { ErrorResponse, ValidationErrorResponse } from "../../common/type";
+import type {
+	ErrorResponse,
+	ValidationErrorResponse,
+} from "../../common/types/errors";
 import createPaymentService from "./service";
 import type { CreatePaymentResponse } from "./type";
 import { createPaymentValidate } from "./validation";

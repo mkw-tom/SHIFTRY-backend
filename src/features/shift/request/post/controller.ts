@@ -5,7 +5,7 @@ import { verifyUserStoreForOwnerAndManager } from "../../../common/authorization
 import type {
 	ErrorResponse,
 	ValidationErrorResponse,
-} from "../../../common/type";
+} from "../../../common/types/errors";
 import type { UpsertShiftRequetResponse } from "./type";
 import { upsertShfitRequestValidate } from "./validation";
 

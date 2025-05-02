@@ -6,7 +6,7 @@ const UserIdParamValidate = z.object({
 		message: "Invalid UserId format",
 	}),
 });
-export type UserIdParamValidate = z.infer<typeof UserIdParamValidate>;
+export type UserIdParamType = z.infer<typeof UserIdParamValidate>;
 
 interface UserIdRequest extends Request {
 	userId: string;

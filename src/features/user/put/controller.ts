@@ -1,7 +1,10 @@
 import type { Request, Response } from "express";
 import { updateUser } from "../../../repositories/user.repository";
 import { verifyUser } from "../../common/authorization.service";
-import type { ErrorResponse, ValidationErrorResponse } from "../../common/type";
+import type {
+	ErrorResponse,
+	ValidationErrorResponse,
+} from "../../common/types/errors";
 import type { UpdateUserProfileResponse } from "./type";
 import { updateUserProlfileValidate } from "./validation";
 

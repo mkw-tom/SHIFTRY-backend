@@ -1,6 +1,9 @@
 import type { Request, Response } from "express";
 import { verifyUserStoreForOwnerAndManager } from "../../common/authorization.service";
-import type { ErrorResponse, ValidationErrorResponse } from "../../common/type";
+import type {
+	ErrorResponse,
+	ValidationErrorResponse,
+} from "../../common/types/errors";
 import { changeUserRoleService } from "./service";
 import type { ChangeUserRoleResponse } from "./type";
 import { changeUserRoleValidate } from "./validation";

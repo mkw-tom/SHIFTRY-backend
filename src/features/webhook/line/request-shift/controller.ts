@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { URI_SHIFT_SUBMITTED } from "../../../../lib/env";
 import { verifyUserStoreForOwnerAndManager } from "../../../common/authorization.service";
-import type { ErrorResponse } from "../../../common/type";
+import type { ErrorResponse } from "../../../common/types/errors";
 import { sendGroupFlexMessage } from "../service";
 import type { LineMessageAPIResponse } from "../type";
 

@@ -4,7 +4,7 @@ import {
 	URI_REGISTER_OWNER,
 } from "../../../../lib/env";
 import { generateJWT } from "../../../../utils/JWT/jwt";
-import type { ErrorResponse } from "../../../common/type";
+import type { ErrorResponse } from "../../../common/types/errors";
 import { sendGroupMessageByTrigger } from "../service";
 import type { LineMessageAPIResponse } from "../type";
 
