@@ -4,7 +4,7 @@ import {
 	verifyUser,
 	verifyUserForOwner,
 } from "../../common/authorization.service";
-import type { ErrorResponse } from "../../common/type";
+import type { ErrorResponse } from "../../common/types/errors";
 import type { DeleteUserByOwnerResponse } from "./type";
 
 const deleteUserByOwnerController = async (

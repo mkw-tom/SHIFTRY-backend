@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { generateJWT } from "../../../utils/JWT/jwt";
-import type { ErrorResponse } from "../../common/type";
+import type { ErrorResponse } from "../../common/types/errors";
 import Init from "./service";
 import type { InitResponse } from "./type";
 import { storeIdValidate } from "./validation";

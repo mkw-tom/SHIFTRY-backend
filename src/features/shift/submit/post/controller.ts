@@ -5,7 +5,7 @@ import { verifyUserStore } from "../../../common/authorization.service";
 import type {
 	ErrorResponse,
 	ValidationErrorResponse,
-} from "../../../common/type";
+} from "../../../common/types/errors";
 import type { UpsertSubmittedShfitResponse } from "./type";
 import { upsertSubmittedShifttValidate } from "./validation";
 

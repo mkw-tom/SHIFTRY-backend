@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { getUsersFromStore } from "../../../repositories/userStore.repository";
 import { verifyUserStore } from "../../common/authorization.service";
-import type { ErrorResponse } from "../../common/type";
+import type { ErrorResponse } from "../../common/types/errors";
 import type { GetUsersFromStoreResponse } from "./type";
 
 const getUsersFromStoreController = async (

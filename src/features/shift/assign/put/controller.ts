@@ -4,7 +4,7 @@ import { verifyUserStoreForOwnerAndManager } from "../../../common/authorization
 import type {
 	ErrorResponse,
 	ValidationErrorResponse,
-} from "../../../common/type";
+} from "../../../common/types/errors";
 import type { UpsertAssigShiftResponse } from "./type";
 import { upsertAssignShfitValidate } from "./validation";
 

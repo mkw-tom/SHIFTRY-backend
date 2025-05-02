@@ -6,7 +6,7 @@ const shiftRequestIdParamValidate = z.object({
 		message: "Invalid shiftRequestId format",
 	}),
 });
-export type shiftRequestIdParamValidate = z.infer<
+export type ShiftRequestIdParamType = z.infer<
 	typeof shiftRequestIdParamValidate
 >;
 

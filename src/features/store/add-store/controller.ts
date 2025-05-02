@@ -3,7 +3,10 @@ import { createStore } from "../../../repositories/store.repository";
 import { createUserStore } from "../../../repositories/userStore.repository";
 import { generateJWT } from "../../../utils/JWT/jwt";
 import { verifyUserForOwner } from "../../common/authorization.service";
-import type { ErrorResponse, ValidationErrorResponse } from "../../common/type";
+import type {
+	ErrorResponse,
+	ValidationErrorResponse,
+} from "../../common/types/errors";
 import type { AddManageStoreResponse } from "./type";
 import { storeNameValidate } from "./validation";
 

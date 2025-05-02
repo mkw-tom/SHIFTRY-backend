@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { stripe } from "../../../config/stripe";
 import { STRIPE_WEBHOOK_SECRET } from "../../../lib/env";
-import type { ErrorResponse } from "../../common/type";
+import type { ErrorResponse } from "../../common/types/errors";
 import stripeWebhookService from "./service";
 import type { StripeWebhookResponse } from "./type";
 

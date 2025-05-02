@@ -3,7 +3,7 @@ import { updateStoreGroupId } from "../../../repositories/store.repository";
 import { getUserById } from "../../../repositories/user.repository";
 import { generateJWT } from "../../../utils/JWT/jwt";
 import { verifyUserStoreForOwner } from "../../common/authorization.service";
-import type { ErrorResponse } from "../../common/type";
+import type { ErrorResponse } from "../../common/types/errors";
 import type { StoreConnectLineGroupResponse } from "./type";
 
 const storeConnectLineGroupController = async (
