@@ -3,4 +3,4 @@ import {
   LineMessageAPIResponse,
 } from "../../../src/features/webhook/line/type";
 
-export { MessageContens, LineMessageAPIResponse };
+export type { MessageContens, LineMessageAPIResponse };

@@ -4,7 +4,7 @@ import { GetShiftRequestSpecificResponse } from "../../../src/features/shift/req
 import { DeleteShiftRequestResponse } from "../../../src/features/shift/request/delete-by-week-start/type";
 
 
-export {
+export type {
   GetShiftRequestResponse,
   UpsertShiftRequetResponse,
   GetShiftRequestSpecificResponse,

@@ -7,7 +7,7 @@ import {
 
 export {
   shiftsOfAssignValidate,
-  ShiftsOfAssignType,
-  upsertAssignShfitInputType,
+  type ShiftsOfAssignType,
   upsertAssignShfitValidate,
+  type upsertAssignShfitInputType,
 };

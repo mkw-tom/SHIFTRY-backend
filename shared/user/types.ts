@@ -4,7 +4,7 @@ import { DeleteUserByOwnerResponse } from "../../src/features/user/delete-by-use
 import { GetUsersFromStoreResponse } from "../../src/features/user/get/type";
 import { UpdateUserProfileResponse } from "../../src/features/user/put/type";
 
-export {
+export type {
   ChangeUserRoleResponse,
   DeleteUserResponse,
   DeleteUserByOwnerResponse,

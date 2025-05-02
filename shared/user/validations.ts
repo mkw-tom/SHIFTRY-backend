@@ -9,7 +9,7 @@ import {
 
 export {
   changeUserRoleValidate,
-  changeUserRoleInputType,
+  type changeUserRoleInputType,
   updateUserProlfileValidate,
-  updateUserProlfileType,
+  type updateUserProlfileType,
 };
