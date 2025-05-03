@@ -1,14 +1,5 @@
+import { shiftRequestIdParamValidate } from "@shared/common/validations/shiftRequestIdParam";
 import type { NextFunction, Request, Response } from "express";
-import { z } from "zod";
-
-const shiftRequestIdParamValidate = z.object({
-	shiftRequestId: z.string().uuid({
-		message: "Invalid shiftRequestId format",
-	}),
-});
-export type ShiftRequestIdParamType = z.infer<
-	typeof shiftRequestIdParamValidate
->;
 
 interface ShiftRequestIdRequest extends Request {
 	shiftRequestId: string;
