@@ -1,8 +1,8 @@
+import type { ErrorResponse } from "@shared/common/types/errors";
+import type { CancelSubscriptionResponse } from "@shared/payment/types/cancel";
 import type { Request, Response } from "express";
 import { verifyUserStoreForOwner } from "../../common/authorization.service";
-import type { ErrorResponse } from "../../common/types/errors";
 import cancelSubscriptionService from "./service";
-import type { CancelSubscriptionResponse } from "./type";
 
 const cancelSubscriptionController = async (
 	req: Request,

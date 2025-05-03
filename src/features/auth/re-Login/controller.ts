@@ -1,7 +1,7 @@
+import type { ErrorResponse } from "@shared/common/types/errors";
 import type { Request, Response } from "express";
 import { generateJWT } from "../../../utils/JWT/jwt";
 import { verifyUserByLineId } from "../../common/authorization.service";
-import type { ErrorResponse } from "../../common/types/errors";
 import type { ReLoginResponse } from "./type";
 
 export const reLoginController = async (

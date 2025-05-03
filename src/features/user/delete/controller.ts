@@ -1,8 +1,8 @@
+import type { ErrorResponse } from "@shared/common/types/errors";
+import type { DeleteUserResponse } from "@shared/user/types/delete";
 import type { Request, Response } from "express";
 import { deleteUser } from "../../../repositories/user.repository";
 import { verifyUser } from "../../common/authorization.service";
-import type { ErrorResponse } from "../../common/types/errors";
-import type { DeleteUserResponse } from "./type";
 
 const deleteUserController = async (
 	req: Request,

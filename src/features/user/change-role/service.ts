@@ -1,7 +1,7 @@
 import type { UserRole } from "@prisma/client";
+import type { ChangeUserRoleServiceResponse } from "@shared/user/types/change-role";
 import { changeUserRole } from "../../../repositories/user.repository";
 import { changeUserRoleToUserStore } from "../../../repositories/userStore.repository";
-import type { ChangeUserRoleServiceResponse } from "./type";
 
 /// ユーザーの権限変更（オーナーが操作）
 export const changeUserRoleService = async (

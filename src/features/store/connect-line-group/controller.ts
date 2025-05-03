@@ -1,10 +1,10 @@
+import type { ErrorResponse } from "@shared/common/types/errors";
+import type { StoreConnectLineGroupResponse } from "@shared/store/types/connect-line-group";
 import type { Request, Response } from "express";
 import { updateStoreGroupId } from "../../../repositories/store.repository";
 import { getUserById } from "../../../repositories/user.repository";
 import { generateJWT } from "../../../utils/JWT/jwt";
 import { verifyUserStoreForOwner } from "../../common/authorization.service";
-import type { ErrorResponse } from "../../common/types/errors";
-import type { StoreConnectLineGroupResponse } from "./type";
 
 const storeConnectLineGroupController = async (
 	req: Request,

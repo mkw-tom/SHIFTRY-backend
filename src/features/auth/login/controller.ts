@@ -1,7 +1,7 @@
+import type { LoginResponse } from "@shared/auth/types/login";
+import type { ErrorResponse } from "@shared/common/types/errors";
 import type { Request, Response } from "express";
-import type { ErrorResponse } from "../../common/types/errors";
 import login from "./service";
-import type { LoginResponse } from "./type";
 
 export const loginController = async (
 	req: Request,

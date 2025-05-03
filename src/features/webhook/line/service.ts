@@ -1,5 +1,5 @@
+import type { MessageContens } from "@shared/webhook/line/types";
 import apiClient from "../../../config/axios";
-import type { MessageContens } from "./type";
 
 //☑️ トリガーを受け取ってメッセージ送信する
 export const sendGroupMessageByTrigger = async (

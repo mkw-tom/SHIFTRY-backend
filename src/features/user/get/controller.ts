@@ -1,8 +1,8 @@
+import type { ErrorResponse } from "@shared/common/types/errors";
+import type { GetUsersFromStoreResponse } from "@shared/user/types/get";
 import type { Request, Response } from "express";
 import { getUsersFromStore } from "../../../repositories/userStore.repository";
 import { verifyUserStore } from "../../common/authorization.service";
-import type { ErrorResponse } from "../../common/types/errors";
-import type { GetUsersFromStoreResponse } from "./type";
 
 const getUsersFromStoreController = async (
 	req: Request,
