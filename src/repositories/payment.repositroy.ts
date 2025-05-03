@@ -1,7 +1,6 @@
-import type { Payment } from "@prisma/client";
-import Stripe from "stripe";
+import type { Payment } from "@shared/common/types/prisma";
 import prisma from "../config/database";
-import type { CreatePaymentInput } from "../types/payment.type";
+import type { CreatePaymentInput } from "../types/inputs";
 
 export const createPayment = async (
 	data: CreatePaymentInput,

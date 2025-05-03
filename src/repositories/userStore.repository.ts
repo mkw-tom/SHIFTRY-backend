@@ -1,6 +1,10 @@
-import type { Store, User, UserStore } from "@prisma/client";
+import type {
+	Store,
+	User,
+	UserRole,
+	UserStore,
+} from "@shared/common/types/prisma";
 import prisma from "../config/database";
-import type { UserRole } from "../types/user.types";
 
 export const createUserStore = async (
 	userId: string,
