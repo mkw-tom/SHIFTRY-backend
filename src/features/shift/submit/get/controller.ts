@@ -1,8 +1,8 @@
+import type { ErrorResponse } from "@shared/common/types/errors";
+import type { GetSubmittedShiftUserResponse } from "@shared/shift/submit/types/get";
 import type { Request, Response } from "express";
 import { getSubmittedShiftUser } from "../../../../repositories/submittedShift.repository";
 import { verifyUserStore } from "../../../common/authorization.service";
-import type { ErrorResponse } from "../../../common/types/errors";
-import type { GetSubmittedShiftUserResponse } from "./type";
 
 const getSubmittedShiftUserController = async (
 	req: Request,

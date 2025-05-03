@@ -1,6 +1,6 @@
-import type { ShiftRequest } from "@prisma/client";
+import type { ShiftRequest } from "@shared/common/types/prisma";
 import prisma from "../config/database";
-import type { UpsertShiftRequetType } from "../features/shift/request/post/validation";
+import type { UpsertShiftRequetType } from "../types/inputs";
 
 export const upsertShiftRequest = async (
 	storeId: string,

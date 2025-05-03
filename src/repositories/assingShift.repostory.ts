@@ -1,6 +1,6 @@
-import type { AssignShift } from "@prisma/client";
+import type { AssignShift } from "@shared/common/types/prisma";
 import prisma from "../config/database";
-import type { upsertAssignShfitInputType } from "../features/shift/assign/put/validation";
+import type { upsertAssignShfitInputType } from "../types/inputs";
 
 export const upsertAssignShfit = async (
 	storeId: string,

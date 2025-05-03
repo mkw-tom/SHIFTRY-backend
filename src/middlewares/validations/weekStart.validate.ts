@@ -1,12 +1,5 @@
+import { WeekStartParamValidate } from "@shared/common/validations/weekStartParam";
 import type { NextFunction, Request, Response } from "express";
-import { z } from "zod";
-
-const WeekStartParamValidate = z.object({
-	weekStart: z.string().refine((val) => !Number.isNaN(Date.parse(val)), {
-		message: "Invalid date format",
-	}),
-});
-export type WeekStartParamType = z.infer<typeof WeekStartParamValidate>;
 
 interface WeekStartRequest extends Request {
 	weekStart: Date;

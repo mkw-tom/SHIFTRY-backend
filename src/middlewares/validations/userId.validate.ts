@@ -1,12 +1,5 @@
+import { UserIdParamValidate } from "@shared/common/validations/userIdParam";
 import type { NextFunction, Request, Response } from "express";
-import { z } from "zod";
-
-const UserIdParamValidate = z.object({
-	userId: z.string().uuid({
-		message: "Invalid UserId format",
-	}),
-});
-export type UserIdParamType = z.infer<typeof UserIdParamValidate>;
 
 interface UserIdRequest extends Request {
 	userId: string;

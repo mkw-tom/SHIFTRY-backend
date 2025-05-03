@@ -1,8 +1,11 @@
+import type {
+	RegisterOwnerServiceResponse,
+	UpsertUserInput,
+} from "@shared/auth/types/register-owner";
+import type { StoreNameType } from "@shared/auth/validations/register-owner";
 import { createStore } from "../../../repositories/store.repository";
 import { upsertUser } from "../../../repositories/user.repository";
 import { createUserStore } from "../../../repositories/userStore.repository";
-import type { RegisterOwnerServiceResponse, UpsertUserInput } from "./type";
-import type { StoreNameType } from "./validation";
 
 const registerOwner = async (
 	userInput: UpsertUserInput,

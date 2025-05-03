@@ -1,15 +1,11 @@
-import type { User, UserRole } from "@prisma/client";
+import type { User, UserRole } from "@shared/common/types/prisma";
 import prisma from "../config/database";
+import type { UpsertUserInput, updateUserProlfileType } from "../types/inputs";
 
-import type { updateUserProlfileType } from "../features/user/put/validation";
-import type { UpsertUserInput } from "../types/user.types";
-
-/// ✅ ユーザーの全取得
 export const getUsers = async (): Promise<User[]> => {
 	return await prisma.user.findMany();
 };
 
-/// ✅ userIdからユーザーの取得
 export const getUserById = async (userId: string): Promise<User | null> => {
 	return await prisma.user.findUnique({
 		where: { id: userId },
@@ -22,7 +18,6 @@ export const getUserByLineId = async (lineId: string): Promise<User | null> => {
 	});
 };
 
-/// ユーザーの作成・更新
 export const upsertUser = async (data: UpsertUserInput): Promise<User> => {
 	return await prisma.user.upsert({
 		where: { lineId: data.lineId },
@@ -53,7 +48,6 @@ export const changeUserRole = async (
 	});
 };
 
-///✅ ユーザーの削除
 export const deleteUser = async (userId: string): Promise<User> => {
 	return prisma.user.delete({
 		where: { id: userId },

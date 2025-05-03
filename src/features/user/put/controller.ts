@@ -1,12 +1,12 @@
-import type { Request, Response } from "express";
-import { updateUser } from "../../../repositories/user.repository";
-import { verifyUser } from "../../common/authorization.service";
 import type {
 	ErrorResponse,
 	ValidationErrorResponse,
-} from "../../common/types/errors";
-import type { UpdateUserProfileResponse } from "./type";
-import { updateUserProlfileValidate } from "./validation";
+} from "@shared/common/types/errors";
+import type { UpdateUserProfileResponse } from "@shared/user/types/put";
+import { updateUserProlfileValidate } from "@shared/user/validations/put";
+import type { Request, Response } from "express";
+import { updateUser } from "../../../repositories/user.repository";
+import { verifyUser } from "../../common/authorization.service";
 
 const updateUserProfileController = async (
 	req: Request,

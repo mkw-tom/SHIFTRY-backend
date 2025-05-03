@@ -1,13 +1,12 @@
-import type { Request, Response } from "express";
-
-import { upsertSubmittedShift } from "../../../../repositories/submittedShift.repository";
-import { verifyUserStore } from "../../../common/authorization.service";
 import type {
 	ErrorResponse,
 	ValidationErrorResponse,
-} from "../../../common/types/errors";
-import type { UpsertSubmittedShfitResponse } from "./type";
-import { upsertSubmittedShifttValidate } from "./validation";
+} from "@shared/common/types/errors";
+import type { UpsertSubmittedShfitResponse } from "@shared/shift/submit/types/put";
+import { upsertSubmittedShifttValidate } from "@shared/shift/submit/validations/put";
+import type { Request, Response } from "express";
+import { upsertSubmittedShift } from "../../../../repositories/submittedShift.repository";
+import { verifyUserStore } from "../../../common/authorization.service";
 
 const upsertSubmittedShiftController = async (
 	req: Request,

@@ -1,4 +1,4 @@
-import type { UserRole, UserStore } from "@prisma/client";
+import type { UserRole, UserStore } from "../../../../types/prisma";
 
 export const mockUserStore = (
 	userId: string,

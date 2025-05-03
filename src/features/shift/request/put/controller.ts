@@ -1,13 +1,12 @@
-import type { Request, Response } from "express";
-
-import { upsertShiftRequest } from "../../../../repositories/shiftRequest.repository";
-import { verifyUserStoreForOwnerAndManager } from "../../../common/authorization.service";
 import type {
 	ErrorResponse,
 	ValidationErrorResponse,
-} from "../../../common/types/errors";
-import type { UpsertShiftRequetResponse } from "./type";
-import { upsertShfitRequestValidate } from "./validation";
+} from "@shared/common/types/errors";
+import type { UpsertShiftRequetResponse } from "@shared/shift/request/types/put";
+import { upsertShfitRequestValidate } from "@shared/shift/request/validations/put";
+import type { Request, Response } from "express";
+import { upsertShiftRequest } from "../../../../repositories/shiftRequest.repository";
+import { verifyUserStoreForOwnerAndManager } from "../../../common/authorization.service";
 
 const upsertShiftRequestController = async (
 	req: Request,

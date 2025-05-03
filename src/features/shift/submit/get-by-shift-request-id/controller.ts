@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
 
+import type { ErrorResponse } from "@shared/common/types/errors";
+import type { GetSubmittedShiftsSpecificResponse } from "@shared/shift/submit/types/get-by-shift-request-id";
 import { getSubmittedShiftsSpecific } from "../../../../repositories/submittedShift.repository";
 import { verifyUserStore } from "../../../common/authorization.service";
-import type { ErrorResponse } from "../../../common/types/errors";
-import type { GetSubmittedShiftsSpecificResponse } from "./type";
 
 const getSubmittedShiftsSpesificController = async (
 	req: Request,

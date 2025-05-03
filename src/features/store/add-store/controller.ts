@@ -1,14 +1,14 @@
+import type {
+	ErrorResponse,
+	ValidationErrorResponse,
+} from "@shared/common/types/errors";
+import type { AddManageStoreResponse } from "@shared/store/types/add-store";
+import { storeNameValidate } from "@shared/store/validations/add-store";
 import type { Request, Response } from "express";
 import { createStore } from "../../../repositories/store.repository";
 import { createUserStore } from "../../../repositories/userStore.repository";
 import { generateJWT } from "../../../utils/JWT/jwt";
 import { verifyUserForOwner } from "../../common/authorization.service";
-import type {
-	ErrorResponse,
-	ValidationErrorResponse,
-} from "../../common/types/errors";
-import type { AddManageStoreResponse } from "./type";
-import { storeNameValidate } from "./validation";
 
 const addManageStoreController = async (
 	req: Request,

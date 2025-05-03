@@ -1,11 +1,8 @@
+import type { ErrorResponse } from "@shared/common/types/errors";
+import type { DeleteUserByOwnerResponse } from "@shared/user/types/delete-by-user-id";
 import type { Request, Response } from "express";
 import { deleteUser } from "../../../repositories/user.repository";
-import {
-	verifyUser,
-	verifyUserForOwner,
-} from "../../common/authorization.service";
-import type { ErrorResponse } from "../../common/types/errors";
-import type { DeleteUserByOwnerResponse } from "./type";
+import { verifyUserForOwner } from "../../common/authorization.service";
 
 const deleteUserByOwnerController = async (
 	req: Request,

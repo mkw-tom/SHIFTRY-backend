@@ -1,12 +1,15 @@
-import type { Request, Response } from "express";
-import { generateJWT } from "../../../utils/JWT/jwt";
+import type { RegisterOwnerResponse } from "@shared/auth/types/register-owner";
+import {
+	storeNameValidate,
+	userInputValidate,
+} from "@shared/auth/validations/register-owner";
 import type {
 	ErrorResponse,
 	ValidationErrorResponse,
-} from "../../common/types/errors";
+} from "@shared/common/types/errors";
+import type { Request, Response } from "express";
+import { generateJWT } from "../../../utils/JWT/jwt";
 import registerOwner from "./service";
-import type { RegisterOwnerResponse } from "./type";
-import { storeNameValidate, userInputValidate } from "./validation";
 
 const registerOwnerController = async (
 	req: Request,

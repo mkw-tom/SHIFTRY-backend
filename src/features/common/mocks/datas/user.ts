@@ -1,6 +1,6 @@
 // tests/utils/mockData.ts
 import { faker } from "@faker-js/faker";
-import type { User, UserRole } from "@prisma/client";
+import type { User, UserRole } from "../../../../types/prisma";
 
 export const createMockUserInput = (role: UserRole) => ({
 	lineId: faker.string.uuid(),
